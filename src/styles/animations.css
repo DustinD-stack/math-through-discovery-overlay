@@ -1,0 +1,72 @@
+/* ============================================================
+   Animation system
+   Every animation is a class. Motion is disabled globally by
+   adding .no-anim to <body> (control panel toggle) or by the
+   OS "reduce motion" setting.
+   ============================================================ */
+
+@keyframes mtd-fade      { from { opacity: 0 } to { opacity: 1 } }
+@keyframes mtd-slide-up  { from { opacity: 0; transform: translateY(18px) } to { opacity: 1; transform: none } }
+@keyframes mtd-slide-left{ from { opacity: 0; transform: translateX(28px) } to { opacity: 1; transform: none } }
+@keyframes mtd-slide-right{from { opacity: 0; transform: translateX(-28px) } to { opacity: 1; transform: none } }
+@keyframes mtd-pop       { 0% { opacity: 0; transform: scale(.86) } 60% { opacity: 1; transform: scale(1.04) } 100% { transform: scale(1) } }
+@keyframes mtd-draw      { from { transform: scaleX(0) } to { transform: scaleX(1) } }
+@keyframes mtd-dash      { to { stroke-dashoffset: 0 } }
+@keyframes mtd-highlight { 0% { background-size: 0 100% } 100% { background-size: 100% 100% } }
+@keyframes mtd-stamp     { 0% { opacity: 0; transform: rotate(-9deg) scale(1.7) } 55% { opacity: 1; transform: rotate(-9deg) scale(.94) } 100% { transform: rotate(-9deg) scale(1) } }
+@keyframes mtd-fill-x    { from { transform: scaleX(0) } to { transform: scaleX(1) } }
+@keyframes mtd-grow-y    { from { transform: scaleY(0) } to { transform: scaleY(1) } }
+@keyframes mtd-pulse     { 0%,100% { box-shadow: 0 0 0 0 rgba(255,210,63,0) } 50% { box-shadow: 0 0 0 10px rgba(255,210,63,.16) } }
+
+/* ---------- reusable classes ---------- */
+.anim-fade        { animation: mtd-fade var(--dur-base) var(--ease-out) both; }
+.anim-slide-up    { animation: mtd-slide-up var(--dur-base) var(--ease-out) both; }
+.anim-slide-left  { animation: mtd-slide-left var(--dur-base) var(--ease-out) both; }
+.anim-slide-right { animation: mtd-slide-right var(--dur-base) var(--ease-out) both; }
+.anim-pop         { animation: mtd-pop var(--dur-base) var(--ease-soft) both; }
+.anim-draw        { animation: mtd-draw var(--dur-draw) var(--ease-out) both; transform-origin: left center; }
+.anim-stamp       { animation: mtd-stamp var(--dur-slow) var(--ease-soft) both; }
+.anim-fill        { animation: mtd-fill-x var(--dur-slow) var(--ease-out) both; transform-origin: left center; }
+.anim-grow        { animation: mtd-grow-y var(--dur-slow) var(--ease-out) both; transform-origin: bottom center; }
+.anim-pulse       { animation: mtd-pulse 2s ease-in-out infinite; }
+
+/* Underline draw on marker headings */
+.underline-chalk::after { animation: mtd-draw var(--dur-draw) var(--ease-out) both; }
+
+/* Number highlight — marker swipe behind a value */
+.hl-number {
+  background-image: linear-gradient(transparent 58%, color-mix(in srgb, var(--c-discover) 55%, transparent) 58%);
+  background-repeat: no-repeat; background-size: 100% 100%;
+  animation: mtd-highlight var(--dur-slow) var(--ease-out) both;
+  padding: 0 .12em;
+}
+
+/* Equation reveal — used by EquationCard when the step advances */
+.eq-reveal { animation: mtd-slide-up var(--dur-base) var(--ease-out) both; }
+
+/* Answer circle draw (SVG ellipse) */
+.ring-draw { stroke-dasharray: 760; stroke-dashoffset: 760; animation: mtd-dash var(--dur-draw) var(--ease-out) forwards; }
+
+/* Number-bond branch draw */
+.branch-draw { stroke-dasharray: 300; stroke-dashoffset: 300; animation: mtd-dash var(--dur-slow) var(--ease-out) forwards; }
+
+/* Stagger helper: set --i on the element */
+.stagger { animation-delay: calc(var(--i, 0) * var(--stagger)); }
+
+/* Step progress indicator */
+.step--reveal { animation: mtd-slide-left var(--dur-base) var(--ease-out) both; }
+
+/* ---------- kill switch ---------- */
+body.no-anim *,
+body.no-anim *::before,
+body.no-anim *::after {
+  animation: none !important;
+  transition: none !important;
+}
+body.no-anim .ring-draw, body.no-anim .branch-draw { stroke-dashoffset: 0 !important; }
+body.no-anim .hl-number { background-size: 100% 100% !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
+  .ring-draw, .branch-draw { stroke-dashoffset: 0 !important; }
+}

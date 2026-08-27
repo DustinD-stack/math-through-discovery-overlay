@@ -1,0 +1,85 @@
+{
+  "episode": "16",
+  "subject": "Integers",
+  "topic": "Integers",
+  "title": "Below Zero Is Real",
+  "subtitle": "An account at -$45",
+  "headline": "Negative is a direction, not a mistake.",
+  "quote": "It said negative forty-five, so I have nothing.",
+  "facts": [
+    {
+      "label": "Account balance",
+      "value": "-$45"
+    },
+    {
+      "label": "Deposit",
+      "value": "$60",
+      "highlight": true
+    }
+  ],
+  "question": "What is the balance after the deposit?",
+  "answer": {
+    "work": "-45 + 60",
+    "value": "= 15",
+    "unit": ""
+  },
+  "steps": {
+    "see": {
+      "text": "Start below zero.",
+      "equation": "-45"
+    },
+    "break": {
+      "text": "Part of the deposit fills the hole.",
+      "equation": "60 = 45 + 15"
+    },
+    "build": {
+      "text": "Fill the hole first.",
+      "equation": "-45 + 45 = 0"
+    },
+    "transform": {
+      "text": "What is left goes above zero.",
+      "equation": "0 + 15 = 15"
+    },
+    "check": {
+      "text": "Walk it on the number line.",
+      "equation": "-45 + 60 = 15"
+    }
+  },
+  "diagram": {
+    "type": "numberLine",
+    "min": -60,
+    "max": 40,
+    "ticks": 10,
+    "jump": {
+      "from": -45,
+      "to": 15,
+      "label": "+60"
+    },
+    "marks": [
+      {
+        "value": 0,
+        "label": "zero"
+      }
+    ]
+  },
+  "comparison": {
+    "think": "Negative means I have zero.",
+    "math": "It means owing {$45} before you gain anything."
+  },
+  "takeaways": [
+    "Zero is a position, not the bottom.",
+    "Adding a positive moves right on the line.",
+    {
+      "text": "Debt is a direction you can measure.",
+      "insight": true
+    }
+  ],
+  "id": "integers",
+  "series": "Math Through Discovery",
+  "seriesLine": "Reality Check Series",
+  "presenter": {
+    "name": "Your host",
+    "role": "Math Through Discovery"
+  },
+  "philosophy": "See the pattern. Change the form. *Keep the value.*"
+}

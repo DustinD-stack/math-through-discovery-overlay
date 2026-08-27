@@ -1,0 +1,85 @@
+{
+  "episode": "1",
+  "subject": "Number Sense",
+  "topic": "Number Sense",
+  "title": "Close Enough To Catch It",
+  "subtitle": "Estimating before you calculate",
+  "headline": "Estimate first. Then you'll notice a wrong answer.",
+  "quote": "The register said $87. That sounds about right.",
+  "facts": [
+    {
+      "label": "Items",
+      "value": "4 at about $9"
+    },
+    {
+      "label": "Register total",
+      "value": "$87",
+      "highlight": true
+    }
+  ],
+  "question": "Does the total make sense?",
+  "answer": {
+    "work": "4 \\times 9",
+    "value": "\\approx 36",
+    "unit": "expected"
+  },
+  "steps": {
+    "see": {
+      "text": "Round each price to something friendly.",
+      "equation": "8.75 \\approx 9"
+    },
+    "break": {
+      "text": "Four groups of about nine.",
+      "equation": "4 \\times 9"
+    },
+    "build": {
+      "text": "Estimate the total.",
+      "equation": "= 36"
+    },
+    "transform": {
+      "text": "Compare with the receipt.",
+      "equation": "87 \\gg 36"
+    },
+    "check": {
+      "text": "The total is far too high.",
+      "equation": "87 - 36 = 51"
+    }
+  },
+  "diagram": {
+    "type": "numberLine",
+    "min": 0,
+    "max": 100,
+    "ticks": 10,
+    "marks": [
+      {
+        "value": 36,
+        "label": "expected"
+      },
+      {
+        "value": 87,
+        "label": "charged",
+        "color": "var(--c-error)"
+      }
+    ]
+  },
+  "comparison": {
+    "think": "The register is always right.",
+    "math": "The estimate says about {$36}."
+  },
+  "takeaways": [
+    "Estimating gives you a range to judge against.",
+    "Rounding trades a little accuracy for a lot of speed.",
+    {
+      "text": "If the answer is far from your estimate, check it.",
+      "insight": true
+    }
+  ],
+  "id": "number-sense",
+  "series": "Math Through Discovery",
+  "seriesLine": "Reality Check Series",
+  "presenter": {
+    "name": "Your host",
+    "role": "Math Through Discovery"
+  },
+  "philosophy": "See the pattern. Change the form. *Keep the value.*"
+}

@@ -1,0 +1,84 @@
+{
+  "episode": "6",
+  "subject": "Fractions",
+  "topic": "Fractions",
+  "title": "Same Value, New Form",
+  "subtitle": "Why 1/2 and 3/6 are the same amount",
+  "headline": "Different numbers. _Same_ amount.",
+  "quote": "Three sixths has to be bigger. The numbers are bigger.",
+  "facts": [
+    {
+      "label": "First share",
+      "value": "1/2"
+    },
+    {
+      "label": "Second share",
+      "value": "3/6",
+      "highlight": true
+    }
+  ],
+  "question": "Which share is bigger?",
+  "answer": {
+    "work": "1/2",
+    "value": "= 3/6",
+    "unit": "same amount"
+  },
+  "steps": {
+    "see": {
+      "text": "Two ways of cutting the same bar.",
+      "equation": "1/2 \\;\\text{vs}\\; 3/6"
+    },
+    "break": {
+      "text": "Cut each half into three pieces.",
+      "equation": "1/2 = 3/6"
+    },
+    "build": {
+      "text": "Multiply top and bottom by 3.",
+      "equation": "\\frac{1 \\times 3}{2 \\times 3}"
+    },
+    "transform": {
+      "text": "The form changed, the value did not.",
+      "equation": "3/6 = 1/2"
+    },
+    "check": {
+      "text": "Line the bars up and compare.",
+      "equation": "0.5 = 0.5"
+    }
+  },
+  "diagram": {
+    "type": "fractionBar",
+    "rows": [
+      {
+        "label": "1/2",
+        "denominator": 2,
+        "shaded": 1
+      },
+      {
+        "label": "3/6",
+        "denominator": 6,
+        "shaded": 3
+      }
+    ],
+    "caption": "Same shaded length, different cuts"
+  },
+  "comparison": {
+    "think": "Bigger numbers means more.",
+    "math": "Both shares equal {half} the bar."
+  },
+  "takeaways": [
+    "Equivalent fractions name the same amount.",
+    "Multiplying top and bottom by the same number keeps the value.",
+    {
+      "text": "Compare the amount, not the digits.",
+      "insight": true
+    }
+  ],
+  "id": "fractions",
+  "series": "Math Through Discovery",
+  "seriesLine": "Reality Check Series",
+  "presenter": {
+    "name": "Your host",
+    "role": "Math Through Discovery"
+  },
+  "philosophy": "See the pattern. Change the form. *Keep the value.*"
+}

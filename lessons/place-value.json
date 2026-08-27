@@ -1,0 +1,78 @@
+{
+  "episode": "2",
+  "subject": "Place Value",
+  "topic": "Place Value",
+  "title": "Where The Digit Sits",
+  "subtitle": "Why 4 can mean 4, 40, or 400",
+  "headline": "Position carries the value.",
+  "quote": "A four is a four. It's the same number.",
+  "facts": [
+    {
+      "label": "Number",
+      "value": "462"
+    },
+    {
+      "label": "Digit in question",
+      "value": "4",
+      "highlight": true
+    }
+  ],
+  "question": "What is the 4 actually worth?",
+  "answer": {
+    "work": "400 + 60 + 2",
+    "value": "= 462",
+    "unit": ""
+  },
+  "steps": {
+    "see": {
+      "text": "Three digits, three places.",
+      "equation": "4\\,|\\,6\\,|\\,2"
+    },
+    "break": {
+      "text": "Give each digit its place.",
+      "equation": "400,\\; 60,\\; 2"
+    },
+    "build": {
+      "text": "Write it as a sum.",
+      "equation": "400 + 60 + 2"
+    },
+    "transform": {
+      "text": "Each place is ten times the next.",
+      "equation": "10 \\times 10 \\times 4"
+    },
+    "check": {
+      "text": "Add the parts back up.",
+      "equation": "462"
+    }
+  },
+  "diagram": {
+    "type": "numberBond",
+    "total": 462,
+    "parts": [
+      400,
+      60,
+      2
+    ],
+    "caption": "Expanded form"
+  },
+  "comparison": {
+    "think": "A 4 is always 4.",
+    "math": "In 462 the 4 is worth {400}."
+  },
+  "takeaways": [
+    "Place value is a multiplier, not decoration.",
+    "Expanded form shows what each digit carries.",
+    {
+      "text": "Same digit. Different place. Different value.",
+      "insight": true
+    }
+  ],
+  "id": "place-value",
+  "series": "Math Through Discovery",
+  "seriesLine": "Reality Check Series",
+  "presenter": {
+    "name": "Your host",
+    "role": "Math Through Discovery"
+  },
+  "philosophy": "See the pattern. Change the form. *Keep the value.*"
+}

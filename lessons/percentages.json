@@ -1,0 +1,75 @@
+{
+  "episode": "9",
+  "subject": "Percent",
+  "topic": "Percentages",
+  "title": "Reality Check",
+  "subtitle": "How much did that 25% actually take?",
+  "headline": "A small-sounding percent, a real dollar amount.",
+  "quote": "25% isn't much. It's basically nothing.",
+  "facts": [
+    {
+      "label": "Total amount",
+      "value": "$800"
+    },
+    {
+      "label": "Percent taken",
+      "value": "25%",
+      "highlight": true
+    }
+  ],
+  "question": "How much was taken? How much is left?",
+  "answer": {
+    "work": "800 \\times 0.25",
+    "value": "= 200",
+    "unit": "taken"
+  },
+  "steps": {
+    "see": {
+      "text": "Name the whole and the part.",
+      "equation": "\\text{whole} = 800"
+    },
+    "break": {
+      "text": "Turn the percent into a piece.",
+      "equation": "25\\% = 1/4 = 0.25"
+    },
+    "build": {
+      "text": "Take one quarter of the whole.",
+      "equation": "800 / 4"
+    },
+    "transform": {
+      "text": "Find what is left over.",
+      "equation": "800 - 200 = 600"
+    },
+    "check": {
+      "text": "Put the pieces back together.",
+      "equation": "200 + 600 = 800"
+    }
+  },
+  "diagram": {
+    "type": "percentBar",
+    "percent": 25,
+    "leftLabel": "$200 taken",
+    "rightLabel": "$600 left",
+    "of": "$800"
+  },
+  "comparison": {
+    "think": "25% isn't much.",
+    "math": "{$200} is gone. $600 is left."
+  },
+  "takeaways": [
+    "A percent is a piece of a specific whole.",
+    "The bigger the whole, the bigger the piece.",
+    {
+      "text": "Always ask: percent of what?",
+      "insight": true
+    }
+  ],
+  "id": "percentages",
+  "series": "Math Through Discovery",
+  "seriesLine": "Reality Check Series",
+  "presenter": {
+    "name": "Your host",
+    "role": "Math Through Discovery"
+  },
+  "philosophy": "See the pattern. Change the form. *Keep the value.*"
+}

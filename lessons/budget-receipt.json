@@ -1,0 +1,88 @@
+{
+  "episode": "27",
+  "subject": "Percent / Money",
+  "topic": "Take-Home Pay",
+  "title": "Reality Check",
+  "subtitle": "Where did the paycheck go?",
+  "headline": "Gross pay is not _take-home_ pay.",
+  "quote": "They said the job pays two thousand a month.",
+  "facts": [
+    {
+      "label": "Gross pay",
+      "value": "$2,000"
+    },
+    {
+      "label": "Deductions",
+      "value": "22%",
+      "highlight": true
+    }
+  ],
+  "question": "What actually lands in the account?",
+  "answer": {
+    "work": "2000 \\times 0.78",
+    "value": "= 1560",
+    "unit": "take-home"
+  },
+  "steps": {
+    "see": {
+      "text": "Start from the gross amount.",
+      "equation": "2000"
+    },
+    "break": {
+      "text": "Deductions take 22 percent.",
+      "equation": "0.22 \\times 2000"
+    },
+    "build": {
+      "text": "That is the amount removed.",
+      "equation": "= 440"
+    },
+    "transform": {
+      "text": "Subtract to find take-home.",
+      "equation": "2000 - 440 = 1560"
+    },
+    "check": {
+      "text": "Or take 78 percent directly.",
+      "equation": "0.78 \\times 2000 = 1560"
+    }
+  },
+  "diagram": {
+    "type": "receipt",
+    "title": "Monthly pay",
+    "rows": [
+      {
+        "label": "Gross pay",
+        "value": "$2,000.00"
+      },
+      {
+        "label": "Deductions (22%)",
+        "value": "-$440.00",
+        "minus": true
+      },
+      {
+        "label": "Take-home",
+        "value": "$1,560.00",
+        "total": true
+      }
+    ]
+  },
+  "comparison": {
+    "think": "I'm making two thousand a month.",
+    "math": "{$1,560} is the number to budget with."
+  },
+  "takeaways": [
+    "Percent off the top changes the whole plan.",
+    "Budget from take-home, not the offer letter.",
+    {
+      "text": "Know the number that reaches your account.",
+      "insight": true
+    }
+  ],
+  "id": "budget-receipt",
+  "series": "Math Through Discovery",
+  "seriesLine": "Reality Check Series",
+  "presenter": {
+    "name": "Your host",
+    "role": "Math Through Discovery"
+  },
+  "philosophy": "See the pattern. Change the form. *Keep the value.*"
+}

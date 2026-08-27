@@ -1,0 +1,74 @@
+{
+  "episode": "21",
+  "subject": "Algebra",
+  "topic": "Algebra",
+  "title": "Keep It Balanced",
+  "subtitle": "Solving 2x + 3 = 11",
+  "headline": "Whatever you do to one side, do to the _other_.",
+  "quote": "Letters in math make no sense to me.",
+  "facts": [
+    {
+      "label": "Equation",
+      "value": "2x + 3 = 11"
+    },
+    {
+      "label": "Unknown",
+      "value": "x",
+      "highlight": true
+    }
+  ],
+  "question": "What value of x keeps both sides equal?",
+  "answer": {
+    "work": "2x + 3 = 11",
+    "value": "x = 4",
+    "unit": ""
+  },
+  "steps": {
+    "see": {
+      "text": "Both sides weigh the same.",
+      "equation": "2x + 3 = 11"
+    },
+    "break": {
+      "text": "The 3 is extra weight.",
+      "equation": "-3 \\;\\text{both sides}"
+    },
+    "build": {
+      "text": "Remove it from both sides.",
+      "equation": "2x = 8"
+    },
+    "transform": {
+      "text": "Split into two equal groups.",
+      "equation": "x = 8/2"
+    },
+    "check": {
+      "text": "Put the answer back in.",
+      "equation": "2(4) + 3 = 11"
+    }
+  },
+  "diagram": {
+    "type": "balanceModel",
+    "left": "2x + 3",
+    "right": "11",
+    "move": "Take 3 off both pans, then halve both pans."
+  },
+  "comparison": {
+    "think": "The letter is the hard part.",
+    "math": "x is just the {unknown weight}: x = 4."
+  },
+  "takeaways": [
+    "An equation is a balanced scale.",
+    "Equal moves on both sides keep it true.",
+    {
+      "text": "Checking your answer is part of solving.",
+      "insight": true
+    }
+  ],
+  "id": "algebra",
+  "series": "Math Through Discovery",
+  "seriesLine": "Reality Check Series",
+  "presenter": {
+    "name": "Your host",
+    "role": "Math Through Discovery"
+  },
+  "philosophy": "See the pattern. Change the form. *Keep the value.*"
+}

@@ -1,0 +1,187 @@
+/* ============================================================
+   Layout presets
+   Region elements the layouts arrange:
+   .r-brand .r-presenter .r-board .r-compare .r-footer
+   ============================================================ */
+
+.stage-content {
+  position: absolute; inset: 0; z-index: 1;
+  display: grid;
+  gap: 0;
+}
+
+.r-presenter { position: relative; grid-area: presenter; z-index: var(--z-presenter); min-width: 0; }
+.r-board     { position: relative; grid-area: board;     z-index: var(--z-math); min-width: 0; min-height: 0;
+               display: grid; grid-template-rows: auto 1fr; gap: var(--s-4);
+               padding: var(--s-5) var(--s-6) var(--s-4); overflow: hidden; }
+.r-compare   { grid-area: compare; z-index: var(--z-compare); min-width: 0; }
+.r-footer    { grid-area: footer;  z-index: var(--z-brand); }
+
+.r-brand {
+  position: absolute; top: var(--s-5); left: var(--s-6);
+  z-index: var(--z-brand); display: flex; flex-direction: column; gap: var(--s-4);
+}
+.r-topic { position: absolute; left: var(--s-6); bottom: var(--s-6); z-index: var(--z-brand); }
+/* The quote floats over the seam between camera and board, so it sits above
+   both. It is a sibling of the presenter, never a child of it. */
+.r-quote { position: absolute; z-index: var(--z-stamp); }
+
+/* ---------- Board internals ---------- */
+.board__head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--s-5); }
+.board__head .section-title { color: var(--t-hi); }
+.board__main { display: grid; gap: var(--s-4); min-height: 0; }
+.board__col { display: grid; gap: var(--s-4); align-content: start; min-height: 0; }
+.board__col--fill { align-content: stretch; }
+
+/* ============================================================
+   PRESET A — Presenter + Board (35 / 65)
+   ============================================================ */
+.preset-A .stage-content {
+  grid-template-columns: 35% 1fr;
+  grid-template-rows: 1fr auto auto;
+  grid-template-areas:
+    "presenter board"
+    "compare   compare"
+    "footer    footer";
+}
+.preset-A .board__main { grid-template-columns: 36% 1fr; }
+.preset-A .r-quote { top: var(--s-6); left: 26%; width: 21%; }
+
+/* ============================================================
+   PRESET B — Full lesson board (no presenter)
+   ============================================================ */
+.preset-B .stage-content {
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr auto auto;
+  grid-template-areas: "board" "compare" "footer";
+}
+.preset-B .r-board { padding-top: calc(var(--s-8) * 2.1); }
+.preset-B .board__main { grid-template-columns: 30% 1fr; }
+.preset-B .r-topic { display: none; }
+
+/* ============================================================
+   PRESET C — Reality Check (presenter + quote + math + comparison)
+   Same skeleton as A, comparison gets more room and a stamp.
+   ============================================================ */
+.preset-C .stage-content {
+  grid-template-columns: 34% 1fr;
+  grid-template-rows: 1fr auto auto;
+  grid-template-areas:
+    "presenter board"
+    "compare   compare"
+    "footer    footer";
+}
+.preset-C .board__main { grid-template-columns: 34% 1fr; }
+.preset-C .r-quote { top: var(--s-6); left: 25%; width: 21%; }
+.preset-C .r-compare { padding-bottom: var(--s-2); }
+
+/* ============================================================
+   PRESET D — Pattern breakdown (big equation + solution paths)
+   ============================================================ */
+.preset-D .stage-content {
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr auto auto;
+  grid-template-areas: "board" "board" "compare" "footer";
+}
+.preset-D .r-board { padding-top: calc(var(--s-8) * 2); }
+.preset-D .board__main { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
+.preset-D .method-cards { grid-auto-columns: 1fr; }
+
+/* ============================================================
+   PRESET E — Number bond lesson (big centered diagram + cards)
+   ============================================================ */
+.preset-E .stage-content {
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr auto auto;
+  grid-template-areas: "board" "compare" "footer";
+}
+.preset-E .r-board { padding-top: calc(var(--s-8) * 2); }
+.preset-E .board__main { grid-template-rows: 1fr auto; }
+.preset-E .method-cards { grid-auto-columns: 1fr; }
+
+/* ============================================================
+   PRESET G — Quick reveal (claim → equation → answer → takeaway)
+   ============================================================ */
+.preset-G .stage-content {
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr auto;
+  grid-template-areas: "board" "footer";
+}
+.preset-G .r-board { padding: var(--s-8) var(--s-8) var(--s-6); align-content: center; }
+.preset-G .board__main { grid-template-rows: auto 1fr auto; justify-items: center; text-align: center; }
+.preset-G .r-topic { display: none; }
+
+/* ============================================================
+   PRESET H — Live whiteboard (minimal chrome, huge math area)
+   ============================================================ */
+.preset-H .stage-content {
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr auto;
+  grid-template-areas: "board" "footer";
+}
+.preset-H .r-board { padding: var(--s-6) var(--s-7) var(--s-4); }
+.preset-H .board__main { grid-template-rows: 1fr; }
+.preset-H .whiteboard {
+  border: var(--bw-thin) dashed var(--line-2);
+  border-radius: var(--r-lg);
+  display: grid; place-items: center; padding: var(--s-6);
+  min-height: 0;
+}
+.preset-H .r-topic { display: none; }
+
+/* ============================================================
+   PRESET F — Short vertical (host top, math stacked)
+   ============================================================ */
+.preset-F .stage-content {
+  grid-template-columns: 1fr;
+  grid-template-rows: 34% 1fr auto auto;
+  grid-template-areas: "presenter" "board" "compare" "footer";
+}
+.preset-F .r-board { padding: var(--s-5) var(--s-5) var(--s-3); }
+.preset-F .board__main { grid-template-columns: 1fr; grid-auto-rows: min-content; }
+.preset-F .r-topic { display: none; }
+
+/* ============================================================
+   Aspect-ratio adaptations
+   Vertical + square force a stacked reading order regardless of preset.
+   ============================================================ */
+.a9x16 .stage-content,
+.a1x1  .stage-content {
+  grid-template-columns: 1fr !important;
+}
+.a9x16.has-presenter .stage-content {
+  grid-template-rows: 30% 1fr auto auto !important;
+  grid-template-areas: "presenter" "board" "compare" "footer" !important;
+}
+.a9x16:not(.has-presenter) .stage-content {
+  grid-template-rows: 1fr auto auto !important;
+  grid-template-areas: "board" "compare" "footer" !important;
+}
+.a1x1 .stage-content {
+  grid-template-rows: 1fr auto !important;
+  grid-template-areas: "board" "footer" !important;
+}
+.a1x1 .r-presenter, .a1x1 .r-compare { display: none; }
+
+.a9x16 .board__main, .a1x1 .board__main { grid-template-columns: 1fr !important; grid-auto-rows: min-content; }
+.a9x16 .r-brand, .a1x1 .r-brand { top: var(--s-4); left: var(--s-4); }
+.a9x16 .brand__l1, .a1x1 .brand__l1 { font-size: var(--fs-2xl); }
+.a9x16 .quote-card, .a1x1 .quote-card { max-width: none; }
+.a9x16 .r-board, .a1x1 .r-board { padding: var(--s-5) var(--s-5) var(--s-3); }
+.a9x16 .r-topic, .a1x1 .r-topic { display: none; }
+.a9x16 .comparison, .a1x1 .comparison { grid-template-columns: 1fr; gap: var(--s-3); }
+.a9x16 .comparison__vs, .a1x1 .comparison__vs { justify-self: center; }
+.a9x16 .footer, .a1x1 .footer { grid-template-columns: 1fr; justify-items: center; text-align: center; gap: var(--s-2); padding: var(--s-3); }
+.a9x16 .footer__mark, .a1x1 .footer__mark { text-align: center; }
+.a9x16 .footer__slogan, .a1x1 .footer__slogan { display: none; }
+
+/* Hide presenter region entirely when the presenter layer is off */
+.no-presenter .stage-content { grid-template-columns: 1fr !important; }
+.no-presenter .stage-content { grid-template-areas: "board" "compare" "footer" !important; }
+.no-presenter .r-presenter { display: none; }
+.no-presenter .r-board { padding-top: calc(var(--s-8) * 2); }
+
+/* Method cards stack rather than squeeze on the narrow canvases. */
+.a9x16 .method-cards, .a1x1 .method-cards { grid-auto-flow: row; }
+.a9x16 .equation-card__eq, .a1x1 .equation-card__eq { font-size: var(--fs-2xl); }
+.a9x16 .board__main, .a1x1 .board__main { align-content: start; }

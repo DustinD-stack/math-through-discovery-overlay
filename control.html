@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Math Through Discovery — Lesson Control</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;600;700&family=Caveat:wght@400;600;700&family=Inter:wght@400;500;600;700&family=Permanent+Marker&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="src/styles/tokens.css">
+<link rel="stylesheet" href="src/styles/base.css">
+<link rel="stylesheet" href="src/styles/components.css">
+<link rel="stylesheet" href="src/styles/animations.css">
+<link rel="stylesheet" href="src/styles/control.css">
+
+<script src="lessons/lessons.bundle.js"></script>
+</head>
+<body class="control">
+  <main id="control-root"></main>
+
+  <script type="module">
+    import { mountControl } from './src/controllers/control-app.js';
+    mountControl(document.getElementById('control-root')).catch((err) => {
+      document.getElementById('control-root').innerHTML =
+        '<pre style="color:#ff5a5a;padding:2rem;font:14px monospace">' + String(err && err.stack || err) + '</pre>';
+    });
+  </script>
+</body>
+</html>

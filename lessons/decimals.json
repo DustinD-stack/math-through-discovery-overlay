@@ -1,0 +1,86 @@
+{
+  "episode": "8",
+  "subject": "Decimals",
+  "topic": "Decimals",
+  "title": "Line Up The Places",
+  "subtitle": "Why 0.7 is bigger than 0.65",
+  "headline": "More digits does not mean more value.",
+  "quote": "0.65 has more numbers, so it's bigger.",
+  "facts": [
+    {
+      "label": "First price",
+      "value": "$0.70"
+    },
+    {
+      "label": "Second price",
+      "value": "$0.65",
+      "highlight": true
+    }
+  ],
+  "question": "Which value is larger?",
+  "answer": {
+    "work": "0.70 \\;\\text{vs}\\; 0.65",
+    "value": "0.70 > 0.65",
+    "unit": ""
+  },
+  "steps": {
+    "see": {
+      "text": "Compare place by place.",
+      "equation": "0.7 \\;\\text{and}\\; 0.65"
+    },
+    "break": {
+      "text": "Give them the same number of places.",
+      "equation": "0.7 = 0.70"
+    },
+    "build": {
+      "text": "Now compare hundredths.",
+      "equation": "70 \\;\\text{vs}\\; 65"
+    },
+    "transform": {
+      "text": "Read them as whole numbers.",
+      "equation": "70 > 65"
+    },
+    "check": {
+      "text": "Check on a number line.",
+      "equation": "0.70 > 0.65"
+    }
+  },
+  "diagram": {
+    "type": "numberLine",
+    "min": 0.6,
+    "max": 0.8,
+    "ticks": 4,
+    "marks": [
+      {
+        "value": 0.65,
+        "label": "0.65",
+        "color": "var(--c-adjust)"
+      },
+      {
+        "value": 0.7,
+        "label": "0.70",
+        "color": "var(--c-correct)"
+      }
+    ]
+  },
+  "comparison": {
+    "think": "More digits means more money.",
+    "math": "{0.70} is five hundredths more."
+  },
+  "takeaways": [
+    "Decimal places have fixed values.",
+    "Adding a zero changes the form, not the value.",
+    {
+      "text": "Compare the same place, not the digit count.",
+      "insight": true
+    }
+  ],
+  "id": "decimals",
+  "series": "Math Through Discovery",
+  "seriesLine": "Reality Check Series",
+  "presenter": {
+    "name": "Your host",
+    "role": "Math Through Discovery"
+  },
+  "philosophy": "See the pattern. Change the form. *Keep the value.*"
+}

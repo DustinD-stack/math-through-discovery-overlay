@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 600" role="img" aria-label="Camera zone placeholder">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+    <stop offset="0" stop-color="#161d2c"/><stop offset="1" stop-color="#0a0e17"/></linearGradient></defs>
+  <rect width="400" height="600" fill="url(#g)"/>
+  <circle cx="200" cy="250" r="72" fill="rgba(255,255,255,.14)"/>
+  <path d="M60 600c0-88 63-150 140-150s140 62 140 150z" fill="rgba(255,255,255,.14)"/>
+  <text x="200" y="560" text-anchor="middle" fill="rgba(255,255,255,.4)" font-family="Inter, sans-serif" font-size="18" letter-spacing="4">CAMERA ZONE</text>
+</svg>

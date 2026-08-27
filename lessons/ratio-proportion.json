@@ -1,0 +1,95 @@
+{
+  "episode": "12",
+  "subject": "Ratio / Proportion",
+  "topic": "Ratio & Proportion",
+  "title": "Scale It Up",
+  "subtitle": "A recipe for 4, cooking for 10",
+  "headline": "Keep the relationship. Change the size.",
+  "quote": "I'll just double it and add a little extra.",
+  "facts": [
+    {
+      "label": "Recipe serves",
+      "value": "4"
+    },
+    {
+      "label": "Cups of rice",
+      "value": "3"
+    },
+    {
+      "label": "Guests coming",
+      "value": "10",
+      "highlight": true
+    }
+  ],
+  "question": "How much rice for 10 servings?",
+  "answer": {
+    "work": "3 / 4",
+    "value": "\\times 10 = 7.5",
+    "unit": "cups"
+  },
+  "steps": {
+    "see": {
+      "text": "3 cups goes with 4 servings.",
+      "equation": "3 : 4"
+    },
+    "break": {
+      "text": "Find one serving first.",
+      "equation": "3/4 = 0.75"
+    },
+    "build": {
+      "text": "Multiply by the new size.",
+      "equation": "0.75 \\times 10"
+    },
+    "transform": {
+      "text": "Read the result.",
+      "equation": "= 7.5 \\text{ cups}"
+    },
+    "check": {
+      "text": "The ratio still holds.",
+      "equation": "7.5 : 10 = 3 : 4"
+    }
+  },
+  "diagram": {
+    "type": "ratioTable",
+    "columns": [
+      "Servings",
+      "Cups of rice"
+    ],
+    "rows": [
+      [
+        4,
+        3
+      ],
+      [
+        1,
+        0.75
+      ],
+      [
+        10,
+        7.5
+      ]
+    ],
+    "keyRow": 2,
+    "caption": "Same ratio at every size"
+  },
+  "comparison": {
+    "think": "Double it and guess.",
+    "math": "{7.5 cups} keeps the ratio exact."
+  },
+  "takeaways": [
+    "A ratio is a relationship, not a fixed amount.",
+    "Finding one unit makes any scale easy.",
+    {
+      "text": "Scaling changes size, not proportion.",
+      "insight": true
+    }
+  ],
+  "id": "ratio-proportion",
+  "series": "Math Through Discovery",
+  "seriesLine": "Reality Check Series",
+  "presenter": {
+    "name": "Your host",
+    "role": "Math Through Discovery"
+  },
+  "philosophy": "See the pattern. Change the form. *Keep the value.*"
+}

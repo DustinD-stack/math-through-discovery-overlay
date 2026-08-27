@@ -1,0 +1,85 @@
+{
+  "episode": "5",
+  "subject": "Subtraction",
+  "topic": "Subtraction",
+  "title": "Count The Gap",
+  "subtitle": "$50 minus a $32.75 bill",
+  "headline": "Subtraction is the distance between two numbers.",
+  "quote": "Borrowing across zeros always trips me up.",
+  "facts": [
+    {
+      "label": "Cash",
+      "value": "$50.00"
+    },
+    {
+      "label": "Bill",
+      "value": "$32.75",
+      "highlight": true
+    }
+  ],
+  "question": "How much change comes back?",
+  "answer": {
+    "work": "50 - 32.75",
+    "value": "= 17.25",
+    "unit": "change"
+  },
+  "steps": {
+    "see": {
+      "text": "Two amounts, one gap.",
+      "equation": "50 - 32.75"
+    },
+    "break": {
+      "text": "Count up to a friendly number.",
+      "equation": "32.75 \\rightarrow 33"
+    },
+    "build": {
+      "text": "Then up to fifty.",
+      "equation": "0.25 + 17"
+    },
+    "transform": {
+      "text": "Add the hops together.",
+      "equation": "= 17.25"
+    },
+    "check": {
+      "text": "Add change back to the bill.",
+      "equation": "32.75 + 17.25 = 50"
+    }
+  },
+  "diagram": {
+    "type": "numberLine",
+    "min": 32,
+    "max": 50,
+    "ticks": 9,
+    "jump": {
+      "from": 32.75,
+      "to": 50,
+      "label": "+17.25"
+    },
+    "marks": [
+      {
+        "value": 33,
+        "label": "$33"
+      }
+    ]
+  },
+  "comparison": {
+    "think": "I have to borrow across the zeros.",
+    "math": "Counting up gives {$17.25} with no borrowing."
+  },
+  "takeaways": [
+    "Subtraction measures distance, not just removal.",
+    "Counting up avoids regrouping entirely.",
+    {
+      "text": "Check by adding back.",
+      "insight": true
+    }
+  ],
+  "id": "subtraction",
+  "series": "Math Through Discovery",
+  "seriesLine": "Reality Check Series",
+  "presenter": {
+    "name": "Your host",
+    "role": "Math Through Discovery"
+  },
+  "philosophy": "See the pattern. Change the form. *Keep the value.*"
+}

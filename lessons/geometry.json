@@ -1,0 +1,79 @@
+{
+  "episode": "24",
+  "subject": "Geometry",
+  "topic": "Geometry",
+  "title": "Measure Before You Buy",
+  "subtitle": "Flooring for a 12 ft by 9 ft room",
+  "headline": "Area is what you pay for.",
+  "quote": "I'll just get about a hundred feet of flooring.",
+  "facts": [
+    {
+      "label": "Room length",
+      "value": "12 ft"
+    },
+    {
+      "label": "Room width",
+      "value": "9 ft"
+    },
+    {
+      "label": "Price per sq ft",
+      "value": "$3",
+      "highlight": true
+    }
+  ],
+  "question": "How much flooring, and what does it cost?",
+  "answer": {
+    "work": "12 \\times 9",
+    "value": "= 108",
+    "unit": "square feet"
+  },
+  "steps": {
+    "see": {
+      "text": "A rectangle with two measurements.",
+      "equation": "12 \\text{ ft} \\times 9 \\text{ ft}"
+    },
+    "break": {
+      "text": "Area is length times width.",
+      "equation": "A = l \\times w"
+    },
+    "build": {
+      "text": "Substitute the numbers.",
+      "equation": "A = 12 \\times 9"
+    },
+    "transform": {
+      "text": "Multiply.",
+      "equation": "A = 108 \\text{ sq ft}"
+    },
+    "check": {
+      "text": "Now find the cost.",
+      "equation": "108 \\times 3 = 324"
+    }
+  },
+  "diagram": {
+    "type": "formulaBlock",
+    "name": "Area of a rectangle",
+    "formula": "A = l \\times w",
+    "substitution": "A = 12 \\times 9 = 108 \\text{ sq ft}",
+    "caption": "Then multiply by price per square foot"
+  },
+  "comparison": {
+    "think": "About a hundred feet.",
+    "math": "{108 sq ft} — and $324 at $3 a foot."
+  },
+  "takeaways": [
+    "Area needs two dimensions, not one.",
+    "Units tell you what you are counting.",
+    {
+      "text": "Measure first, buy once.",
+      "insight": true
+    }
+  ],
+  "id": "geometry",
+  "series": "Math Through Discovery",
+  "seriesLine": "Reality Check Series",
+  "presenter": {
+    "name": "Your host",
+    "role": "Math Through Discovery"
+  },
+  "philosophy": "See the pattern. Change the form. *Keep the value.*"
+}

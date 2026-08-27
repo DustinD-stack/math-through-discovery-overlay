@@ -1,0 +1,26 @@
+{
+  "name": "math-through-discovery-overlay",
+  "version": "1.0.0",
+  "description": "Data-driven lesson overlay kit for Math Through Discovery — OBS browser sources, recorded video, shorts and static exports.",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "node server/server.js",
+    "dev": "node server/server.js",
+    "python": "python3 -m http.server 3000",
+    "lessons": "node tools/build-lessons.cjs",
+    "test": "node tools/smoke-test.mjs"
+  },
+  "keywords": [
+    "obs",
+    "overlay",
+    "education",
+    "math",
+    "streaming",
+    "lower-third"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "ws": "^8.18.3"
+  }
+}

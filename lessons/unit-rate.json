@@ -1,0 +1,85 @@
+{
+  "series": "Math Through Discovery",
+  "seriesLine": "Reality Check Series",
+  "episode": "14",
+  "subject": "Unit Rate",
+  "topic": "Unit Rate",
+  "title": "Reality Check",
+  "subtitle": "What is the real hourly rate?",
+  "headline": "Today we're finding the _real_ hourly pay.",
+  "quote": "I worked all week and still felt broke.",
+  "presenter": {
+    "name": "Your host",
+    "role": "Math Through Discovery"
+  },
+  "facts": [
+    {
+      "label": "Total pay",
+      "value": "$1,200"
+    },
+    {
+      "label": "Total hours worked",
+      "value": "160",
+      "highlight": true
+    }
+  ],
+  "question": "What is the hourly rate?",
+  "answer": {
+    "work": "1200 / 160",
+    "value": "= 7.50",
+    "unit": "per hour"
+  },
+  "steps": {
+    "see": {
+      "text": "Identify the important numbers.",
+      "equation": "1200 \\;\\text{and}\\; 160",
+      "annotation": "money and time"
+    },
+    "break": {
+      "text": "We're finding how much for 1 hour.",
+      "equation": "160 \\text{ hrs} \\rightarrow 1 \\text{ hr}"
+    },
+    "build": {
+      "text": "Set up the division.",
+      "equation": "1200 / 160"
+    },
+    "transform": {
+      "text": "Make it easier to divide.",
+      "equation": "120 / 16 = 7.5"
+    },
+    "check": {
+      "text": "Multiply to confirm.",
+      "equation": "7.50 \\times 160 = 1200"
+    }
+  },
+  "diagram": {
+    "type": "unitRateTable",
+    "quantityLabel": "Hours",
+    "valueLabel": "Pay",
+    "rows": [
+      [
+        160,
+        "$1,200"
+      ],
+      [
+        1,
+        "$7.50"
+      ]
+    ],
+    "caption": "Unit rate compares everything to one hour"
+  },
+  "comparison": {
+    "think": "I made good money.",
+    "math": "{$7.50} per hour is the actual rate."
+  },
+  "takeaways": [
+    "Big totals can be misleading.",
+    "Unit rate compares everything to one unit.",
+    {
+      "text": "Always compare earnings to time.",
+      "insight": true
+    }
+  ],
+  "id": "unit-rate",
+  "philosophy": "See the pattern. Change the form. *Keep the value.*"
+}

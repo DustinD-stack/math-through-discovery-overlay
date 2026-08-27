@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Math Through Discovery — Overlay</title>
+
+<!-- Fonts: fall back to system faces if the network is unavailable -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;600;700&family=Caveat:wght@400;600;700&family=Inter:wght@400;500;600;700&family=Permanent+Marker&display=swap" rel="stylesheet">
+
+<!-- KaTeX: optional. Without it the built-in fallback renderer takes over. -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+
+<link rel="stylesheet" href="src/styles/tokens.css">
+<link rel="stylesheet" href="src/styles/base.css">
+<link rel="stylesheet" href="src/styles/components.css">
+<link rel="stylesheet" href="src/styles/diagrams.css">
+<link rel="stylesheet" href="src/styles/layouts.css">
+<link rel="stylesheet" href="src/styles/animations.css">
+
+<!-- Lessons bundled for file:// use. Over http(s) the JSON files are fetched instead. -->
+<script src="lessons/lessons.bundle.js"></script>
+</head>
+<body>
+  <main id="overlay-root"></main>
+
+  <script type="module">
+    import { mountOverlay } from './src/app/overlay-app.js';
+    mountOverlay(document.getElementById('overlay-root')).then((app) => {
+      window.MTD = app;             // handy for debugging in the browser console
+    }).catch((err) => {
+      document.body.innerHTML = '<pre style="color:#ff5a5a;padding:2rem;font:14px monospace">'
+        + String(err && err.stack || err) + '</pre>';
+    });
+  </script>
+</body>
+</html>

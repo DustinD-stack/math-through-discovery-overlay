@@ -1,0 +1,85 @@
+{
+  "episode": "3",
+  "subject": "Addition",
+  "topic": "Addition",
+  "title": "Make A Friendly Number",
+  "subtitle": "Adding 68 + 27 in your head",
+  "headline": "Move a little. Keep the total.",
+  "quote": "I need paper for anything over twenty.",
+  "facts": [
+    {
+      "label": "First amount",
+      "value": "68"
+    },
+    {
+      "label": "Second amount",
+      "value": "27",
+      "highlight": true
+    }
+  ],
+  "question": "What is 68 + 27?",
+  "answer": {
+    "work": "68 + 27",
+    "value": "= 95",
+    "unit": ""
+  },
+  "steps": {
+    "see": {
+      "text": "68 is close to 70.",
+      "equation": "68 + 27"
+    },
+    "break": {
+      "text": "Take 2 from the 27.",
+      "equation": "27 = 2 + 25"
+    },
+    "build": {
+      "text": "Give the 2 to the 68.",
+      "equation": "70 + 25"
+    },
+    "transform": {
+      "text": "Now it's easy.",
+      "equation": "= 95"
+    },
+    "check": {
+      "text": "The total never moved.",
+      "equation": "68 + 27 = 95"
+    }
+  },
+  "diagram": {
+    "type": "numberLine",
+    "min": 60,
+    "max": 100,
+    "ticks": 8,
+    "jump": {
+      "from": 68,
+      "to": 95,
+      "label": "+27"
+    },
+    "marks": [
+      {
+        "value": 70,
+        "label": "friendly"
+      }
+    ]
+  },
+  "comparison": {
+    "think": "Mental math is guessing.",
+    "math": "Moving 2 across gives {95} exactly."
+  },
+  "takeaways": [
+    "Compensation moves value without losing it.",
+    "Friendly numbers end in 0.",
+    {
+      "text": "Same value. Different form.",
+      "insight": true
+    }
+  ],
+  "id": "addition",
+  "series": "Math Through Discovery",
+  "seriesLine": "Reality Check Series",
+  "presenter": {
+    "name": "Your host",
+    "role": "Math Through Discovery"
+  },
+  "philosophy": "See the pattern. Change the form. *Keep the value.*"
+}

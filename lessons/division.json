@@ -1,0 +1,74 @@
+{
+  "episode": "7",
+  "subject": "Division",
+  "topic": "Division",
+  "title": "Share It Out",
+  "subtitle": "Splitting a $144 bill four ways",
+  "headline": "Division answers: how much for _one_?",
+  "quote": "Just split it however, it's close enough.",
+  "facts": [
+    {
+      "label": "Total bill",
+      "value": "$144"
+    },
+    {
+      "label": "People",
+      "value": "4",
+      "highlight": true
+    }
+  ],
+  "question": "What does each person owe?",
+  "answer": {
+    "work": "144 / 4",
+    "value": "= 36",
+    "unit": "each"
+  },
+  "steps": {
+    "see": {
+      "text": "One total, four equal shares.",
+      "equation": "144 / 4"
+    },
+    "break": {
+      "text": "Split the total into easy parts.",
+      "equation": "144 = 120 + 24"
+    },
+    "build": {
+      "text": "Divide each part.",
+      "equation": "120/4 + 24/4"
+    },
+    "transform": {
+      "text": "Add the shares.",
+      "equation": "30 + 6 = 36"
+    },
+    "check": {
+      "text": "Multiply back.",
+      "equation": "36 \\times 4 = 144"
+    }
+  },
+  "diagram": {
+    "type": "arrayModel",
+    "rows": 4,
+    "cols": 9,
+    "caption": "4 equal rows"
+  },
+  "comparison": {
+    "think": "Close enough is fine.",
+    "math": "Exactly {$36} each, no one overpays."
+  },
+  "takeaways": [
+    "Division splits a total into equal groups.",
+    "Breaking the total apart makes it mental math.",
+    {
+      "text": "Multiplication is the check.",
+      "insight": true
+    }
+  ],
+  "id": "division",
+  "series": "Math Through Discovery",
+  "seriesLine": "Reality Check Series",
+  "presenter": {
+    "name": "Your host",
+    "role": "Math Through Discovery"
+  },
+  "philosophy": "See the pattern. Change the form. *Keep the value.*"
+}

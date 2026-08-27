@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 120" role="img" aria-label="See, Break, Build, Transform, Check">
+  <g fill="none" stroke-width="6" stroke-linecap="round">
+    <!-- SEE: an eye -->
+    <g stroke="#4aa3ff" transform="translate(20,30)"><path d="M2 30 Q30 2 58 30 Q30 58 2 30Z"/><circle cx="30" cy="30" r="9" fill="#4aa3ff" stroke="none"/></g>
+    <!-- BREAK: a split bar -->
+    <g stroke="#57c86a" transform="translate(140,30)"><path d="M2 30h22"/><path d="M36 30h22"/><path d="M30 10v40" stroke-dasharray="6 8"/></g>
+    <!-- BUILD: stacked blocks -->
+    <g stroke="#ff9d3d" transform="translate(260,30)"><rect x="4" y="32" width="24" height="24" rx="4"/><rect x="32" y="32" width="24" height="24" rx="4"/><rect x="18" y="6" width="24" height="24" rx="4"/></g>
+    <!-- TRANSFORM: two arrows -->
+    <g stroke="#b07bff" transform="translate(380,30)"><path d="M4 20h44l-12-10"/><path d="M56 40H12l12 10"/></g>
+    <!-- CHECK: a tick -->
+    <g stroke="#ffd23f" transform="translate(500,30)"><path d="M6 32l16 16 30-34"/></g>
+  </g>
+</svg>

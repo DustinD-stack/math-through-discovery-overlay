@@ -1,0 +1,90 @@
+{
+  "episode": "18",
+  "subject": "Exponents",
+  "topic": "Exponents",
+  "title": "Doubling Adds Up Fast",
+  "subtitle": "One penny doubled for ten days",
+  "headline": "Repeated multiplication is not repeated addition.",
+  "quote": "A penny a day? That's nothing.",
+  "facts": [
+    {
+      "label": "Starting amount",
+      "value": "$0.01"
+    },
+    {
+      "label": "Days doubling",
+      "value": "10",
+      "highlight": true
+    }
+  ],
+  "question": "What is the amount on day 10?",
+  "answer": {
+    "work": "0.01 \\times 2^{10}",
+    "value": "= 10.24",
+    "unit": "dollars"
+  },
+  "steps": {
+    "see": {
+      "text": "The same move, repeated.",
+      "equation": "\\times 2 \\;\\text{each day}"
+    },
+    "break": {
+      "text": "Count the doublings, not the days.",
+      "equation": "2^{10}"
+    },
+    "build": {
+      "text": "Write it as a power.",
+      "equation": "0.01 \\times 2^{10}"
+    },
+    "transform": {
+      "text": "2 to the tenth is 1024.",
+      "equation": "0.01 \\times 1024"
+    },
+    "check": {
+      "text": "Read the result in dollars.",
+      "equation": "= 10.24"
+    }
+  },
+  "diagram": {
+    "type": "barGraph",
+    "data": [
+      {
+        "label": "Day 1",
+        "value": 1
+      },
+      {
+        "label": "Day 4",
+        "value": 8
+      },
+      {
+        "label": "Day 7",
+        "value": 64
+      },
+      {
+        "label": "Day 10",
+        "value": 512
+      }
+    ],
+    "caption": "Pennies, day by day"
+  },
+  "comparison": {
+    "think": "It stays tiny.",
+    "math": "It reaches {$10.24} in ten days."
+  },
+  "takeaways": [
+    "An exponent counts how many times you multiply.",
+    "Growth by multiplying starts slow and turns steep.",
+    {
+      "text": "Small rates plus time change the picture.",
+      "insight": true
+    }
+  ],
+  "id": "exponents",
+  "series": "Math Through Discovery",
+  "seriesLine": "Reality Check Series",
+  "presenter": {
+    "name": "Your host",
+    "role": "Math Through Discovery"
+  },
+  "philosophy": "See the pattern. Change the form. *Keep the value.*"
+}

@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Math Through Discovery — Overlay Kit</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;600;700&family=Caveat:wght@400;600;700&family=Inter:wght@400;500;600;700&family=Permanent+Marker&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="src/styles/tokens.css">
+<link rel="stylesheet" href="src/styles/base.css">
+<link rel="stylesheet" href="src/styles/components.css">
+<link rel="stylesheet" href="src/styles/animations.css">
+<link rel="stylesheet" href="src/styles/control.css">
+<style>
+  .hub { max-width: 1180px; margin: 0 auto; padding: var(--s-6) var(--s-5) var(--s-8); }
+  .hub__hero { display: grid; gap: var(--s-4); margin-bottom: var(--s-6); }
+  .hub__chain { display: flex; flex-wrap: wrap; gap: var(--s-3); font: 700 1.1rem/1 var(--font-logo); letter-spacing: .12em; }
+  .hub__cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: var(--s-4); }
+  .hub__steps { counter-reset: s; display: grid; gap: var(--s-3); margin: 0; padding: 0; list-style: none; }
+  .hub__steps li { display: grid; grid-template-columns: 2rem 1fr; gap: var(--s-3); color: var(--t-mid); line-height: 1.5; }
+  .hub__steps li::before { counter-increment: s; content: counter(s); display: grid; place-items: center; width: 2rem; height: 2rem; border-radius: 50%; background: var(--c-discover); color: #10131a; font-weight: 700; }
+  code.k { color: var(--c-discover); font: 400 .9rem ui-monospace, Menlo, monospace; }
+</style>
+<script src="lessons/lessons.bundle.js"></script>
+</head>
+<body class="control">
+<div class="hub">
+
+  <header class="hub__hero">
+    <div class="brand">
+      <div class="brand__logo">
+        <span class="brand__l1">MATH</span>
+        <span class="brand__l2">THROUGH</span>
+        <span class="brand__l3">DISCOVERY</span>
+      </div>
+      <div class="brand__series">Overlay kit · v1.0</div>
+    </div>
+    <p class="hub__chain">
+      <span style="color:var(--c-step-see)">SEE</span><span style="color:var(--t-faint)">→</span>
+      <span style="color:var(--c-step-break)">BREAK</span><span style="color:var(--t-faint)">→</span>
+      <span style="color:var(--c-step-build)">BUILD</span><span style="color:var(--t-faint)">→</span>
+      <span style="color:var(--c-step-transform)">TRANSFORM</span><span style="color:var(--t-faint)">→</span>
+      <span style="color:var(--c-step-check)">CHECK</span>
+    </p>
+    <p class="hint" style="max-width:62ch">Same value. Different form. Lesson content lives in JSON — layouts never change when the math does.</p>
+  </header>
+
+  <div class="hub__cards" style="margin-bottom:var(--s-6)">
+    <a class="btn btn--primary btn--xl" href="control.html">Open the control panel</a>
+    <a class="btn btn--xl" href="overlay.html">Open an overlay</a>
+    <a class="btn btn--xl" href="docs/OBS_SETUP.md">Read the OBS setup guide</a>
+  </div>
+
+  <section class="cp__panel">
+    <h2 class="cp__legend">Build an overlay URL</h2>
+    <div class="grid grid--4" style="margin-bottom:var(--s-3)">
+      <div class="field" style="margin:0"><label>Lesson</label><select id="f-lesson"></select></div>
+      <div class="field" style="margin:0"><label>Preset</label><select id="f-preset"></select></div>
+      <div class="field" style="margin:0"><label>Canvas</label><select id="f-aspect">
+        <option value="16x9">1920 × 1080</option><option value="9x16">1080 × 1920</option><option value="1x1">1080 × 1080</option>
+      </select></div>
+      <div class="field" style="margin:0"><label>Background</label><select id="f-bg">
+        <option value="studio">Studio</option><option value="transparent">Transparent (OBS)</option><option value="paper">Paper</option>
+      </select></div>
+    </div>
+    <div class="urlbar" style="border-radius:var(--r-md);border-top:0">
+      <code id="f-url"></code>
+      <button class="btn" id="f-copy">Copy</button>
+      <button class="btn" id="f-open">Open</button>
+    </div>
+    <iframe id="f-frame" class="preview__frame" style="margin-top:var(--s-4);border-radius:var(--r-md)" title="Preview"></iframe>
+  </section>
+
+  <section class="cp__panel">
+    <h2 class="cp__legend">Quick start</h2>
+    <ol class="hub__steps">
+      <li>Serve the folder: <code class="k">npm start</code> (or <code class="k">python3 -m http.server 3000</code>). Opening the files directly from disk also works.</li>
+      <li>In OBS, add a <strong>Browser</strong> source pointing at the URL above, sized to match the canvas.</li>
+      <li>Set the background to <strong>Transparent</strong> and place your camera source underneath.</li>
+      <li>Open <code class="k">control.html</code> on a second screen or tablet and drive the lesson live.</li>
+      <li>To add a lesson, drop a new file in <code class="k">lessons/</code> and register it in <code class="k">lessons/lessons.bundle.js</code>.</li>
+    </ol>
+  </section>
+
+  <section class="cp__panel">
+    <h2 class="cp__legend">Documentation</h2>
+    <div class="grid grid--3">
+      <a class="btn" href="docs/OBS_SETUP.md">OBS setup</a>
+      <a class="btn" href="docs/LESSON_CREATION.md">Create a lesson</a>
+      <a class="btn" href="docs/LIVE_CONTROL.md">Live control</a>
+      <a class="btn" href="docs/DESIGN_SYSTEM.md">Design system</a>
+      <a class="btn" href="docs/COMPONENTS.md">Component reference</a>
+      <a class="btn" href="docs/PRODUCTION.md">Recording & shorts</a>
+    </div>
+  </section>
+</div>
+
+<script type="module">
+  import { lessonIndex } from './src/utils/lesson-loader.js';
+  import { PRESETS, PRESET_KEYS } from './src/layouts/presets.js';
+
+  const $ = (id) => document.getElementById(id);
+  for (const L of lessonIndex()) $('f-lesson').add(new Option(L.topic, L.id));
+  for (const k of PRESET_KEYS) $('f-preset').add(new Option(`${k} · ${PRESETS[k].name}`, k));
+
+  function url() {
+    return `overlay.html?lesson=${$('f-lesson').value}&preset=${$('f-preset').value}&aspect=${$('f-aspect').value}&bg=${$('f-bg').value}&step=5`;
+  }
+  function sync() {
+    const u = url();
+    $('f-url').textContent = new URL(u, location.href).href;
+    $('f-frame').src = u;
+    $('f-frame').className = 'preview__frame a' + $('f-aspect').value;
+  }
+  ['f-lesson', 'f-preset', 'f-aspect', 'f-bg'].forEach((id) => $(id).addEventListener('change', sync));
+  $('f-copy').addEventListener('click', async () => {
+    try { await navigator.clipboard.writeText($('f-url').textContent); $('f-copy').textContent = 'Copied'; setTimeout(() => ($('f-copy').textContent = 'Copy'), 1400); }
+    catch (_) { window.prompt('Copy this URL:', $('f-url').textContent); }
+  });
+  $('f-open').addEventListener('click', () => window.open(url(), '_blank'));
+  sync();
+</script>
+</body>
+</html>

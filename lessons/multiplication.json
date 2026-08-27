@@ -1,0 +1,80 @@
+{
+  "episode": "4",
+  "subject": "Multiplication",
+  "topic": "Multiplication",
+  "title": "Break It To Build It",
+  "subtitle": "14 × 13 without a calculator",
+  "headline": "Hard problems are easy problems stacked together.",
+  "quote": "I can't do that one in my head.",
+  "facts": [
+    {
+      "label": "First number",
+      "value": "14"
+    },
+    {
+      "label": "Second number",
+      "value": "13",
+      "highlight": true
+    }
+  ],
+  "question": "What is 14 × 13?",
+  "answer": {
+    "work": "14 \\times 13",
+    "value": "= 182",
+    "unit": ""
+  },
+  "steps": {
+    "see": {
+      "text": "Two two-digit numbers.",
+      "equation": "14 \\times 13"
+    },
+    "break": {
+      "text": "Split each into tens and ones.",
+      "equation": "(10+4)(10+3)"
+    },
+    "build": {
+      "text": "Four easy rectangles.",
+      "equation": "100 + 30 + 40 + 12"
+    },
+    "transform": {
+      "text": "Add the pieces.",
+      "equation": "170 + 12 = 182"
+    },
+    "check": {
+      "text": "Estimate to confirm.",
+      "equation": "14 \\times 13 \\approx 182"
+    }
+  },
+  "diagram": {
+    "type": "areaModel",
+    "rowParts": [
+      10,
+      4
+    ],
+    "colParts": [
+      10,
+      3
+    ],
+    "caption": "14 × 13 = 182"
+  },
+  "comparison": {
+    "think": "That's too hard to do mentally.",
+    "math": "Four small products: {182}."
+  },
+  "takeaways": [
+    "Breaking apart keeps the value the same.",
+    "Area models make multiplication visible.",
+    {
+      "text": "Every hard product is small products added.",
+      "insight": true
+    }
+  ],
+  "id": "multiplication",
+  "series": "Math Through Discovery",
+  "seriesLine": "Reality Check Series",
+  "presenter": {
+    "name": "Your host",
+    "role": "Math Through Discovery"
+  },
+  "philosophy": "See the pattern. Change the form. *Keep the value.*"
+}

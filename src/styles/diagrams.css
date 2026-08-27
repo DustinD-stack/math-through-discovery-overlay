@@ -1,0 +1,86 @@
+/* ============================================================
+   Diagram modules
+   ============================================================ */
+
+.diagram { display: grid; gap: var(--s-3); min-width: 0; }
+.diagram__caption { font: 400 var(--fs-sm)/1.35 var(--font-ui); color: var(--t-low); text-align: center; }
+.diagram svg { width: 100%; height: auto; display: block; overflow: visible; }
+.diagram--lg { font-size: 1.15em; }
+
+/* ---------- Tables (ratio, unit rate) ---------- */
+.mtable { width: 100%; border-collapse: collapse; font-size: var(--fs-md); }
+.mtable th, .mtable td {
+  border: var(--bw-hair) solid var(--line-2);
+  padding: var(--s-2) var(--s-3); text-align: center;
+}
+.mtable th {
+  font: 600 var(--fs-xs)/1 var(--font-ui); letter-spacing: var(--tr-wider);
+  text-transform: uppercase; color: var(--t-low); background: var(--fill-1);
+}
+.mtable td { font-weight: 600; }
+.mtable .is-key { color: var(--c-discover); background: color-mix(in srgb, var(--c-discover) 10%, transparent); }
+.mtable .is-unit { color: var(--c-strategy); }
+
+/* ---------- Fraction bar ---------- */
+.fbar { display: flex; width: 100%; border: var(--bw-thin) solid var(--line-2); border-radius: var(--r-sm); overflow: hidden; }
+.fbar__cell {
+  flex: 1 1 0; height: 3.2em; display: grid; place-items: center;
+  border-right: var(--bw-hair) solid var(--line-2);
+  font: 600 var(--fs-sm)/1 var(--font-ui); color: var(--t-low);
+  background: var(--fill-1);
+}
+.fbar__cell:last-child { border-right: 0; }
+.fbar__cell.is-on { background: color-mix(in srgb, var(--c-structure) 62%, transparent); color: #fff; }
+.fbar__cell.is-on-alt { background: color-mix(in srgb, var(--c-transform) 62%, transparent); color: #fff; }
+.fbar-stack { display: grid; gap: var(--s-3); }
+.fbar-row { display: grid; grid-template-columns: 4.5em 1fr; align-items: center; gap: var(--s-3); }
+.fbar-row__label { font-family: var(--font-hand); font-size: var(--fs-lg); }
+
+/* ---------- Percent bar ---------- */
+.pbar { position: relative; height: 3.4em; border-radius: var(--r-sm); background: var(--fill-2); overflow: hidden; border: var(--bw-hair) solid var(--line-2); }
+.pbar__fill { position: absolute; inset: 0 auto 0 0; background: linear-gradient(90deg, color-mix(in srgb, var(--c-strategy) 85%, transparent), color-mix(in srgb, var(--c-structure) 85%, transparent)); transform-origin: left center; }
+.pbar__label { position: absolute; inset: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 var(--s-3); font: 700 var(--fs-md)/1 var(--font-ui); }
+.pbar__ticks { display: flex; justify-content: space-between; font: 400 var(--fs-xs)/1 var(--font-ui); color: var(--t-faint); margin-top: var(--s-1); }
+
+/* ---------- Receipt / money breakdown ---------- */
+.receipt {
+  background: linear-gradient(180deg, #fbf7ea, #efe8d5);
+  color: var(--c-paper-ink); padding: var(--s-4) var(--s-4) var(--s-5);
+  font-family: var(--font-hand); font-size: var(--fs-lg);
+  box-shadow: var(--sh-2);
+  clip-path: polygon(0 0, 100% 0, 100% 97%, 92% 100%, 84% 97%, 76% 100%, 68% 97%, 60% 100%, 52% 97%, 44% 100%, 36% 97%, 28% 100%, 20% 97%, 12% 100%, 4% 97%, 0 100%);
+}
+.receipt__head { text-align: center; font-family: var(--font-logo); font-weight: 700; letter-spacing: .16em; text-transform: uppercase; font-size: var(--fs-sm); border-bottom: 2px dashed rgba(0,0,0,.35); padding-bottom: var(--s-2); margin-bottom: var(--s-3); }
+.receipt__row { display: flex; justify-content: space-between; gap: var(--s-4); padding: .12em 0; }
+.receipt__row--total { border-top: 2px solid rgba(0,0,0,.5); margin-top: var(--s-2); padding-top: var(--s-2); font-weight: 700; }
+.receipt__row--minus { color: #a3271f; }
+
+/* ---------- Balance model ---------- */
+.balance { display: grid; gap: var(--s-2); }
+.balance__pans { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: var(--s-3); }
+.balance__pan { border: var(--bw-thin) solid var(--line-2); border-radius: var(--r-md); padding: var(--s-4); text-align: center; font-size: var(--fs-xl); background: var(--fill-1); }
+.balance__pan.is-left { border-color: color-mix(in srgb, var(--c-structure) 60%, transparent); }
+.balance__pan.is-right { border-color: color-mix(in srgb, var(--c-correct) 60%, transparent); }
+.balance__eq { font: 400 var(--fs-2xl)/1 var(--font-marker); color: var(--t-mid); }
+
+/* ---------- Formula block ---------- */
+.formula {
+  border-left: var(--bw-bold) solid var(--c-strategy);
+  background: var(--fill-1); border-radius: var(--r-md);
+  padding: var(--s-4) var(--s-5);
+}
+.formula__name { font: 600 var(--fs-xs)/1 var(--font-ui); letter-spacing: var(--tr-wider); text-transform: uppercase; color: var(--c-strategy); margin-bottom: var(--s-2); }
+.formula__body { font-size: var(--fs-xl); }
+
+/* ---------- Graph panels ---------- */
+.graph { background: var(--fill-1); border-radius: var(--r-md); padding: var(--s-4); }
+.graph__legend { display: flex; gap: var(--s-4); flex-wrap: wrap; margin-top: var(--s-2); font: 400 var(--fs-xs)/1 var(--font-ui); color: var(--t-low); }
+.graph__legend span { display: inline-flex; align-items: center; gap: var(--s-1); }
+.graph__swatch { width: .8em; height: .8em; border-radius: 2px; }
+
+/* SVG shared */
+.svg-axis { stroke: var(--line-2); stroke-width: 2; }
+.svg-grid { stroke: var(--line-1); stroke-width: 1; }
+.svg-label { fill: var(--t-low); font: 400 13px var(--font-ui); }
+.svg-value { fill: var(--t-hi); font: 700 15px var(--font-ui); }
+.svg-hand { fill: var(--t-hi); font: 400 20px var(--font-hand); }

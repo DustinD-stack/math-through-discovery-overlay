@@ -1,0 +1,135 @@
+/* ============================================================
+   Math Through Discovery — Design Tokens
+   Change values here to re-skin the entire system.
+   ============================================================ */
+
+:root {
+  /* ---------- Core surfaces ---------- */
+  --c-navy-900: #070b14;
+  --c-navy-800: #0c121f;
+  --c-navy-700: #121a2b;
+  --c-charcoal: #14161b;
+  --c-board:    #0b0e14;   /* chalkboard / lesson panel */
+  --c-board-2:  #10141d;   /* raised panel */
+  --c-paper:    #f4f1e6;   /* teaching paper surface */
+  --c-paper-ink:#1b1b18;
+
+  /* ---------- Meaning colors ---------- */
+  --c-structure: #4aa3ff;  /* blue   — structure / place value */
+  --c-correct:   #57c86a;  /* green  — correct / confirmed */
+  --c-adjust:    #ff9d3d;  /* orange — adjustment / nearby number */
+  --c-transform: #b07bff;  /* purple — equivalence / transformation */
+  --c-error:     #ff5a5a;  /* red    — misconception / warning */
+  --c-discover:  #ffd23f;  /* yellow — discovery / highlight */
+  --c-strategy:  #35d0c4;  /* teal   — strategy / build */
+
+  /* ---------- Step colors (SEE→CHECK) ---------- */
+  --c-step-see:       var(--c-structure);
+  --c-step-break:     var(--c-correct);
+  --c-step-build:     var(--c-adjust);
+  --c-step-transform: var(--c-transform);
+  --c-step-check:     var(--c-discover);
+
+  /* ---------- Text ---------- */
+  --t-hi:   #ffffff;
+  --t-mid:  rgba(255,255,255,.82);
+  --t-low:  rgba(255,255,255,.56);
+  --t-faint:rgba(255,255,255,.34);
+
+  /* ---------- Lines & fills ---------- */
+  --line-1: rgba(255,255,255,.10);
+  --line-2: rgba(255,255,255,.18);
+  --fill-1: rgba(255,255,255,.04);
+  --fill-2: rgba(255,255,255,.07);
+  --tape:   rgba(214,186,120,.85);
+
+  /* ---------- Typography ---------- */
+  --font-logo:   "Archivo Narrow", "Oswald", "Arial Narrow", Impact, sans-serif;
+  --font-marker: "Permanent Marker", "Bradley Hand", "Segoe Script", cursive;
+  --font-hand:   "Caveat", "Bradley Hand", "Segoe Print", cursive;
+  --font-ui:     "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-math:   "KaTeX_Main", "Latin Modern Math", Cambria Math, Georgia, serif;
+
+  /* Type scale is expressed in cqw-friendly rems; layouts scale the root. */
+  --fs-xs:   0.72rem;
+  --fs-sm:   0.86rem;
+  --fs-base: 1.00rem;
+  --fs-md:   1.18rem;
+  --fs-lg:   1.45rem;
+  --fs-xl:   1.85rem;
+  --fs-2xl:  2.40rem;
+  --fs-3xl:  3.20rem;
+  --fs-4xl:  4.20rem;
+
+  --lh-tight: 1.08;
+  --lh-snug:  1.28;
+  --lh-body:  1.45;
+
+  --tr-wide:  .06em;
+  --tr-wider: .14em;
+
+  /* ---------- Spacing ---------- */
+  --s-1: 0.25rem;
+  --s-2: 0.5rem;
+  --s-3: 0.75rem;
+  --s-4: 1rem;
+  --s-5: 1.5rem;
+  --s-6: 2rem;
+  --s-7: 2.75rem;
+  --s-8: 3.5rem;
+
+  /* ---------- Borders & radius ---------- */
+  --bw-hair: 1px;
+  --bw-thin: 2px;
+  --bw-bold: 3px;
+  --r-sm: 6px;
+  --r-md: 12px;
+  --r-lg: 18px;
+  --r-xl: 26px;
+  --r-pill: 999px;
+  --panel-radius: var(--r-lg);
+
+  /* ---------- Shadows ---------- */
+  --sh-1: 0 2px 10px rgba(0,0,0,.35);
+  --sh-2: 0 10px 30px rgba(0,0,0,.45);
+  --sh-3: 0 22px 60px rgba(0,0,0,.55);
+  --sh-glow-yellow: 0 0 22px rgba(255,210,63,.30);
+  --sh-glow-green:  0 0 22px rgba(87,200,106,.28);
+
+  /* ---------- Animation ---------- */
+  --dur-fast: 180ms;
+  --dur-base: 340ms;
+  --dur-slow: 620ms;
+  --dur-draw: 900ms;
+  --ease-out: cubic-bezier(.16,.84,.28,1);
+  --ease-soft: cubic-bezier(.34,.9,.32,1);
+  --stagger: 90ms;
+
+  /* ---------- Z-index layers ---------- */
+  --z-bg:        0;   /* Layer 1 background        */
+  --z-presenter: 10;  /* Layer 3 presenter frame   */
+  --z-story:     20;  /* Layer 4 story / scenario  */
+  --z-math:      30;  /* Layer 5 main math         */
+  --z-discovery: 40;  /* Layer 6 discovery method  */
+  --z-compare:   50;  /* Layer 7 comparison        */
+  --z-takeaway:  60;  /* Layer 8 takeaways         */
+  --z-brand:     70;  /* Layer 2 brand             */
+  --z-stamp:     80;  /* stamps / reveals          */
+  --z-controls:  90;  /* Layer 9 controls          */
+}
+
+/* Paper / board background variant re-points a few tokens. */
+.bg-paper {
+  --c-board:   #fbf8ee;
+  --c-board-2: #ffffff;
+  --t-hi:  #14161b;
+  --t-mid: rgba(20,22,27,.82);
+  --t-low: rgba(20,22,27,.58);
+  --t-faint: rgba(20,22,27,.34);
+  --line-1: rgba(20,22,27,.12);
+  --line-2: rgba(20,22,27,.22);
+  --fill-1: rgba(20,22,27,.035);
+  --fill-2: rgba(20,22,27,.06);
+  --c-structure:#1a6fd4; --c-correct:#2e9c46; --c-adjust:#d97a10;
+  --c-transform:#7a45d6; --c-error:#d8302f; --c-discover:#c08a00; --c-strategy:#12897f;
+}
