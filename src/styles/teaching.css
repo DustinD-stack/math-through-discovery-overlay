@@ -333,3 +333,224 @@
 .prompt.is-active { box-shadow: var(--sh-2), inset 0 0 0 1px color-mix(in srgb, var(--prompt-accent) 40%, transparent); }
 .prompt.is-complete { --prompt-accent: var(--ui-success); }
 .prompt.is-inactive { opacity: .45; }
+
+/* ============================================================
+   NumberJobs  (Phase 4)  —  WHOLE / SPLIT / TAKE
+   The role word is always shown; colour only reinforces it.
+   ============================================================ */
+.njobs {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--s-3);
+  max-width: 100%;
+}
+.njobs--row.njobs--n3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.njobs--row.njobs--n2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.njobs--stack { grid-template-columns: 1fr; }
+
+.njobs__job {
+  --job: var(--ui-border);
+  display: grid;
+  justify-items: center;
+  gap: var(--s-1);
+  text-align: center;
+  padding: var(--s-3) var(--s-3) var(--s-4);
+  border: var(--bw-hair) solid var(--ui-border);
+  border-top: var(--bw-bold) solid var(--job);
+  border-radius: var(--r-md);
+  background: var(--ui-panel-quiet);
+  transition: transform var(--tr-state), box-shadow var(--tr-state), background-color var(--tr-state);
+}
+.njobs__job--whole { --job: var(--job-whole); }
+.njobs__job--split { --job: var(--job-split); }
+.njobs__job--take  { --job: var(--job-take); }
+.njobs--stack .njobs__job {
+  grid-template-columns: auto 1fr;
+  justify-items: start;
+  text-align: left;
+  column-gap: var(--s-4);
+  border-top: var(--bw-hair) solid var(--ui-border);
+  border-left: var(--bw-bold) solid var(--job);
+}
+
+.njobs__value {
+  font: 700 var(--fs-2xl)/1 var(--font-ui);
+  color: var(--job);
+  display: inline-flex;
+  align-items: baseline;
+  gap: .25em;
+}
+.njobs--stack .njobs__value { grid-row: span 3; align-self: center; }
+.njobs__context { font: 400 var(--fs-sm)/1 var(--font-ui); color: var(--ui-text-muted); }
+.njobs__name {
+  font: 700 var(--fs-md)/1 var(--font-logo);
+  letter-spacing: var(--tr-wider);
+  text-transform: uppercase;
+  color: var(--ui-text);
+}
+.njobs__desc { font: 400 var(--fs-explain)/1.35 var(--font-ui); color: var(--ui-text-muted); max-width: 26ch; }
+.njobs--stack .njobs__desc { max-width: none; }
+
+/* active job: emphasised; the others stay readable, only dimmed */
+.njobs__job.is-active {
+  background: color-mix(in srgb, var(--job) 14%, transparent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--job) 45%, transparent), var(--sh-2);
+  transform: translateY(-2px);
+}
+.njobs__job.is-muted { opacity: .55; }
+
+/* narrow canvases: always stack */
+.a9x16 .njobs--row, .a1x1 .njobs--row { grid-template-columns: 1fr; }
+.a9x16 .njobs--row .njobs__job, .a1x1 .njobs--row .njobs__job {
+  grid-template-columns: auto 1fr;
+  justify-items: start;
+  text-align: left;
+  column-gap: var(--s-4);
+  border-top: var(--bw-hair) solid var(--ui-border);
+  border-left: var(--bw-bold) solid var(--job);
+}
+.a9x16 .njobs--row .njobs__desc, .a1x1 .njobs--row .njobs__desc { max-width: none; }
+
+/* ============================================================
+   TransformationChain  (Phase 4)  —  SAME VALUE, DIFFERENT FORM
+   ============================================================ */
+.tchain {
+  position: relative;
+  max-width: 100%;
+  padding-bottom: var(--s-5);   /* room for the baseline tag */
+}
+.tchain__links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  min-width: 0;
+}
+
+/* flow: a wrapping horizontal row - never scrolls */
+.tchain--flow .tchain__links {
+  flex-flow: row wrap;
+  align-items: flex-start;
+  gap: var(--s-2) var(--s-3);
+}
+/* stack: a vertical column */
+.tchain--stack .tchain__links {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s-4);
+}
+
+.tchain__link {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: var(--s-1);
+  padding: var(--s-2) var(--s-3);
+  border-radius: var(--r-md);
+  border: var(--bw-hair) solid transparent;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.tchain--stack .tchain__link { justify-items: start; }
+
+/* the equals / arrow joiner between links */
+.tchain__join {
+  font: 400 var(--fs-xl)/1 var(--font-marker);
+  color: var(--ui-text-muted);
+}
+.tchain--flow .tchain__join {
+  position: absolute;
+  left: calc(var(--s-3) * -1);
+  top: var(--s-2);
+  transform: translateX(-50%);
+}
+.tchain--stack .tchain__join {
+  position: absolute;
+  top: calc(var(--s-4) * -1 - 0.1em);
+  left: var(--s-3);
+}
+.tchain__join--arrow { font-family: var(--font-ui); color: var(--ui-text-faint); }
+.tchain__link.is-inactive .tchain__join { opacity: .25; }
+
+.tchain__form { font-size: var(--fs-xl); line-height: 1.25; color: var(--ui-text); }
+.tchain__form .katex { font-size: 1em; }
+.tchain__hidden { color: var(--ui-text-faint); letter-spacing: .1em; }
+.tchain__label {
+  font: 600 var(--fs-label)/1 var(--font-ui);
+  letter-spacing: var(--tr-wide);
+  text-transform: uppercase;
+  color: var(--ui-text-muted);
+}
+.tchain__note { font: 400 var(--fs-explain)/1.3 var(--font-hand); color: var(--ui-text-muted); }
+
+/* states */
+.tchain__link.is-active {
+  border-color: var(--ui-accent);
+  background: color-mix(in srgb, var(--ui-accent) 10%, transparent);
+}
+.tchain__link.is-inactive { }
+.tchain__link.is-inactive .tchain__label,
+.tchain__link.is-inactive .tchain__note { visibility: hidden; }
+
+/* the equivalence baseline - every form sits on one line = one value */
+.tchain__base {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: var(--s-5);
+}
+.tchain--flow .tchain__base {
+  border-top: var(--bw-thin) solid color-mix(in srgb, var(--ui-success) 60%, transparent);
+}
+.tchain--stack .tchain__base {
+  right: auto;
+  top: 0;
+  width: var(--s-5);
+  height: auto;
+  border-top: 0;
+  border-left: var(--bw-thin) solid color-mix(in srgb, var(--ui-success) 60%, transparent);
+}
+.tchain__base-tag {
+  position: absolute;
+  font: 600 var(--fs-label)/1 var(--font-ui);
+  letter-spacing: var(--tr-wider);
+  text-transform: uppercase;
+  color: var(--ui-success);
+  background: var(--ui-bg);
+  padding: 0 var(--s-2);
+}
+.tchain--flow .tchain__base-tag { left: 0; top: -0.55em; }
+.tchain--stack .tchain__base-tag {
+  left: -0.4em; top: auto; bottom: 0;
+  transform: rotate(180deg);
+  writing-mode: vertical-rl;
+}
+
+/* narrow canvases: force stack */
+.a9x16 .tchain--flow .tchain__links,
+.a1x1  .tchain--flow .tchain__links {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--s-4);
+}
+.a9x16 .tchain--flow .tchain__link,
+.a1x1  .tchain--flow .tchain__link { justify-items: start; }
+.a9x16 .tchain--flow .tchain__join,
+.a1x1  .tchain--flow .tchain__join {
+  position: absolute; left: var(--s-3);
+  top: calc(var(--s-4) * -1 - 0.1em); transform: none;
+}
+.a9x16 .tchain--flow .tchain__base,
+.a1x1  .tchain--flow .tchain__base {
+  right: auto; top: 0; width: var(--s-5); height: auto;
+  border-top: 0;
+  border-left: var(--bw-thin) solid color-mix(in srgb, var(--ui-success) 60%, transparent);
+}
+.a9x16 .tchain--flow .tchain__base-tag,
+.a1x1  .tchain--flow .tchain__base-tag {
+  left: -0.4em; top: auto; bottom: 0;
+  transform: rotate(180deg); writing-mode: vertical-rl;
+}

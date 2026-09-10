@@ -147,6 +147,12 @@
   --stage-check:      var(--c-step-check);
   --stage-color:      var(--stage-see);
 
+  /* ---------- Number-job colours (WHOLE / SPLIT / TAKE) ----------
+     Reinforce the reasoning words; never the only distinction. */
+  --job-whole:  var(--c-structure);   /* the intact quantity / structure   */
+  --job-split:  var(--c-transform);   /* partitioned into equal parts      */
+  --job-take:   var(--c-adjust);      /* the parts we select               */
+
   /* ---------- Intent aliases (no new values) ---------- */
   --r-card:      var(--r-lg);
   --fs-value:    var(--fs-2xl);

@@ -44,15 +44,8 @@
   .g-scaler .stage { display: block; }
   .g-scaler .stage-content-lite { position: absolute; inset: 0; display: grid; align-content: center; padding: 6% 5%; }
   @media (max-width: 900px) { .g-grid.cols2 { grid-template-columns: 1fr; } }
-  /* gallery-only labels for the composed demo — NOT a component.
-     NumberJobs proper arrives in Phase 4. */
-  .demo-jobs { display: flex; gap: .75rem; flex-wrap: wrap; margin: .25rem 0 1rem; }
-  .demo-job { flex: 1 1 7rem; border: 1px solid var(--ui-border); border-top: 3px solid var(--j); border-radius: var(--r-md);
-              padding: .6rem .8rem; text-align: center; }
-  .demo-job b { display: block; font: 700 1.6rem/1 var(--font-ui); }
-  .demo-job span { font: 600 .68rem/1 var(--font-ui); letter-spacing: .14em; text-transform: uppercase; color: var(--ui-text-muted); }
-  .demo-flow { display: grid; gap: 1rem; }
-  .demo-flow > * { margin: 0 auto; }
+  .demo-flow { display: grid; gap: 1rem; max-width: 780px; }
+  .demo-flow > * { width: 100%; }
 </style>
 </head>
 <body>
@@ -121,8 +114,34 @@
     <div class="g-grid cols2" id="prompt-demo"></div>
   </section>
 
+  <!-- ================= PHASE 4 ================= -->
   <section class="g">
-    <h2>Phase 3 · composed teaching example — “3/8 of 20” (gallery only, not a production preset)</h2>
+    <h2>Phase 4 · TransformationChain — SAME VALUE → DIFFERENT FORM</h2>
+    <div class="g-grid" id="tchain-demo"></div>
+  </section>
+
+  <section class="g">
+    <h2>Phase 4 · TransformationChain — flow / stack / dark / paper / &gt;5 links / 16:9 / 9:16</h2>
+    <div class="g-grid cols2" id="tchain-contexts"></div>
+  </section>
+
+  <section class="g">
+    <h2>Phase 4 · NumberJobs — WHOLE / SPLIT / TAKE (words primary)</h2>
+    <div class="g-grid cols2" id="njobs-demo"></div>
+  </section>
+
+  <section class="g">
+    <h2>Phase 4 · NumberJobs — active job, no active job, reusable structure, dark / paper</h2>
+    <div class="g-grid cols2" id="njobs-states"></div>
+  </section>
+
+  <section class="g">
+    <h2>Phase 4 · NumberJobs — narrow canvases (9:16 / 1:1)</h2>
+    <div class="g-frames" id="njobs-frames"></div>
+  </section>
+
+  <section class="g">
+    <h2>Phase 3+4 · composed teaching example — “3/8 of 20” (gallery only, not a production preset)</h2>
     <div class="g-grid" id="composed-demo"></div>
   </section>
 </div>
@@ -133,6 +152,8 @@
   import { EquationWorkspace } from './src/components/equation-workspace.js';
   import { AnswerReveal } from './src/components/answer-reveal.js';
   import { PromptCard } from './src/components/prompt-card.js';
+  import { TransformationChain } from './src/components/transformation-chain.js';
+  import { NumberJobs } from './src/components/number-jobs.js';
   import { el } from './src/utils/dom.js';
 
   const SAMPLE = {
@@ -240,29 +261,153 @@
   pr.appendChild(card('Try', PromptCard({ kind: 'try', text: 'Find one eighth of 20 first.', hint: '20 ÷ 8 = 2.5', revealHint: false })));
   pr.appendChild(card('Notice — hint revealed', PromptCard({ kind: 'notice', text: 'What do you see about 3/8 and 1/2?', hint: '3/8 is *less than* 1/2, so the answer is less than 10.', revealHint: true })));
 
-  // composed: "3/8 of 20"
-  const jobs = () => {
-    const box = el('div', { class: 'demo-jobs' });
-    [['20', 'Whole', 'var(--c-structure)'], ['8', 'Split', 'var(--c-transform)'], ['3', 'Take', 'var(--c-adjust)']]
-      .forEach(([n, role, colour]) => box.appendChild(
-        el('div', { class: 'demo-job', style: { '--j': colour } }, el('b', {}, n), el('span', {}, role))));
-    return box;
+  /* ================= PHASE 4 ================= */
+
+  // --- TransformationChain: three examples, showing SAME VALUE > DIFFERENT FORM
+  //     is bigger than fractions ---
+  const REMAINDER_CHAIN = [
+    { form: '20 \\div 8', label: 'the division' },
+    { form: '2\\ \\text{R}\\,4', label: 'quotient + remainder', note: '4 left over, out of a group of 8' },
+    { form: '2 + \\tfrac{4}{8}', label: 'the remainder as a fraction', note: '4 out of 8 = four eighths' },
+    { form: '2 + \\tfrac{1}{2}', label: 'simplified', note: '\\tfrac{4}{8} = \\tfrac{1}{2}' },
+    { form: '2.5', label: 'as a decimal' },
+  ];
+  const HALF_CHAIN = [
+    { form: '\\tfrac{1}{2}' },
+    { form: '\\tfrac{2}{4}', note: 'split each half in two' },
+    { form: '0.5', note: 'as a decimal' },
+    { form: '50\\%', note: 'per hundred' },
+  ];
+  const TWENTYFOUR_CHAIN = [
+    { form: '24' },
+    { form: '6 \\times 4', note: 'one factor pair' },
+    { form: '8 \\times 3', note: 'another' },
+    { form: '12 \\times 2', note: 'and another' },
+  ];
+
+  const tc = document.getElementById('tchain-demo');
+  tc.appendChild(card('20 ÷ 8  (a remainder, four ways to write it)', TransformationChain({ links: REMAINDER_CHAIN, title: '2.5' })));
+  tc.appendChild(card('1/2  (fraction ↔ decimal ↔ percent)', TransformationChain({ links: HALF_CHAIN, title: '0.5' })));
+  tc.appendChild(card('24  (same number, different factor pairs)', TransformationChain({ links: TWENTYFOUR_CHAIN, title: '24' })));
+
+  const tcx = document.getElementById('tchain-contexts');
+  tcx.appendChild(card('flow — progressive reveal (current = 3)', TransformationChain({ links: REMAINDER_CHAIN, current: 3, title: '2.5' })));
+  tcx.appendChild(card('stack layout', TransformationChain({ links: REMAINDER_CHAIN, layout: 'stack', title: '2.5' })));
+  tcx.appendChild(card('dark', TransformationChain({ links: HALF_CHAIN, title: '0.5' })));
+  tcx.appendChild(card('bg-paper', el('div', { class: 'bg-paper' }, TransformationChain({ links: HALF_CHAIN, title: '0.5' })), 'on-paper'));
+  tcx.appendChild(card('> 5 links → auto-stack (never a scrolling row)',
+    TransformationChain({ links: [...TWENTYFOUR_CHAIN, { form: '24 \\times 1' }, { form: '48 \\div 2' }, { form: '2^3 \\times 3' }], title: '24' })));
+  [['16:9', 'a16x9', 1920, 1080, 0.30], ['9:16', 'a9x16', 1080, 1920, 0.22]].forEach(([cap, aspect, w, h, scale]) => {
+    const stage = el('div', { class: `stage ${aspect} bg-studio`, style: { width: w + 'px', height: h + 'px' } },
+      el('div', { class: 'layer layer-bg' }),
+      el('div', { class: 'stage-content-lite' }, TransformationChain({ links: REMAINDER_CHAIN, title: '2.5' })));
+    stage.style.transform = `scale(${scale})`; stage.style.transformOrigin = 'top left';
+    tcx.appendChild(card(cap + ' — flow auto-stacks on the narrow canvas',
+      el('div', { class: 'g-scaler', style: { width: (w * scale) + 'px', height: (h * scale) + 'px' } }, stage)));
+  });
+
+  // --- NumberJobs ---
+  const JOBS_38_20 = { whole: { value: 20 }, split: { value: 8, context: 'parts' }, take: { value: 3 } };
+  const JOBS_BILL = {
+    whole: { value: '$144', desc: 'The whole bill.' },
+    split: { value: 4, context: 'people', desc: 'Shared equally between 4 people.' },
+    take: { value: 1, desc: 'One person’s share.' },
   };
+
+  const nj = document.getElementById('njobs-demo');
+  nj.appendChild(card('3/8 of 20', NumberJobs(JOBS_38_20)));
+  nj.appendChild(card('reusable — “$144 split 4 ways, take 1” (not a fraction)', NumberJobs(JOBS_BILL)));
+
+  const njs = document.getElementById('njobs-states');
+  njs.appendChild(card('active: WHOLE', NumberJobs({ ...JOBS_38_20, active: 'whole' })));
+  njs.appendChild(card('active: SPLIT', NumberJobs({ ...JOBS_38_20, active: 'split' })));
+  njs.appendChild(card('active: TAKE', NumberJobs({ ...JOBS_38_20, active: 'take' })));
+  njs.appendChild(card('no active job', NumberJobs({ ...JOBS_38_20, active: null })));
+  njs.appendChild(card('two-job configuration', NumberJobs({ whole: { value: 12, context: 'eggs' }, split: { value: 2, desc: 'Into halves.' } })));
+  njs.appendChild(card('bg-paper', el('div', { class: 'bg-paper' }, NumberJobs({ ...JOBS_38_20, active: 'split' })), 'on-paper'));
+
+  const njf = document.getElementById('njobs-frames');
+  [['9:16', 'a9x16', 1080, 1920, 0.22], ['1:1', 'a1x1', 1080, 1080, 0.30]].forEach(([cap, aspect, w, h, scale]) => {
+    const stage = el('div', { class: `stage ${aspect} bg-studio`, style: { width: w + 'px', height: h + 'px' } },
+      el('div', { class: 'layer layer-bg' }),
+      el('div', { class: 'stage-content-lite' }, NumberJobs({ ...JOBS_38_20, active: 'whole' })));
+    stage.style.transform = `scale(${scale})`; stage.style.transformOrigin = 'top left';
+    njf.appendChild(card(cap + ' — row layout auto-stacks', el('div', { class: 'g-scaler', style: { width: (w * scale) + 'px', height: (h * scale) + 'px' } }, stage)));
+  });
+
+  /* ---- composed "3/8 of 20": NumberJobs + TransformationChain + the rest ---- */
+  const heading = (t) => el('div', { style: { font: '700 .72rem/1 var(--font-logo)', letterSpacing: '.16em', textTransform: 'uppercase', color: 'var(--ui-text-muted)', margin: '.5rem 0 -.25rem' } }, t);
+
+  // BOTH useful paths, then their equivalence for THIS structure
+  const PATH_A = [
+    { expr: '\\tfrac{1}{8}\\ \\text{of}\\ 20 = 20 \\div 8 = 2.5', kind: 'work' },
+    { expr: '\\tfrac{3}{8}\\ \\text{of}\\ 20 = 2.5 \\times 3 = 7.5', kind: 'result' },
+  ];
+  const PATH_B = [
+    { expr: '3 \\times 20 = 60', kind: 'work' },
+    { expr: '60 \\div 8 = 7.5', kind: 'result' },
+  ];
+  const PATH_EQUIV = [
+    { form: '(20 \\div 8) \\times 3', label: 'divide first' },
+    { form: '(20 \\times 3) \\div 8', label: 'multiply first', note: 'same three numbers, regrouped' },
+    { form: '7.5', label: 'either way' },
+  ];
+
   const composed = el('div', { class: 'demo-flow' },
-    PromptCard({ kind: 'notice', text: 'SEE — what is {3/8} of 20?', context: '3/8 of a 20 oz bag.' }),
-    jobs(),
+    heading('SEE'),
+    PromptCard({ kind: 'notice', text: 'What is {3/8} of 20?', context: '3/8 of a 20 oz bag.' }),
+
+    heading('Number jobs — what each number is doing'),
+    NumberJobs(JOBS_38_20),
+
+    heading('The reasoning path'),
     TeachingRail({ variant: 'rail', current: 4 }),
-    EquationWorkspace({ lines: EQ_LINES }),
+
+    heading('BREAK — divide, and read the remainder'),
+    EquationWorkspace({ lines: [{ expr: '20 \\div 8 = 2\\ \\text{R}\\,4', kind: 'given' }] }),
     PromptCard({
       kind: 'notice',
-      text: 'CHECK — is 7.5 reasonable?',
-      context: '3/8 is less than 1/2. Half of 20 is 10, so the answer should be under 10.',
-      hint: '7.5 < 10 — it passes the reasonableness check.',
+      text: 'The remainder *means* something.',
+      context: '20 ÷ 8 leaves 4 — and that 4 is 4 out of another group of 8. So 20 ÷ 8 = 2 + 4/8.',
+      hint: '2 + 4/8 = 2 + 1/2 = 2.5  — R4 was never a symbol to memorise; it is four eighths.',
       revealHint: true,
     }),
-    AnswerReveal({ work: '\\frac{3}{8}\\ \\text{of}\\ 20', value: '7.5', revealed: true, skin: 'panel', lead: 'So' }),
+
+    heading('TRANSFORM the remainder — same value, different form'),
+    TransformationChain({ links: REMAINDER_CHAIN, title: '2.5' }),
+
+    heading('BUILD'),
+    EquationWorkspace({ lines: [{ expr: '\\tfrac{1}{8}\\ \\text{of}\\ 20 = 2.5', kind: 'given' }] }),
+
+    heading('TAKE 3'),
+    EquationWorkspace({ lines: [{ expr: '2.5 \\times 3 = 7.5', kind: 'work' }, { expr: '\\tfrac{3}{8}\\ \\text{of}\\ 20 = 7.5', kind: 'result' }] }),
+
+    heading('Two useful paths'),
+    el('div', { class: 'g-grid cols2', style: { margin: '.25rem 0' } },
+      card('Path A — divide first', EquationWorkspace({ lines: PATH_A })),
+      card('Path B — multiply first', EquationWorkspace({ lines: PATH_B })),
+    ),
+    PromptCard({
+      kind: 'notice',
+      text: 'Different path, {same value}.',
+      context: 'For “a fraction of a whole”, dividing then multiplying and multiplying then dividing give the same result, because you are scaling the same 20 by 3/8 either way.',
+      hint: 'This is *not* a claim that every rearrangement of operations is allowed — it holds for this fraction-of-a-whole structure.',
+      revealHint: true,
+    }),
+    TransformationChain({ links: PATH_EQUIV, title: '7.5' }),
+
+    heading('CHECK — is it reasonable?'),
+    PromptCard({
+      kind: 'notice',
+      text: '{3/8} is less than {1/2}.',
+      context: '1/2 of 20 is 10, so 3/8 of 20 must be less than 10.  7.5 < 10  ✓',
+    }),
+
+    heading('RESULT'),
+    AnswerReveal({ work: '\\tfrac{3}{8}\\ \\text{of}\\ 20', value: '7.5', revealed: true, skin: 'panel', lead: 'So' }),
   );
-  document.getElementById('composed-demo').appendChild(card('SEE → BREAK → BUILD → TRANSFORM → CHECK,  same value different form', composed));
+  document.getElementById('composed-demo').appendChild(
+    card('SEE · NUMBER JOBS · BREAK · TRANSFORM · BUILD · TAKE · RESULT · CHECK   —   same value, different form', composed));
 
   // toggles
   const bAnim = document.getElementById('btn-anim');

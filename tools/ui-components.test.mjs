@@ -76,6 +76,8 @@ const { AnswerReveal } = await import('../src/components/answer-reveal.js');
 const { PromptCard } = await import('../src/components/prompt-card.js');
 const { EquationCard, PaperNote } = await import('../src/components/discovery.js');
 const { ProblemCard } = await import('../src/components/core.js');
+const { TransformationChain } = await import('../src/components/transformation-chain.js');
+const { NumberJobs, JOB_IDS } = await import('../src/components/number-jobs.js');
 
 const SAMPLE = {
   see: { text: 'A total and a count.', equation: '144 \\text{ and } 4', annotation: 'money' },
@@ -322,6 +324,146 @@ group('delegations: EquationCard / PaperNote / ProblemCard', () => {
   // markup() text is written via innerHTML; the shim stores it as .innerHTML
   check(pc.byClass('prompt__text')[0].innerHTML.includes('What is the rate?'),
     'ProblemCard renders the question');
+});
+
+/* ============================================================
+   TransformationChain  (Phase 4)
+   ============================================================ */
+const CHAIN = [
+  { form: '20 \\div 8', label: 'the division' },
+  { form: '2 \\text{ R} 4', label: 'quotient and remainder', note: '4 left over, out of 8' },
+  { form: '2 \\tfrac{4}{8}', label: 'as a mixed number', note: 'the remainder is 4 eighths' },
+  { form: '2 \\tfrac{1}{2}', label: 'simplified', note: '4/8 = 1/2' },
+  { form: '2.5', label: 'as a decimal' },
+];
+
+group('TransformationChain: progressive reveal + states', () => {
+  for (const current of [0, 1, 3, 5, undefined]) {
+    const n = TransformationChain({ links: CHAIN, current });
+    const links = n.byClass('tchain__link');
+    check(links.length === CHAIN.length,
+      `chain current=${current}: all ${CHAIN.length} links kept (no layout jump) — got ${links.length}`);
+    const revealed = current == null ? CHAIN.length : Math.max(0, Math.min(CHAIN.length, current));
+    const expInactive = CHAIN.length - revealed;
+    const expActive = (current != null && current >= 1 && current < CHAIN.length) ? 1 : 0;
+    check(links.filter((x) => x.hasClass('is-inactive')).length === expInactive, `chain current=${current}: ${expInactive} inactive`);
+    check(links.filter((x) => x.hasClass('is-active')).length === expActive, `chain current=${current}: ${expActive} active`);
+    check(links.filter((x) => x.hasClass('is-complete')).length === revealed - expActive, `chain current=${current}: complete count`);
+    check(links.filter((x) => x.getAttribute('aria-current') === 'step').length === expActive, `chain current=${current}: aria-current`);
+    check(links.filter((x) => x.getAttribute('aria-hidden') === 'true').length === expInactive, `chain current=${current}: inactive links aria-hidden`);
+    // hidden links show a placeholder, not their form -> reserve space, no jump
+    links.forEach((x, i) => {
+      if (x.hasClass('is-inactive')) check(x.byClass('tchain__hidden').length === 1, `chain current=${current}: link ${i} placeholder`);
+    });
+  }
+});
+
+group('TransformationChain: equivalence language, not "value changed"', () => {
+  const n = TransformationChain({ links: CHAIN });
+  // joiners between links are "=", never a bare arrow, unless equals:false
+  const joins = n.byClass('tchain__join');
+  check(joins.length === CHAIN.length - 1, 'one joiner between each pair of links');
+  check(joins.every((j) => j.textAll().trim() === '='), 'every joiner is "=" by default');
+  check(joins.every((j) => j.getAttribute('aria-hidden') === 'true'), 'joiners are decorative');
+  // the equivalence baseline + its "same value" tag
+  check(n.byClass('tchain__base').length === 1 && n.byClass('tchain__base-tag').length === 1, 'baseline + tag present');
+  check(/same value/i.test(n.byClass('tchain__base-tag')[0].textAll()), 'baseline tag says "same value"');
+  check(/different forms/i.test(n.getAttribute('aria-label') || ''), 'group aria-label frames it as forms of one value');
+  // title threads the shared value into the tag
+  const t = TransformationChain({ links: CHAIN, title: '2.5' });
+  check(/2\.5/.test(t.byClass('tchain__base-tag')[0].textAll()), 'title appears on the baseline tag');
+  // equals:false -> arrow joiner (opt-in only)
+  const a = TransformationChain({ links: [{ form: 'a' }, { form: 'b', equals: false }] });
+  check(a.byClass('tchain__join--arrow').length === 1, 'equals:false renders an arrow joiner');
+});
+
+group('TransformationChain: flow / stack / no horizontal scroll', () => {
+  check(TransformationChain({ links: CHAIN, layout: 'flow' }).hasClass('tchain--flow'), 'flow layout');
+  check(TransformationChain({ links: CHAIN, layout: 'stack' }).hasClass('tchain--stack'), 'stack layout');
+  // > 5 links always stacks, even if flow was asked for
+  const many = Array.from({ length: 7 }, (_, i) => ({ form: `f${i}` }));
+  check(TransformationChain({ links: many, layout: 'flow' }).hasClass('tchain--stack'),
+    '> 5 links forces stack (never a wide row that could scroll)');
+  check(TransformationChain({ links: CHAIN }).hasClass('tchain--flow'), '<= 5 links + default = flow');
+  // structure is a list; the row is a flex container in CSS (wraps, not scrolls)
+  const n = TransformationChain({ links: CHAIN });
+  check(n.byClass('tchain__links')[0].tagName === 'ol' && n.byClass('tchain__links')[0].getAttribute('role') === 'list',
+    'links are a semantic list');
+});
+
+group('TransformationChain: accessibility', () => {
+  const n = TransformationChain({ links: CHAIN, current: 3, title: '2.5' });
+  check(n.getAttribute('role') === 'group', 'root is a group');
+  const links = n.byClass('tchain__link');
+  check(links.every((x) => x.getAttribute('role') === 'listitem'), 'links are listitems');
+  check(links.every((x) => /^Form \d of 5/.test(x.getAttribute('aria-label') || '')), 'each link has a positional aria-label');
+  check(/remainder is 4 eighths/.test(links[2].getAttribute('aria-label') || ''), 'link note reaches the aria-label');
+  check(n.byClass('tchain__label').every((x) => x.getAttribute('aria-hidden') === 'true'), 'visible labels are aria-hidden (in the listitem label already)');
+});
+
+/* ============================================================
+   NumberJobs  (Phase 4)
+   ============================================================ */
+group('NumberJobs: three jobs, words primary', () => {
+  const n = NumberJobs({ whole: { value: 20 }, split: { value: 8 }, take: { value: 3 } });
+  check(n.tagName === 'ol' && n.getAttribute('role') === 'list', 'root is a list');
+  check(n.getAttribute('aria-label') === 'What each number is doing', 'group label');
+  const jobs = n.byClass('njobs__job');
+  check(jobs.length === 3, 'three job tiles');
+  check(n.hasClass('njobs--n3'), 'n3 layout class');
+  const names = n.byClass('njobs__name').map((x) => x.textAll().trim());
+  check(names.join(',') === 'Whole,Split,Take', `role words present and in order (got ${names.join(',')})`);
+  // every tile carries its role word AND a description regardless of colour
+  check(jobs.every((x) => x.byClass('njobs__name').length === 1 && x.byClass('njobs__desc')[0].textAll().trim().length > 0),
+    'each tile: role word + description (not colour-only)');
+  check(n.byClass('njobs__value').map((x) => x.textAll().replace(/\s/g, '')).join(',') === '20,8,3', 'values render');
+  // canonical descriptions, and SPLIT is not defined as "divide by this number"
+  const splitDesc = jobs[1].byClass('njobs__desc')[0].textAll();
+  check(/equal parts/.test(splitDesc) && !/divide by/i.test(splitDesc), 'SPLIT described as equal parts, not "divide by"');
+});
+
+group('NumberJobs: two-job configuration', () => {
+  const n = NumberJobs({ whole: { value: 12 }, split: { value: 4 } });
+  check(n.byClass('njobs__job').length === 2 && n.hasClass('njobs--n2'), 'two tiles, n2 layout');
+  check(n.byClass('njobs__job--take').length === 0, 'no take tile when take omitted');
+});
+
+group('NumberJobs: active job emphasises without hiding the rest', () => {
+  for (const active of JOB_IDS) {
+    const n = NumberJobs({ whole: { value: 20 }, split: { value: 8 }, take: { value: 3 }, active });
+    const jobs = n.byClass('njobs__job');
+    check(jobs.filter((x) => x.hasClass('is-active')).length === 1, `active=${active}: one active`);
+    check(jobs.find((x) => x.hasClass(`njobs__job--${active}`)).hasClass('is-active'), `active=${active}: the right tile`);
+    check(jobs.filter((x) => x.hasClass('is-muted')).length === 2, `active=${active}: the other two are dimmed, still rendered`);
+    check(jobs.every((x) => x.byClass('njobs__name')[0].textAll().trim().length > 0), `active=${active}: all role words still present`);
+    check(jobs.find((x) => x.hasClass('is-active')).getAttribute('aria-current') === 'true', `active=${active}: aria-current`);
+  }
+});
+
+group('NumberJobs: no active job', () => {
+  const n = NumberJobs({ whole: { value: 20 }, split: { value: 8 }, take: { value: 3 }, active: null });
+  const jobs = n.byClass('njobs__job');
+  check(jobs.filter((x) => x.hasClass('is-active')).length === 0, 'nothing active');
+  check(jobs.filter((x) => x.hasClass('is-muted')).length === 0, 'nothing dimmed - all equal weight');
+  check(jobs.every((x) => x.hasClass('is-rest')), 'all tiles in the rest state');
+});
+
+group('NumberJobs: reusable with arbitrary values / descriptions', () => {
+  const n = NumberJobs({
+    whole: { value: '$144', desc: 'The whole bill.' },
+    split: { value: 4, context: 'people', desc: 'Shared equally between 4.' },
+    take: { value: 1, desc: 'One person’s share.' },
+  });
+  check(n.byClass('njobs__value')[0].textAll().includes('$144'), 'custom value renders');
+  check(n.byClass('njobs__desc')[0].textAll().includes('whole bill'), 'custom description renders');
+  check(n.byClass('njobs__context')[0].textAll().trim() === 'people', 'per-value context renders');
+  // the role words are still the fixed reasoning language
+  check(n.byClass('njobs__name').map((x) => x.textAll().trim()).join(',') === 'Whole,Split,Take',
+    'role words stay WHOLE / SPLIT / TAKE regardless of content');
+});
+
+group('NumberJobs: stack layout + narrow-canvas class', () => {
+  check(NumberJobs({ whole: { value: 1 }, split: { value: 2 }, layout: 'stack' }).hasClass('njobs--stack'), 'stack layout class');
 });
 
 /* ---------- report ---------- */
