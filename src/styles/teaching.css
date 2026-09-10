@@ -172,3 +172,164 @@
   border-top-width: calc(var(--bw-bold) * 2);
   box-shadow: var(--sh-3);
 }
+
+/* ============================================================
+   EquationWorkspace  (Phase 3)
+   Working THROUGH mathematics: GIVEN -> WORK -> RESULT as a
+   vertical flow. Reveal is by visibility so nothing below shifts.
+   ============================================================ */
+.eqw { max-width: 100%; min-width: 0; }
+.eqw--flow { display: grid; gap: var(--s-3); justify-items: center; }
+
+.eqw__lines {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--s-2);
+  justify-items: center;
+}
+
+.eqw__line {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: var(--s-1);
+  padding: var(--s-2) var(--s-4);
+  border-radius: var(--r-md);
+  border-left: var(--bw-bold) solid transparent;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+/* down-arrow connector between consecutive lines - decorative */
+.eqw__line + .eqw__line::before {
+  content: "\2193";
+  position: absolute;
+  top: calc(var(--s-2) * -1 - 0.55em);
+  left: 50%;
+  transform: translateX(-50%);
+  font: 400 1em/1 var(--font-ui);
+  color: var(--ui-text-faint);
+}
+
+.eqw__tag {
+  font: 700 var(--fs-label)/1 var(--font-logo);
+  letter-spacing: var(--tr-wider);
+  text-transform: uppercase;
+  color: var(--ui-text-muted);
+}
+.eqw__expr { font-size: var(--fs-2xl); line-height: 1.25; }
+.eqw--lg .eqw__expr { font-size: var(--fs-3xl); }
+.eqw--xl .eqw__expr { font-size: var(--fs-4xl); }
+.eqw__expr .katex { font-size: 1em; }
+.eqw__note { font: 400 var(--fs-explain)/1.3 var(--font-hand); color: var(--ui-text-muted); }
+.eqw__caption { font: 400 var(--fs-explain)/1.4 var(--font-ui); color: var(--ui-text-muted); text-align: center; }
+
+/* kind treatments */
+.eqw__line--given .eqw__expr { color: var(--ui-text-muted); }
+.eqw__line--work  .eqw__expr { color: var(--ui-text); }
+.eqw__line--result {
+  background: color-mix(in srgb, var(--ui-success) 12%, transparent);
+  box-shadow: var(--sh-glow-green);
+}
+.eqw__line--result .eqw__expr,
+.eqw__line--result .eqw__tag { color: var(--ui-success); }
+
+/* state - active line carries the focus accent (not a stage colour,
+   so the component stays reusable); complete = plain; inactive keeps
+   its box so the layout never jumps. */
+.eqw__line.is-active { border-left-color: var(--ui-accent); }
+.eqw__line.is-inactive { visibility: hidden; }
+
+/* size step-down on the narrow canvases */
+.a9x16 .eqw--xl .eqw__expr, .a1x1 .eqw--xl .eqw__expr { font-size: var(--fs-3xl); }
+.a9x16 .eqw--lg .eqw__expr, .a1x1 .eqw--lg .eqw__expr { font-size: var(--fs-2xl); }
+.a9x16 .eqw__expr, .a1x1 .eqw__expr { font-size: var(--fs-xl); }
+
+/* ============================================================
+   AnswerReveal  (Phase 3)
+   .paper skin keeps the legacy .paper-note styles in components.css.
+   ============================================================ */
+.areveal--panel {
+  display: grid;
+  justify-items: center;
+  gap: var(--s-2);
+  padding: var(--s-4) var(--s-5);
+  border-radius: var(--r-card);
+  border: var(--bw-hair) solid var(--ui-border);
+  background: var(--ui-panel-quiet);
+  text-align: center;
+}
+.areveal--panel.is-revealed {
+  border-color: color-mix(in srgb, var(--ui-success) 55%, transparent);
+  background: color-mix(in srgb, var(--ui-success) 10%, transparent);
+  box-shadow: var(--sh-glow-green);
+}
+.areveal__flow { font: 400 var(--fs-lg)/1 var(--font-ui); color: var(--ui-text-faint); }
+.areveal__lead {
+  font: 700 var(--fs-label)/1 var(--font-logo);
+  letter-spacing: var(--tr-wider); text-transform: uppercase;
+  color: var(--ui-text-muted);
+}
+.areveal--panel .areveal__work { font-size: var(--fs-lg); color: var(--ui-text-muted); }
+.areveal--panel .areveal__value {
+  position: relative;
+  display: inline-block;
+  font-size: var(--fs-2xl);
+  padding: .1em .55em;
+  color: var(--ui-text);
+}
+.areveal--panel.is-revealed .areveal__value { color: var(--ui-success); }
+.areveal--panel .areveal__q { opacity: .4; }
+.areveal--panel .areveal__unit {
+  font: 400 var(--fs-md)/1 var(--font-hand);
+  letter-spacing: .08em; text-transform: uppercase; color: var(--ui-text-muted);
+}
+
+.areveal--inline {
+  display: inline-flex;
+  align-items: baseline;
+  gap: .25em;
+  font-size: var(--fs-lg);
+}
+.areveal--inline .areveal__work { color: var(--ui-text-muted); }
+.areveal--inline .areveal__value { font-weight: 700; color: var(--ui-text); }
+.areveal--inline.is-revealed .areveal__value { color: var(--ui-success); }
+.areveal--inline.is-hidden .areveal__value { color: var(--ui-text-faint); }
+.areveal--inline .areveal__unit { color: var(--ui-text-muted); font-size: .85em; }
+
+/* ============================================================
+   PromptCard  (Phase 3)
+   A learner-thinking beat. Built on the .panel primitive so it
+   sits inside the existing system.
+   ============================================================ */
+.prompt {
+  --prompt-accent: var(--ui-accent);
+  border-left: var(--bw-bold) solid var(--prompt-accent);
+  display: grid;
+  gap: var(--s-2);
+}
+.prompt--question { --prompt-accent: var(--c-structure); }
+.prompt--predict  { --prompt-accent: var(--c-adjust); }
+.prompt--try      { --prompt-accent: var(--c-strategy); }
+.prompt--notice   { --prompt-accent: var(--c-discover); }
+
+.prompt__eyebrow {
+  font: 600 var(--fs-label)/1 var(--font-ui);
+  letter-spacing: var(--tr-wider); text-transform: uppercase;
+  color: var(--prompt-accent);
+}
+.prompt__text { font: 400 var(--fs-lg)/1.35 var(--font-ui); color: var(--ui-text); }
+.prompt__text .hl-number { font-weight: 700; }
+.prompt__context { font: 400 var(--fs-explain)/1.45 var(--font-ui); color: var(--ui-text-muted); }
+.prompt__hint {
+  font: 400 var(--fs-explain)/1.45 var(--font-hand);
+  color: var(--ui-text);
+  border-top: var(--bw-hair) dashed var(--ui-border);
+  padding-top: var(--s-2);
+}
+.prompt__hint[hidden] { display: none; }
+
+.prompt.is-active { box-shadow: var(--sh-2), inset 0 0 0 1px color-mix(in srgb, var(--prompt-accent) 40%, transparent); }
+.prompt.is-complete { --prompt-accent: var(--ui-success); }
+.prompt.is-inactive { opacity: .45; }

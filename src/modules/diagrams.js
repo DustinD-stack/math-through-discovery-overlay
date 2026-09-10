@@ -7,6 +7,7 @@
 
 import { el, svg, esc } from '../utils/dom.js';
 import { renderMath } from '../utils/math-render.js';
+import { EquationWorkspace } from '../components/equation-workspace.js';
 
 const C = {
   structure: 'var(--c-structure)', correct: 'var(--c-correct)', adjust: 'var(--c-adjust)',
@@ -354,9 +355,7 @@ export function FormulaBlock(spec = {}) {
 /* ---------- Plain equation ---------- */
 export function EquationModule(spec = {}) {
   return wrap(spec.caption,
-    el('div', { class: 'equation-card eq-reveal' },
-      el('div', { class: 'equation-card__eq' }, renderMath(spec.equation || '', { display: true })),
-    ),
+    EquationWorkspace({ variant: 'card', lines: [{ expr: spec.equation || '' }], display: true }),
   );
 }
 

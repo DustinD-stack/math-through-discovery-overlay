@@ -6,6 +6,7 @@
 
 import { el, svg, markup } from '../utils/dom.js';
 import { STEPS } from './steps.js';
+import { PromptCard } from './prompt-card.js';
 
 /* ---------- Layer 2 — Brand ---------- */
 
@@ -85,11 +86,9 @@ export function ScenarioFacts(lesson) {
   );
 }
 
+/** Question-only card. Thin wrapper over PromptCard. */
 export function ProblemCard(lesson) {
-  return el('div', { class: 'panel' },
-    el('h3', { class: 'panel__title' }, 'The problem'),
-    el('p', { class: 'scenario__q' }, lesson.question || lesson.headline || ''),
-  );
+  return PromptCard({ kind: 'question', text: lesson.question || lesson.headline || '' });
 }
 
 export function Sticky(text) {

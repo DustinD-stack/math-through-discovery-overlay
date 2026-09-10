@@ -9,11 +9,13 @@
    (e.g. src/controllers/control-app.js).
    ============================================================ */
 
-import { el, svg } from '../utils/dom.js';
+import { el } from '../utils/dom.js';
 import { renderMath } from '../utils/math-render.js';
 import { STEP_KEYS } from '../utils/lesson-loader.js';
 import { STEP_META, withLesson } from './steps.js';
 import { TeachingRail } from './teaching-rail.js';
+import { EquationWorkspace } from './equation-workspace.js';
+import { AnswerReveal } from './answer-reveal.js';
 
 export { STEP_META };
 
@@ -64,41 +66,31 @@ export function MethodCards(lesson, { step = 5, keys = STEP_KEYS } = {}) {
   });
 }
 
-/** Big centred equation, used by Presets D, G, H. */
+/** Big centred equation, used by Presets D, G, H.
+    Thin wrapper over EquationWorkspace's legacy `card` variant -
+    same markup as before. */
 export function EquationCard(expr, { caption = '', large = false, display = true } = {}) {
-  if (!expr) return null;
-  return el('div', { class: `equation-card${large ? ' equation-card--lg' : ''} eq-reveal` },
-    el('div', { class: 'equation-card__eq' }, renderMath(expr, { display })),
-    caption && el('div', { class: 'equation-card__caption' }, caption),
-  );
+  return EquationWorkspace({
+    variant: 'card',
+    lines: [{ expr }],
+    caption,
+    size: large ? 'lg' : 'md',
+    display,
+  });
 }
 
-/** The taped slip of paper with the circled answer. */
+/** The taped slip of paper with the circled answer.
+    Thin wrapper over AnswerReveal's `paper` skin. */
 export function PaperNote(lesson, { revealed = true } = {}) {
   const a = lesson.answer;
   if (!a) return null;
-  return el('div', { class: 'paper-note anim-pop' },
-    a.work && el('div', { class: 'paper-note__eq' }, renderMath(a.work)),
-    revealed
-      ? el('div', { class: 'paper-note__answer' },
-          renderMath(a.value),
-          AnswerRing(),
-        )
-      : el('div', { class: 'paper-note__answer', style: { opacity: .28 } }, '= ?'),
-    a.unit && el('div', { class: 'paper-note__unit' }, a.unit),
-  );
-}
-
-function AnswerRing() {
-  return el('span', { class: 'answer-ring-wrap', style: { position: 'absolute', inset: '-14% -10%', pointerEvents: 'none' } },
-    svg('svg', { viewBox: '0 0 240 90', preserveAspectRatio: 'none', style: 'width:100%;height:100%' },
-      svg('ellipse', {
-        cx: 120, cy: 45, rx: 112, ry: 38,
-        fill: 'none', stroke: 'var(--c-correct)', 'stroke-width': 5,
-        transform: 'rotate(-2 120 45)', class: 'ring-draw',
-      }),
-    ),
-  );
+  return AnswerReveal({
+    work: a.work,
+    value: a.value,
+    unit: a.unit,
+    revealed,
+    skin: 'paper',
+  });
 }
 
 /** Small progress pips, handy in vertical formats. */
