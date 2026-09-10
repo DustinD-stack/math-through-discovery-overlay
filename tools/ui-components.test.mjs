@@ -80,6 +80,9 @@ const { TransformationChain } = await import('../src/components/transformation-c
 const { NumberJobs, JOB_IDS } = await import('../src/components/number-jobs.js');
 const { DIAGRAMS, DIAGRAM_NAMES, NumberBond, FractionBar, NumberLine } = await import('../src/modules/diagrams.js');
 const { PlaceValueBreakdown, decompose } = await import('../src/components/place-value-breakdown.js');
+const { buildStageContent } = await import('../src/layouts/presets.js');
+const { DEFAULT_STATE } = await import('../src/app/state.js');
+const { normalize } = await import('../src/utils/lesson-loader.js');
 
 /* deep text of an SVG/DOM subtree, including #text nodes */
 const allText = (n) => (n.text || '') + (n.children || []).map(allText).join(' ');
@@ -653,6 +656,73 @@ group('PlaceValueBreakdown: forms + reveal + regroup + a11y', () => {
   // highlighted place
   check(PlaceValueBreakdown({ value: 342, highlightPlace: 0 }).byClass('pvb__col')[0].hasClass('is-active'),
     'highlightPlace -> active column');
+});
+
+/* ============================================================
+   Phase 6 - production teaching composition
+   ============================================================ */
+const LESSON = normalize({
+  topic: 'Unit Rate', title: 'Reality Check', question: 'What is the hourly rate?',
+  steps: {
+    see: { text: 'notice the numbers', equation: '1200 \\text{ and } 160' },
+    break: { text: 'one hour', equation: '160 \\to 1' },
+    build: { text: 'divide', equation: '1200 / 160' },
+    transform: { text: 'easier', equation: '120 / 16 = 7.5' },
+    check: { text: 'multiply back', equation: '7.5 \\times 160 = 1200' },
+  },
+  answer: { work: '1200 / 160', value: '= 7.50', unit: 'per hour' },
+  diagram: { type: 'numberBond', total: 1200, parts: [1120, 80] },
+  comparison: { think: 'good money', math: '{$7.50} per hour' },
+  takeaways: ['big totals mislead'],
+}, 'unit-rate');
+
+const st = (over = {}) => ({ ...structuredClone(DEFAULT_STATE), ...over });
+
+group('Phase 6: preset A composes the teaching-workspace hierarchy', () => {
+  const n = buildStageContent(st({ preset: 'A', aspect: '16x9', step: 3, revealAnswer: true }), LESSON);
+  check(n.byClass('r-rail').length === 1, 'top rail present');
+  check(n.byClass('trail--rail').length >= 1, 'rail uses TeachingRail rail variant');
+  check(n.byClass('ws-col').length === 1, 'workspace column present');
+  check(n.byClass('ws-equation').length === 1, 'equation region (EquationWorkspace)');
+  check(n.byClass('eqw').length >= 1, 'EquationWorkspace rendered');
+  check(n.byClass('ws-visual').length === 1, 'visual model region');
+  check(n.byClass('ws-result').length === 1, 'result region (AnswerReveal)');
+  check(n.byClass('r-philosophy').length === 1, 'philosophy strip present');
+  check(/Same value/i.test(allText(n.byClass('r-philosophy')[0])), 'philosophy strip says "same value / different form"');
+});
+
+group('Phase 6: rail + workspace track state.step', () => {
+  const railNodes = (step) => buildStageContent(st({ preset: 'A', step }), LESSON)
+    .byClass('trail__node');
+  check(railNodes(0).filter((x) => x.hasClass('is-active')).length === 0, 'step 0 -> no active rail node');
+  check(railNodes(3).filter((x) => x.hasClass('is-active')).length === 1, 'step 3 -> BUILD active');
+  check(railNodes(3).filter((x) => x.hasClass('is-complete')).length === 2, 'step 3 -> SEE + BREAK complete');
+});
+
+group('Phase 6: layer flags gate the composed regions', () => {
+  const off = (layer) => {
+    const s = st({ preset: 'A', step: 3 });
+    s.layers = { ...s.layers, [layer]: false };
+    return buildStageContent(s, LESSON);
+  };
+  check(off('discovery').byClass('r-rail').length === 0, 'discovery:false -> no rail');
+  check(off('math').byClass('ws-equation').length === 0 && off('math').byClass('ws-visual').length === 0,
+    'math:false -> no equation / visual regions');
+  check(off('presenter').byClass('r-presenter').length === 0, 'presenter:false -> no camera region');
+  // philosophy strip is the persistent backbone - always there
+  check(off('math').byClass('r-philosophy').length === 1, 'philosophy strip survives layer toggles');
+});
+
+group('Phase 6: answer reveal gating + aspect gating', () => {
+  const hidden = buildStageContent(st({ preset: 'A', step: 5, revealAnswer: false }), LESSON);
+  check(/Answer hidden/i.test(hidden.byClass('ws-result')[0].getAttribute('aria-label') || allText(hidden)),
+    'revealAnswer:false -> answer placeholder, no value leaked');
+  const sq = buildStageContent(st({ preset: 'A', aspect: '1x1', step: 3 }), LESSON);
+  check(sq.byClass('r-rail').length === 0, '1:1 does not carry the 16:9 top rail (own composition lands later)');
+  // legacy presets are untouched this commit
+  const legacyB = buildStageContent(st({ preset: 'B', step: 3 }), LESSON);
+  check(legacyB.byClass('r-rail').length === 0 && legacyB.byClass('stepper').length >= 1,
+    'preset B still renders its legacy stepper board (not yet migrated)');
 });
 
 /* ---------- report ---------- */

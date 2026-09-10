@@ -13,6 +13,14 @@ import {
   DiscoveryStepper, MethodCards, EquationCard, PaperNote, StepHeadline, StepProgress,
 } from '../components/discovery.js';
 import { renderDiagram } from '../modules/diagrams.js';
+import {
+  TopRail, PromptRegion, EquationRegion, VisualRegion, ResultRegion, PhilosophyStrip,
+} from './workspace.js';
+
+/* Presets whose board is composed from the Phase 6 teaching-workspace
+   hierarchy (and therefore carry the top rail). Grows one commit at a
+   time so each change stays inside its family. */
+const COMPOSED_PRESETS = ['A', 'C'];
 
 export const PRESETS = {
   A: { name: 'Presenter + Board', presenter: true, quote: true },
@@ -59,6 +67,13 @@ export function buildStageContent(state, lesson) {
       PresenterFrame(lesson, { showLowerThird: !showTopicTag && state.aspect === '16x9' })));
   }
 
+  /* Top rail — WHERE WE ARE. Compact so it never competes with the maths.
+     Composed 16:9 presets only for now; vertical/square land in later
+     Phase 6 commits. */
+  if (L.discovery && COMPOSED_PRESETS.includes(state.preset) && state.aspect === '16x9') {
+    content.appendChild(TopRail(state, { compact: true }));
+  }
+
   /* Sibling of the presenter, not a child — otherwise the presenter's own
      stacking context would trap it underneath the board panel. */
   if (floatQuote) content.appendChild(el('div', { class: 'r-quote' }, QuoteCard(lesson.quote)));
@@ -80,7 +95,7 @@ export function buildStageContent(state, lesson) {
       TakeawayPanel(lesson.takeaways, { stamp: lesson.stamp, revealed: state.revealAnswer })));
   }
 
-  content.appendChild(el('div', { class: 'r-footer' }, FooterWorkflow(lesson)));
+  content.appendChild(el('div', { class: 'r-footer' }, PhilosophyStrip(), FooterWorkflow(lesson)));
   return content;
 }
 
@@ -99,6 +114,19 @@ function buildBoard(state, lesson, { compact, showQuoteInBoard }) {
   const diagram = L.math ? renderDiagram(lesson.diagram, lesson, state.diagram) : null;
 
   switch (state.preset) {
+    /* ---- Phase 6: Presenter + Workspace (A) and Reality Check (C) ----
+       The board is the teaching-workspace hierarchy: the head carries
+       the question, then equation -> visual model -> result. The top
+       rail (added in buildStageContent) shows WHERE WE ARE. */
+    case 'A':
+    case 'C': {
+      main.appendChild(el('div', { class: 'ws-col' },
+        EquationRegion(state, lesson, { size: 'md' }),
+        VisualRegion(state, lesson),
+        ResultRegion(state, lesson, { skin: 'panel' }),
+      ));
+      break;
+    }
     case 'D': {
       main.appendChild(el('div', { class: 'board__col', style: { justifyItems: 'center', alignContent: 'center' } },
         L.math && EquationCard(lesson.answer?.work || lesson.steps.build?.equation, {

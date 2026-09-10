@@ -34,17 +34,17 @@
 .board__col--fill { align-content: stretch; }
 
 /* ============================================================
-   PRESET A — Presenter + Board (35 / 65)
+   PRESET A — Presenter + Workspace (38 / 62)   [Phase 6]
    ============================================================ */
 .preset-A .stage-content {
-  grid-template-columns: 35% 1fr;
+  grid-template-columns: 38% 1fr;
   grid-template-rows: 1fr auto auto;
   grid-template-areas:
     "presenter board"
     "compare   compare"
     "footer    footer";
 }
-.preset-A .board__main { grid-template-columns: 36% 1fr; }
+.preset-A .board__main { grid-template-columns: 1fr; }
 .preset-A .r-quote { top: var(--s-6); left: 26%; width: 21%; }
 
 /* ============================================================
@@ -64,14 +64,14 @@
    Same skeleton as A, comparison gets more room and a stamp.
    ============================================================ */
 .preset-C .stage-content {
-  grid-template-columns: 34% 1fr;
+  grid-template-columns: 38% 1fr;
   grid-template-rows: 1fr auto auto;
   grid-template-areas:
     "presenter board"
     "compare   compare"
     "footer    footer";
 }
-.preset-C .board__main { grid-template-columns: 34% 1fr; }
+.preset-C .board__main { grid-template-columns: 1fr; }
 .preset-C .r-quote { top: var(--s-6); left: 25%; width: 21%; }
 .preset-C .r-compare { padding-bottom: var(--s-2); }
 
@@ -185,3 +185,68 @@
 .a9x16 .method-cards, .a1x1 .method-cards { grid-auto-flow: row; }
 .a9x16 .equation-card__eq, .a1x1 .equation-card__eq { font-size: var(--fs-2xl); }
 .a9x16 .board__main, .a1x1 .board__main { align-content: start; }
+
+/* ============================================================
+   PHASE 6 — Production teaching composition
+   Shared regions used by the composed presets. Legacy presets
+   (B, D, E, G, H, F until migrated) keep their own rules above.
+   ============================================================ */
+
+/* ---- Top rail: WHERE WE ARE ---- */
+.r-rail {
+  position: absolute;
+  top: var(--s-5);
+  z-index: var(--z-brand);
+  pointer-events: none;
+}
+/* on the composed 16:9 presets the rail spans the workspace only,
+   clearing the camera column and the brand block */
+.has-presenter .r-rail { left: 40%; right: var(--s-6); }
+.no-presenter  .r-rail { left: 26%; right: var(--s-6); }
+.r-rail--compact .trail--rail { gap: 0; }
+.r-rail--compact .trail__marker { width: 1.7em; height: 1.7em; border-width: var(--bw-thin); font-size: var(--fs-sm); }
+.r-rail--compact .trail__prompt { display: none; }
+.r-rail--compact .trail__label { font-size: 0.62rem; }
+.r-rail--compact .trail__node { gap: var(--s-1); }
+
+/* make room for the rail at the top of a composed 16:9 board */
+.a16x9.preset-A .r-board,
+.a16x9.preset-C .r-board { padding-top: calc(var(--s-5) + 3.4em); }
+
+/* ---- Teaching-workspace column (hierarchy) ---- */
+.ws-col {
+  display: grid;
+  gap: var(--s-5);
+  align-content: start;
+  min-height: 0;
+}
+.ws-equation { display: grid; justify-items: center; }
+.ws-visual   { display: grid; justify-items: center; }
+.ws-visual .diagram,
+.ws-visual .tchain,
+.ws-visual svg { max-width: 100%; }
+.ws-visual > * { max-width: min(100%, 46rem); }
+.ws-result   { display: grid; justify-items: center; }
+.ws-result .areveal--panel { min-width: min(100%, 24rem); }
+.ws-prompt   { display: grid; }
+
+/* Camera-off: the workspace recomposes to a comfortable measure and
+   centres, instead of stretching the full 1920 or leaving a hole. */
+.no-presenter.preset-A .ws-col,
+.no-presenter.preset-C .ws-col { max-width: 62rem; margin: 0 auto; }
+
+/* ---- Philosophy strip: quiet backbone in the footer band ---- */
+.r-philosophy {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-3);
+  padding: var(--s-2) var(--s-6) 0;
+  font: 700 var(--fs-label)/1 var(--font-logo);
+  letter-spacing: var(--tr-wider);
+  text-transform: uppercase;
+  color: var(--t-faint);
+}
+.r-philosophy__arrow { color: var(--c-discover); opacity: .8; }
+.r-philosophy__b { color: var(--t-low); }
+.a1x1 .r-philosophy { display: none; }   /* the square has no room to spare */
