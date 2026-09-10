@@ -1,0 +1,174 @@
+/* ============================================================
+   Teaching components (Phase 2)
+   Component-specific styles for the reusable teaching system.
+   Tokens only - no raw hex, no fixed-pixel type. This is not a
+   new framework; it is one stylesheet that grows with the
+   components in UI_SYSTEM_PLAN.md. Phase 2 ships TeachingRail.
+   ============================================================ */
+
+/* ---------- Stage-colour utilities ----------
+   Any element carrying .stage-<id> exposes --stage-color to its
+   subtree. Mirrors the legacy .step-<id> classes in components.css
+   (those set --step-color and are left untouched). */
+.stage-see       { --stage-color: var(--stage-see); }
+.stage-break     { --stage-color: var(--stage-break); }
+.stage-build     { --stage-color: var(--stage-build); }
+.stage-transform { --stage-color: var(--stage-transform); }
+.stage-check     { --stage-color: var(--stage-check); }
+
+/* ============================================================
+   TeachingRail
+   ============================================================ */
+.trail { list-style: none; margin: 0; padding: 0; }
+
+/* ------------------------------------------------------------
+   variant: rail
+   One connected path that fills as the learner progresses, so it
+   reads as a single line of thinking - not five separate chips.
+   ------------------------------------------------------------ */
+.trail--rail {
+  display: flex;
+  gap: 0;
+  align-items: flex-start;
+}
+.trail--rail.trail--vertical {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.trail__node {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--s-2);
+  padding: 0 var(--s-2);
+  text-align: center;
+  /* one settle on mount; no loop. Killed by body.no-anim and
+     prefers-reduced-motion (see animations.css). */
+  animation: mtd-fade var(--dur-base) var(--ease-out) both;
+  animation-delay: calc(var(--i, 0) * var(--stagger));
+}
+.trail--vertical .trail__node {
+  flex-direction: row;
+  align-items: flex-start;
+  gap: var(--s-3);
+  padding: var(--s-2) 0;
+  text-align: left;
+}
+
+/* connector line between markers */
+.trail__node::before {
+  content: "";
+  position: absolute;
+  background: var(--ui-border-faint);
+  z-index: 0;
+}
+.trail--horizontal .trail__node::before {
+  top: 1.05em;          /* vertical centre of the 2.1em marker */
+  right: 50%;
+  left: -50%;
+  height: 3px;
+}
+.trail--vertical .trail__node::before {
+  left: 1.05em;
+  top: -50%;
+  bottom: 50%;
+  width: 3px;
+}
+.trail__node:first-child::before { display: none; }
+/* the path is "lit" up to and including the active node */
+.trail__node.is-complete::before,
+.trail__node.is-active::before { background: var(--stage-color); }
+
+/* marker: shows the step number, or a check glyph once complete.
+   Three visually distinct treatments so state never depends on
+   colour alone:
+     inactive  - dashed ring, dimmed, digit
+     active    - solid ring, haloed, enlarged, digit
+     complete  - filled disc, check glyph                       */
+.trail__marker {
+  position: relative;
+  z-index: 1;
+  flex: none;
+  width: 2.1em;
+  height: 2.1em;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font: 700 var(--fs-base)/1 var(--font-ui);
+  border: var(--bw-bold) solid var(--ui-border);
+  background: var(--ui-panel);
+  color: var(--ui-text-muted);
+  transition: transform var(--tr-state), border-color var(--tr-state),
+              background-color var(--tr-state), color var(--tr-state);
+}
+.trail__node.is-inactive .trail__marker {
+  border-style: dashed;
+  opacity: .45;
+}
+.trail__node.is-active .trail__marker {
+  border-color: var(--stage-color);
+  color: var(--ui-text);
+  transform: scale(1.1);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--stage-color) 24%, transparent);
+}
+.trail__node.is-complete .trail__marker {
+  border-color: var(--stage-color);
+  background: var(--stage-color);
+  color: #0a0d14;
+}
+
+.trail__label {
+  font: 700 var(--fs-label)/1 var(--font-logo);
+  letter-spacing: var(--tr-wider);
+  text-transform: uppercase;
+  color: var(--ui-text-muted);
+}
+.trail__node.is-active .trail__label { color: var(--stage-color); }
+.trail__node.is-complete .trail__label { color: var(--ui-text); }
+.trail__node.is-inactive .trail__label { opacity: .5; }
+
+.trail__prompt {
+  font: 400 var(--fs-explain)/1.3 var(--font-ui);
+  color: var(--ui-text-muted);
+  max-width: 18ch;
+}
+.trail--vertical .trail__prompt { max-width: none; }
+.trail__node.is-inactive .trail__prompt { opacity: .4; }
+
+/* Narrow canvases: if a horizontal rail is dropped into a 9:16 or
+   1:1 stage without an explicit orientation, stack it so nothing
+   overflows. Callers should still pass orientation:'vertical'. */
+.a9x16 .trail--rail.trail--horizontal,
+.a1x1  .trail--rail.trail--horizontal {
+  flex-direction: column;
+  align-items: stretch;
+}
+.a9x16 .trail--rail.trail--horizontal .trail__node,
+.a1x1  .trail--rail.trail--horizontal .trail__node {
+  flex-direction: row;
+  align-items: flex-start;
+  gap: var(--s-3);
+  padding: var(--s-2) 0;
+  text-align: left;
+}
+.a9x16 .trail--rail.trail--horizontal .trail__node::before,
+.a1x1  .trail--rail.trail--horizontal .trail__node::before {
+  left: 1.05em; top: -50%; bottom: 50%;
+  right: auto; width: 3px; height: auto;
+}
+.a9x16 .trail--rail.trail--horizontal .trail__prompt,
+.a1x1  .trail--rail.trail--horizontal .trail__prompt { max-width: none; }
+
+/* ------------------------------------------------------------
+   variant: cards  (legacy MethodCards, presets D / E)
+   rows and cards keep their existing look; the only addition is a
+   non-colour active cue for the 3-state contract.
+   ------------------------------------------------------------ */
+.trail--cards .method-card.is-active {
+  border-top-width: calc(var(--bw-bold) * 2);
+  box-shadow: var(--sh-3);
+}

@@ -5,6 +5,7 @@
    ============================================================ */
 
 import { el, svg, markup } from '../utils/dom.js';
+import { STEPS } from './steps.js';
 
 /* ---------- Layer 2 — Brand ---------- */
 
@@ -157,13 +158,10 @@ function Bulb() {
 
 /* ---------- Footer ---------- */
 
-const STEP_NAMES = [
-  ['SEE', 'var(--c-step-see)'],
-  ['BREAK', 'var(--c-step-break)'],
-  ['BUILD', 'var(--c-step-build)'],
-  ['TRANSFORM', 'var(--c-step-transform)'],
-  ['CHECK', 'var(--c-step-check)'],
-];
+/* Names + colours come from the shared step model, not a local copy.
+   var(--stage-see) aliases var(--c-step-see) in tokens.css, so the
+   rendered chain is identical to before. */
+const STEP_NAMES = STEPS.map((s) => [s.label.toUpperCase(), `var(${s.stageVar})`]);
 
 export function FooterWorkflow(lesson) {
   return el('footer', { class: 'footer' },
@@ -174,7 +172,7 @@ export function FooterWorkflow(lesson) {
         el('div', { class: 'footer__chain' },
           STEP_NAMES.flatMap(([name, color], i) => [
             el('span', { style: { color } }, name),
-            i < 4 ? el('span', { class: 'arrow' }, '\u2192') : null,
+            i < STEP_NAMES.length - 1 ? el('span', { class: 'arrow' }, '\u2192') : null,
           ]),
         ),
       ),

@@ -1,27 +1,32 @@
 /* ============================================================
    Layer 6 — SEE / BREAK / BUILD / TRANSFORM / CHECK
    Plus the equation card and the taped paper answer note.
+
+   The five-step renderers below now delegate to the canonical
+   TeachingRail (src/components/teaching-rail.js). Step meaning is
+   defined once in src/components/steps.js. Public signatures are
+   unchanged, and STEP_META is re-exported for existing importers
+   (e.g. src/controllers/control-app.js).
    ============================================================ */
 
-import { el, svg, markup } from '../utils/dom.js';
+import { el, svg } from '../utils/dom.js';
 import { renderMath } from '../utils/math-render.js';
 import { STEP_KEYS } from '../utils/lesson-loader.js';
+import { STEP_META, withLesson } from './steps.js';
+import { TeachingRail } from './teaching-rail.js';
 
-export const STEP_META = {
-  see:       { label: 'See',       n: 1, cls: 'step-see' },
-  break:     { label: 'Break',     n: 2, cls: 'step-break' },
-  build:     { label: 'Build',     n: 3, cls: 'step-build' },
-  transform: { label: 'Transform', n: 4, cls: 'step-transform' },
-  check:     { label: 'Check',     n: 5, cls: 'step-check' },
-};
+export { STEP_META };
 
 /**
  * @param step  current progress, 0–5. A step is revealed when n <= step.
  */
 export function DiscoveryStepper(lesson, { step = 5, compact = false } = {}) {
-  return el('div', { class: `panel panel--flush stepper${compact ? ' stepper--compact' : ''}` },
-    STEP_KEYS.map((key) => DiscoveryStep(key, lesson.steps[key], step)),
-  );
+  return TeachingRail({
+    variant: 'rows',
+    current: step,
+    compact,
+    steps: withLesson(lesson.steps),
+  });
 }
 
 export function DiscoveryStep(key, data = {}, step = 5) {
@@ -44,28 +49,19 @@ export function DiscoveryStep(key, data = {}, step = 5) {
       data.annotation && el('div', { class: 'step__annot' }, data.annotation),
       data.equation ? renderMath(data.equation) : null,
       data.note && el('div', { class: 'step__annot', style: { color: 'var(--t-low)' } }, data.note),
-      key === 'check' && data.equation && revealed ? el('span', { style: { color: 'var(--c-correct)', marginLeft: '.3em' } }, '\u2713') : null,
+      key === 'check' && data.equation && revealed ? el('span', { style: { color: 'var(--c-correct)', marginLeft: '.3em' } }, '✓') : null,
     ),
   );
 }
 
 /** Preset D/E variant: the five steps as a row of cards. */
 export function MethodCards(lesson, { step = 5, keys = STEP_KEYS } = {}) {
-  return el('div', { class: 'method-cards' },
-    keys.map((key) => {
-      const meta = STEP_META[key];
-      const data = lesson.steps[key] || {};
-      const revealed = meta.n <= step;
-      return el('div', {
-        class: `method-card ${meta.cls} ${revealed ? 'anim-slide-up stagger' : 'step--pending'}`,
-        style: { '--i': meta.n },
-      },
-        el('div', { class: 'method-card__label' }, `${meta.n}. ${data.label || meta.label}`),
-        data.text && el('div', { class: 'method-card__text' }, data.text),
-        data.equation && el('div', { class: 'method-card__math' }, renderMath(data.equation)),
-      );
-    }),
-  );
+  return TeachingRail({
+    variant: 'cards',
+    current: step,
+    keys,
+    steps: withLesson(lesson.steps, keys),
+  });
 }
 
 /** Big centred equation, used by Presets D, G, H. */
@@ -122,11 +118,9 @@ export function StepProgress(step = 5) {
 }
 
 export function StepHeadline(lesson, step) {
-  const key = STEP_KEYS[Math.max(0, step - 1)];
-  const data = lesson.steps[key] || {};
-  const meta = STEP_META[key];
-  return el('div', { class: meta.cls, style: { textAlign: 'center' } },
-    el('div', { class: 'step__label', style: { fontSize: 'var(--fs-xl)' } }, data.label || meta.label),
-    data.text && el('div', { class: 'step__text', style: { fontSize: 'var(--fs-md)' }, html: markup(data.text) }),
-  );
+  return TeachingRail({
+    variant: 'headline',
+    current: step,
+    steps: withLesson(lesson.steps),
+  });
 }

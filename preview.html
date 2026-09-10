@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Math Through Discovery — Component Gallery (dev)</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@400;600;700&family=Caveat:wght@400;600;700&family=Inter:wght@400;500;600;700&family=Permanent+Marker&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+
+<link rel="stylesheet" href="src/styles/tokens.css">
+<link rel="stylesheet" href="src/styles/base.css">
+<link rel="stylesheet" href="src/styles/components.css">
+<link rel="stylesheet" href="src/styles/diagrams.css">
+<link rel="stylesheet" href="src/styles/layouts.css">
+<link rel="stylesheet" href="src/styles/animations.css">
+<link rel="stylesheet" href="src/styles/teaching.css">
+
+<style>
+  /* Gallery chrome only — NOT part of the design system. */
+  html, body { overflow: auto; height: auto; }
+  body { background: var(--ui-bg); color: var(--ui-text); font: 400 16px/1.5 var(--font-ui); padding: 0 0 6rem; }
+  .g-wrap { max-width: 1400px; margin: 0 auto; padding: 2rem 1.5rem; }
+  .g-bar { position: sticky; top: 0; z-index: 5; display: flex; flex-wrap: wrap; gap: .75rem; align-items: center;
+           padding: .9rem 1.5rem; background: rgba(0,0,0,.6); backdrop-filter: blur(6px); border-bottom: 1px solid var(--ui-border); }
+  .g-bar h1 { font: 700 1rem/1 var(--font-logo); letter-spacing: .12em; text-transform: uppercase; margin: 0 auto 0 0; }
+  .g-bar button { appearance: none; cursor: pointer; border: 1px solid var(--ui-border); background: var(--fill-2);
+                  color: var(--ui-text); font: 600 .82rem/1 var(--font-ui); padding: .6rem .9rem; border-radius: var(--r-md); }
+  .g-note { color: var(--ui-text-muted); font-size: .85rem; margin: .4rem 0 2rem; }
+  section.g { margin: 2.5rem 0; }
+  section.g > h2 { font: 700 .8rem/1 var(--font-ui); letter-spacing: .16em; text-transform: uppercase;
+                   color: var(--ui-accent); border-bottom: 1px solid var(--ui-border); padding-bottom: .5rem; margin: 0 0 1.25rem; }
+  .g-grid { display: grid; gap: 1.25rem; }
+  .g-grid.cols2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .g-card { border: 1px solid var(--ui-border); border-radius: var(--r-lg); padding: 1.25rem; background: var(--fill-1); min-width: 0; }
+  .g-card > .cap { font: 600 .72rem/1 var(--font-ui); letter-spacing: .12em; text-transform: uppercase; color: var(--ui-text-muted); margin-bottom: .9rem; }
+  .g-card.on-paper { background: #fbf8ee; }
+  /* scaled OBS canvases */
+  .g-frames { display: flex; gap: 1.5rem; flex-wrap: wrap; align-items: flex-start; }
+  .g-scaler { border: 1px solid var(--ui-border); border-radius: var(--r-md); overflow: hidden; }
+  .g-scaler .stage { display: block; }
+  .g-scaler .stage-content-lite { position: absolute; inset: 0; display: grid; align-content: center; padding: 6% 5%; }
+  @media (max-width: 900px) { .g-grid.cols2 { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="g-bar">
+  <h1>MTD · Component Gallery</h1>
+  <button id="btn-anim" type="button">Animations: on</button>
+  <button id="btn-theme" type="button">Sample surface: dark</button>
+</div>
+
+<div class="g-wrap">
+  <p class="g-note">
+    Non-production development surface. Renders <code>TeachingRail</code> (Phase 2) in every
+    variant and state so it can be inspected visually. Nothing here is wired into a lesson,
+    preset, or OBS output. Serve with <code>npm start</code> and open
+    <code>/preview.html</code>.
+  </p>
+
+  <section class="g">
+    <h2>TeachingRail — variant: rail (horizontal) — one continuous path, states 1–5 + complete</h2>
+    <div class="g-grid" id="rail-states"></div>
+  </section>
+
+  <section class="g">
+    <h2>TeachingRail — rail: orientation &amp; showText</h2>
+    <div class="g-grid cols2" id="rail-variants"></div>
+  </section>
+
+  <section class="g">
+    <h2>TeachingRail — variant: rows (legacy DiscoveryStepper) — dark &amp; paper</h2>
+    <div class="g-grid cols2" id="rows-demo"></div>
+  </section>
+
+  <section class="g">
+    <h2>TeachingRail — variant: cards (legacy MethodCards)</h2>
+    <div class="g-grid" id="cards-demo"></div>
+  </section>
+
+  <section class="g">
+    <h2>TeachingRail — variant: headline (legacy StepHeadline)</h2>
+    <div class="g-grid cols2" id="headline-demo"></div>
+  </section>
+
+  <section class="g">
+    <h2>OBS canvases — rail inside a scaled stage (16:9 / 9:16 / 1:1)</h2>
+    <div class="g-frames" id="obs-demo"></div>
+  </section>
+</div>
+
+<script type="module">
+  import { TeachingRail } from './src/components/teaching-rail.js';
+  import { STEPS, withLesson } from './src/components/steps.js';
+  import { el } from './src/utils/dom.js';
+
+  const SAMPLE = {
+    see:       { text: 'A total and a count are visible.', equation: '144 \\text{ and } 4', annotation: 'money · people' },
+    break:     { text: 'Split the total into friendly parts.', equation: '144 = 120 + 24' },
+    build:     { text: 'Divide each part on its own.', equation: '120/4 + 24/4' },
+    transform: { text: 'Same value, easier form.', equation: '30 + 6' },
+    check:     { text: 'Multiply back to be sure.', equation: '36 \\times 4 = 144' },
+  };
+
+  const card = (cap, node, cls = '') => el('div', { class: `g-card ${cls}`.trim() },
+    el('div', { class: 'cap' }, cap), node);
+
+  // rail — states
+  const railStates = document.getElementById('rail-states');
+  [
+    ['SEE active (current = 1)', 1],
+    ['BREAK active (current = 2)', 2],
+    ['BUILD active (current = 3)', 3],
+    ['TRANSFORM active (current = 4)', 4],
+    ['CHECK active (current = 5)', 5],
+    ['All complete (current = 6)', 6],
+  ].forEach(([cap, cur]) => railStates.appendChild(card(cap, TeachingRail({ variant: 'rail', current: cur }))));
+
+  // rail — variants
+  const railVar = document.getElementById('rail-variants');
+  railVar.appendChild(card('orientation: vertical (current = 3)',
+    TeachingRail({ variant: 'rail', orientation: 'vertical', current: 3 })));
+  railVar.appendChild(card('showText: false (current = 2)',
+    TeachingRail({ variant: 'rail', current: 2, showText: false })));
+
+  // rows
+  const rows = document.getElementById('rows-demo');
+  rows.appendChild(card('rows — current = 3 (dark)',
+    TeachingRail({ variant: 'rows', current: 3, steps: withLesson(SAMPLE) })));
+  rows.appendChild(card('rows — current = 3 (bg-paper)',
+    el('div', { class: 'bg-paper' }, TeachingRail({ variant: 'rows', current: 3, steps: withLesson(SAMPLE) })),
+    'on-paper'));
+
+  // cards
+  document.getElementById('cards-demo').appendChild(
+    card('cards — current = 3', TeachingRail({ variant: 'cards', current: 3, steps: withLesson(SAMPLE) })));
+
+  // headline
+  const head = document.getElementById('headline-demo');
+  head.appendChild(card('headline — current = 2', TeachingRail({ variant: 'headline', current: 2, steps: withLesson(SAMPLE) })));
+  head.appendChild(card('headline — current = 5', TeachingRail({ variant: 'headline', current: 5, steps: withLesson(SAMPLE) })));
+
+  // OBS scaled canvases
+  const obs = document.getElementById('obs-demo');
+  [
+    ['16:9  1920×1080', 'a16x9', 1920, 1080, 0.30, 'horizontal'],
+    ['9:16  1080×1920', 'a9x16', 1080, 1920, 0.22, 'horizontal'],
+    ['1:1  1080×1080', 'a1x1', 1080, 1080, 0.30, 'horizontal'],
+  ].forEach(([cap, aspect, w, h, scale, orient]) => {
+    const stage = el('div', { class: `stage ${aspect} bg-studio`, style: { width: w + 'px', height: h + 'px' } },
+      el('div', { class: 'layer layer-bg' }),
+      el('div', { class: 'stage-content-lite' },
+        TeachingRail({ variant: 'rail', current: 3, orientation: orient })),
+    );
+    const scaler = el('div', { class: 'g-scaler', style: { width: (w * scale) + 'px', height: (h * scale) + 'px' } }, stage);
+    stage.style.transform = `scale(${scale})`;
+    stage.style.transformOrigin = 'top left';
+    obs.appendChild(card(cap, scaler));
+  });
+
+  // toggles
+  const bAnim = document.getElementById('btn-anim');
+  bAnim.addEventListener('click', () => {
+    document.body.classList.toggle('no-anim');
+    bAnim.textContent = 'Animations: ' + (document.body.classList.contains('no-anim') ? 'off' : 'on');
+  });
+  const bTheme = document.getElementById('btn-theme');
+  bTheme.addEventListener('click', () => {
+    document.querySelectorAll('#rail-states .g-card, #rail-variants .g-card, #cards-demo .g-card')
+      .forEach((c) => c.classList.toggle('bg-paper'));
+    const on = document.querySelector('#rail-states .g-card').classList.contains('bg-paper');
+    bTheme.textContent = 'Sample surface: ' + (on ? 'paper' : 'dark');
+  });
+</script>
+</body>
+</html>

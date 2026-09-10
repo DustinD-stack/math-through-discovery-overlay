@@ -116,6 +116,44 @@
   --z-brand:     70;  /* Layer 2 brand             */
   --z-stamp:     80;  /* stamps / reveals          */
   --z-controls:  90;  /* Layer 9 controls          */
+
+  /* ============================================================
+     Phase 2 - Semantic UI alias layer
+     These do NOT replace the palette above. They alias into it so
+     reusable components can depend on stable names while the skin
+     stays configurable. Every alias resolves through var(), so the
+     .bg-paper overrides below are picked up automatically.
+     ============================================================ */
+  --ui-bg:            var(--c-navy-900);
+  --ui-panel:         var(--c-board-2);
+  --ui-panel-quiet:   var(--fill-1);
+  --ui-text:          var(--t-hi);
+  --ui-text-muted:    var(--t-low);
+  --ui-text-faint:    var(--t-faint);
+  --ui-accent:        var(--c-discover);
+  --ui-success:       var(--c-correct);
+  --ui-warning:       var(--c-adjust);
+  --ui-error:         var(--c-error);
+  --ui-border:        var(--line-2);
+  --ui-border-faint:  var(--line-1);
+
+  /* ---------- Teaching-stage colours (SEE -> CHECK) ----------
+     Components read the single variable --stage-color, which the
+     .stage-* utility classes (src/styles/teaching.css) set per element. */
+  --stage-see:        var(--c-step-see);
+  --stage-break:      var(--c-step-break);
+  --stage-build:      var(--c-step-build);
+  --stage-transform:  var(--c-step-transform);
+  --stage-check:      var(--c-step-check);
+  --stage-color:      var(--stage-see);
+
+  /* ---------- Intent aliases (no new values) ---------- */
+  --r-card:      var(--r-lg);
+  --fs-value:    var(--fs-2xl);
+  --fs-value-lg: var(--fs-4xl);
+  --fs-label:    var(--fs-xs);
+  --fs-explain:  var(--fs-sm);
+  --tr-state:    var(--dur-base) var(--ease-out);
 }
 
 /* Paper / board background variant re-points a few tokens. */
