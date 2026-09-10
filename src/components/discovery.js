@@ -49,7 +49,7 @@ export function DiscoveryStep(key, data = {}, step = 5) {
       data.annotation && el('div', { class: 'step__annot' }, data.annotation),
       data.equation ? renderMath(data.equation) : null,
       data.note && el('div', { class: 'step__annot', style: { color: 'var(--t-low)' } }, data.note),
-      key === 'check' && data.equation && revealed ? el('span', { style: { color: 'var(--c-correct)', marginLeft: '.3em' } }, '✓') : null,
+      key === 'check' && data.equation && revealed ? el('span', { style: { color: 'var(--c-correct)', marginLeft: '.3em' } }, '\u2713') : null,
     ),
   );
 }
