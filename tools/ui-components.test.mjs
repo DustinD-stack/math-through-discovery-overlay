@@ -739,9 +739,28 @@ group('Phase 6: visual-reasoning families (B / D / E / G / H)', () => {
   check(compose('E').byClass('ws-col--visual').length === 1, 'E uses the visual-lead column');
   // H keeps its dashed whiteboard frame
   check(compose('H').byClass('whiteboard').length === 1, 'H keeps the whiteboard frame');
-  // F is still the legacy vertical board until commit 3
-  check(buildStageContent(st({ preset: 'F', aspect: '9x16', step: 3 }), LESSON).byClass('stepper').length >= 1,
-    'F still legacy until the vertical/square commit');
+});
+
+group('Phase 6: vertical (F / 9:16) and square (1:1) compositions', () => {
+  const fv = buildStageContent(st({ preset: 'F', aspect: '9x16', step: 3, revealAnswer: true }), LESSON);
+  check(fv.byClass('ws-col--vertical').length === 1, 'F composes a deliberate vertical column');
+  check(fv.byClass('stepper').length === 0, 'F no longer uses the legacy stepper');
+  check(fv.byClass('eqw').length >= 1 && fv.byClass('ws-visual').length === 1, 'F stacks visual + equation');
+  check(fv.byClass('r-rail').length === 1, 'F carries the vertical top rail');
+  check(fv.byClass('r-presenter').length === 1, 'F keeps a (smaller, lower) camera region');
+
+  // presenter OFF on the phone canvas still looks intentional (no dead rect)
+  const fvOff = st({ preset: 'F', aspect: '9x16', step: 3 });
+  fvOff.layers = { ...fvOff.layers, presenter: false };
+  const fvOffN = buildStageContent(fvOff, LESSON);
+  check(fvOffN.byClass('r-presenter').length === 0, 'F presenter hidden -> camera region dropped');
+  check(fvOffN.byClass('ws-col--vertical').length === 1, 'F presenter hidden -> workspace still composes');
+
+  // square: no rail, board head carries the prompt, workspace stays
+  const sq = buildStageContent(st({ preset: 'A', aspect: '1x1', step: 3, revealAnswer: true }), LESSON);
+  check(sq.byClass('r-rail').length === 0, '1:1 drops the rail for room');
+  check(sq.byClass('ws-col').length === 1 && sq.byClass('ws-visual').length === 1, '1:1 keeps prompt/visual/result workspace');
+  check(sq.byClass('r-philosophy').length === 1, 'philosophy strip still in the DOM (CSS-hidden on 1:1)');
 });
 
 /* ---------- report ---------- */

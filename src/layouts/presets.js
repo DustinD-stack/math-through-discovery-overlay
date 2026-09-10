@@ -19,10 +19,10 @@ import {
 
 /* Presets whose board is composed from the Phase 6 teaching-workspace
    hierarchy. RAIL_PRESETS is the subset that also carries the top rail
-   (Quick Reveal stays chrome-free). F and the square canvas get their
-   own compositions in later Phase 6 commits. */
-const COMPOSED_PRESETS = ['A', 'B', 'C', 'D', 'E', 'G', 'H'];
-const RAIL_PRESETS = ['A', 'B', 'C', 'D', 'E', 'H'];
+   (Quick Reveal stays chrome-free). The square canvas leans on the
+   board head for its prompt and drops the rail for room. */
+const COMPOSED_PRESETS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+const RAIL_PRESETS = ['A', 'B', 'C', 'D', 'E', 'F', 'H'];
 
 export const PRESETS = {
   A: { name: 'Presenter + Board', presenter: true, quote: true },
@@ -70,9 +70,8 @@ export function buildStageContent(state, lesson) {
   }
 
   /* Top rail — WHERE WE ARE. Compact so it never competes with the maths.
-     16:9 rail presets only for now; vertical/square land in a later
-     Phase 6 commit. */
-  if (L.discovery && RAIL_PRESETS.includes(state.preset) && state.aspect === '16x9') {
+     Landscape and vertical carry it; the square canvas has no room. */
+  if (L.discovery && RAIL_PRESETS.includes(state.preset) && state.aspect !== '1x1') {
     content.appendChild(TopRail(state, { compact: true }));
   }
 
@@ -183,10 +182,22 @@ function buildBoard(state, lesson, { compact, showQuoteInBoard }) {
       ));
       break;
     }
+    /* ---- Phase 6: Short Vertical (F) — a deliberate phone composition,
+       not a shrunk 16:9. prompt -> visual -> equation -> result, with the
+       camera as its own (smaller, lower) region placed by the grid. ---- */
+    case 'F': {
+      main.appendChild(el('div', { class: 'ws-col ws-col--vertical' },
+        PromptRegion(state, lesson),
+        VisualRegion(state, lesson),
+        EquationRegion(state, lesson, { size: 'md' }),
+        ResultRegion(state, lesson, { skin: 'panel' }),
+      ));
+      break;
+    }
+
     default: {
-      /* F (Short Vertical) and any unknown preset — scenario column +
-         discovery column. F gets its own Phase 6 composition in a later
-         commit; this keeps it working until then. */
+      /* Any unknown preset — the pre-Phase-6 scenario + discovery board,
+         kept as a safe fallback. */
       const roomForDiagram = state.aspect === '16x9';
       main.appendChild(el('div', { class: 'board__col' },
         showQuoteInBoard ? QuoteCard(lesson.quote) : null,

@@ -149,9 +149,12 @@
 .a1x1  .stage-content {
   grid-template-columns: 1fr !important;
 }
+/* Phase 6 vertical: the teaching workspace leads, the camera is a
+   smaller region lower in the stack (a deliberate phone composition,
+   not a shrunk 16:9). */
 .a9x16.has-presenter .stage-content {
-  grid-template-rows: 30% 1fr auto auto !important;
-  grid-template-areas: "presenter" "board" "compare" "footer" !important;
+  grid-template-rows: 1fr 22% auto auto !important;
+  grid-template-areas: "board" "presenter" "compare" "footer" !important;
 }
 .a9x16:not(.has-presenter) .stage-content {
   grid-template-rows: 1fr auto auto !important;
@@ -264,3 +267,33 @@
 .r-philosophy__arrow { color: var(--c-discover); opacity: .8; }
 .r-philosophy__b { color: var(--t-low); }
 .a1x1 .r-philosophy { display: none; }   /* the square has no room to spare */
+
+/* ---- Phase 6: vertical (9:16) and square (1:1) ---- */
+
+/* rail runs full-width under the small brand block on the phone canvas */
+.a9x16 .r-rail {
+  left: var(--s-4);
+  right: var(--s-4);
+  top: calc(var(--s-4) + 3.4em);
+}
+.a9x16 .r-rail--compact .trail__marker { width: 1.5em; height: 1.5em; }
+.a9x16 .r-rail--compact .trail__label { font-size: 0.55rem; }
+
+/* clear the rail; F/vertical boards start below it */
+.a9x16 .r-board { padding-top: calc(var(--s-4) + 3.6em); }
+
+.ws-col--vertical { gap: var(--s-4); align-content: start; }
+.a9x16 .ws-col { gap: var(--s-4); }
+.a9x16 .ws-visual > *,
+.a1x1  .ws-visual > * { max-width: 100%; }
+.a9x16 .ws-result .areveal--panel,
+.a1x1  .ws-result .areveal--panel { min-width: 0; width: 100%; }
+
+/* the camera region, when shown, is a calm framed strip - not the star */
+.a9x16 .r-presenter { border-radius: var(--r-lg); overflow: hidden; }
+
+/* Square: prompt (board head) -> visual -> result, tight, no rail. */
+.a1x1 .ws-col { gap: var(--s-3); align-content: center; }
+.a1x1 .r-board { padding: var(--s-6) var(--s-5) var(--s-4); align-content: center; }
+.a1x1 .board__head .section-title { font-size: var(--fs-xl); }
+.a1x1 .eqw__expr { font-size: var(--fs-xl); }
