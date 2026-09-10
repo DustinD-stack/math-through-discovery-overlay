@@ -719,10 +719,29 @@ group('Phase 6: answer reveal gating + aspect gating', () => {
     'revealAnswer:false -> answer placeholder, no value leaked');
   const sq = buildStageContent(st({ preset: 'A', aspect: '1x1', step: 3 }), LESSON);
   check(sq.byClass('r-rail').length === 0, '1:1 does not carry the 16:9 top rail (own composition lands later)');
-  // legacy presets are untouched this commit
-  const legacyB = buildStageContent(st({ preset: 'B', step: 3 }), LESSON);
-  check(legacyB.byClass('r-rail').length === 0 && legacyB.byClass('stepper').length >= 1,
-    'preset B still renders its legacy stepper board (not yet migrated)');
+});
+
+group('Phase 6: visual-reasoning families (B / D / E / G / H)', () => {
+  const compose = (preset) => buildStageContent(st({ preset, step: 3, revealAnswer: true }), LESSON);
+  for (const p of ['B', 'D', 'E', 'G', 'H']) {
+    const n = compose(p);
+    check(n.byClass('ws-col').length === 1, `preset ${p}: composes a workspace column`);
+    check(n.byClass('eqw').length >= 1, `preset ${p}: EquationWorkspace present`);
+    check(n.byClass('stepper').length === 0, `preset ${p}: legacy row stepper retired`);
+  }
+  // rail: yes for B/D/E/H, no for the quick-explanation beat (G)
+  check(compose('B').byClass('r-rail').length === 1, 'B carries the top rail');
+  check(compose('D').byClass('r-rail').length === 1, 'D carries the top rail');
+  check(compose('G').byClass('r-rail').length === 0, 'G stays chrome-free (no rail)');
+  // D leans on the equivalence chain for its visual slot
+  check(compose('D').byClass('tchain').length >= 1, 'D shows a TransformationChain');
+  // E leads with the model
+  check(compose('E').byClass('ws-col--visual').length === 1, 'E uses the visual-lead column');
+  // H keeps its dashed whiteboard frame
+  check(compose('H').byClass('whiteboard').length === 1, 'H keeps the whiteboard frame');
+  // F is still the legacy vertical board until commit 3
+  check(buildStageContent(st({ preset: 'F', aspect: '9x16', step: 3 }), LESSON).byClass('stepper').length >= 1,
+    'F still legacy until the vertical/square commit');
 });
 
 /* ---------- report ---------- */

@@ -18,9 +18,11 @@ import {
 } from './workspace.js';
 
 /* Presets whose board is composed from the Phase 6 teaching-workspace
-   hierarchy (and therefore carry the top rail). Grows one commit at a
-   time so each change stays inside its family. */
-const COMPOSED_PRESETS = ['A', 'C'];
+   hierarchy. RAIL_PRESETS is the subset that also carries the top rail
+   (Quick Reveal stays chrome-free). F and the square canvas get their
+   own compositions in later Phase 6 commits. */
+const COMPOSED_PRESETS = ['A', 'B', 'C', 'D', 'E', 'G', 'H'];
+const RAIL_PRESETS = ['A', 'B', 'C', 'D', 'E', 'H'];
 
 export const PRESETS = {
   A: { name: 'Presenter + Board', presenter: true, quote: true },
@@ -68,9 +70,9 @@ export function buildStageContent(state, lesson) {
   }
 
   /* Top rail — WHERE WE ARE. Compact so it never competes with the maths.
-     Composed 16:9 presets only for now; vertical/square land in later
-     Phase 6 commits. */
-  if (L.discovery && COMPOSED_PRESETS.includes(state.preset) && state.aspect === '16x9') {
+     16:9 rail presets only for now; vertical/square land in a later
+     Phase 6 commit. */
+  if (L.discovery && RAIL_PRESETS.includes(state.preset) && state.aspect === '16x9') {
     content.appendChild(TopRail(state, { compact: true }));
   }
 
@@ -127,51 +129,64 @@ function buildBoard(state, lesson, { compact, showQuoteInBoard }) {
       ));
       break;
     }
+
+    /* ---- Phase 6: Workspace Focus (B) ---- */
+    case 'B': {
+      main.appendChild(el('div', { class: 'ws-col ws-col--focus' },
+        PromptRegion(state, lesson),
+        EquationRegion(state, lesson, { size: 'lg' }),
+        VisualRegion(state, lesson),
+        ResultRegion(state, lesson, { skin: 'panel' }),
+      ));
+      break;
+    }
+
+    /* ---- Phase 6: Pattern Breakdown (D) — big equation + the chain ---- */
     case 'D': {
-      main.appendChild(el('div', { class: 'board__col', style: { justifyItems: 'center', alignContent: 'center' } },
-        L.math && EquationCard(lesson.answer?.work || lesson.steps.build?.equation, {
-          caption: lesson.question, large: true,
-        }),
-        diagram,
+      main.appendChild(el('div', { class: 'ws-col ws-col--focus' },
+        EquationRegion(state, lesson, { size: 'lg' }),
+        VisualRegion(state, lesson, { preferChain: true }),
+        ResultRegion(state, lesson, { skin: 'panel' }),
       ));
-      if (L.discovery) main.appendChild(MethodCards(lesson, { step: state.step }));
       break;
     }
+
+    /* ---- Phase 6: Visual Model Focus (E) — the model leads ---- */
     case 'E': {
-      main.appendChild(el('div', { class: 'board__col', style: { justifyItems: 'center', alignContent: 'center' } },
-        diagram || EquationCard(lesson.steps.build?.equation, { large: true }),
+      main.appendChild(el('div', { class: 'ws-col ws-col--visual' },
+        VisualRegion(state, lesson),
+        EquationRegion(state, lesson, { size: 'md' }),
+        ResultRegion(state, lesson, { skin: 'panel' }),
       ));
-      if (L.discovery) main.appendChild(MethodCards(lesson, { step: state.step }));
       break;
     }
+
+    /* ---- Phase 6: Quick Explanation (G) — prompt / equation / visual / answer ---- */
     case 'G': {
-      main.appendChild(el('div', { class: 'board__col', style: { justifyItems: 'center' } },
-        L.story && lesson.quote ? QuoteCard(lesson.quote) : null,
-        L.math ? EquationCard(lesson.answer?.work, { large: true }) : null,
-        L.math ? PaperNote(lesson, { revealed: state.revealAnswer }) : null,
-        L.takeaways && lesson.takeaways.length
-          ? el('div', { class: 'panel panel--quiet', style: { textAlign: 'center', maxWidth: '70%' } },
-              el('div', { class: 'takeaways__head', style: { justifyContent: 'center' } }, 'The takeaway'),
-              el('div', { class: 'comparison__body' }, textOf(lesson.takeaways[0])))
-          : null,
+      main.appendChild(el('div', { class: 'ws-col ws-col--quick' },
+        PromptRegion(state, lesson),
+        EquationRegion(state, lesson, { size: 'md' }),
+        VisualRegion(state, lesson),
+        ResultRegion(state, lesson, { skin: 'paper' }),
       ));
       break;
     }
+
+    /* ---- Phase 6: Whiteboard / Deep Work (H) — maximum reasoning space ---- */
     case 'H': {
       main.appendChild(el('div', { class: 'whiteboard' },
-        el('div', { class: 'board__col', style: { justifyItems: 'center', gap: 'var(--s-6)' } },
-          L.discovery ? StepHeadline(lesson, Math.max(1, state.step)) : null,
-          L.math ? EquationCard(currentEquation(lesson, state.step), { large: true }) : null,
-          diagram,
-          L.discovery ? StepProgress(state.step) : null,
+        el('div', { class: 'ws-col ws-col--board' },
+          EquationRegion(state, lesson, { size: 'xl' }),
+          VisualRegion(state, lesson, { preferChain: !diagram }),
+          ResultRegion(state, lesson, { skin: 'inline' }),
         ),
       ));
       break;
     }
     default: {
-      /* A, B, C, F — scenario column + discovery column.
-         Vertical and square canvases stack these and drop the diagram, which
-         would otherwise push the five steps off the bottom of the stage. */
+      /* F (Short Vertical) and any unknown preset — scenario column +
+         discovery column. F gets its own Phase 6 composition in a later
+         commit; this keeps it working until then. */
       const roomForDiagram = state.aspect === '16x9';
       main.appendChild(el('div', { class: 'board__col' },
         showQuoteInBoard ? QuoteCard(lesson.quote) : null,

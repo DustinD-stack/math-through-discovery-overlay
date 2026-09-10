@@ -56,7 +56,7 @@
   grid-template-areas: "board" "compare" "footer";
 }
 .preset-B .r-board { padding-top: calc(var(--s-8) * 2.1); }
-.preset-B .board__main { grid-template-columns: 30% 1fr; }
+.preset-B .board__main { grid-template-columns: 1fr; }
 .preset-B .r-topic { display: none; }
 
 /* ============================================================
@@ -84,7 +84,7 @@
   grid-template-areas: "board" "board" "compare" "footer";
 }
 .preset-D .r-board { padding-top: calc(var(--s-8) * 2); }
-.preset-D .board__main { grid-template-columns: 1fr; grid-template-rows: auto 1fr; }
+.preset-D .board__main { grid-template-columns: 1fr; }
 .preset-D .method-cards { grid-auto-columns: 1fr; }
 
 /* ============================================================
@@ -96,7 +96,7 @@
   grid-template-areas: "board" "compare" "footer";
 }
 .preset-E .r-board { padding-top: calc(var(--s-8) * 2); }
-.preset-E .board__main { grid-template-rows: 1fr auto; }
+.preset-E .board__main { grid-template-columns: 1fr; }
 .preset-E .method-cards { grid-auto-columns: 1fr; }
 
 /* ============================================================
@@ -108,7 +108,7 @@
   grid-template-areas: "board" "footer";
 }
 .preset-G .r-board { padding: var(--s-8) var(--s-8) var(--s-6); align-content: center; }
-.preset-G .board__main { grid-template-rows: auto 1fr auto; justify-items: center; text-align: center; }
+.preset-G .board__main { grid-template-rows: auto; justify-items: center; text-align: center; }
 .preset-G .r-topic { display: none; }
 
 /* ============================================================
@@ -199,19 +199,33 @@
   z-index: var(--z-brand);
   pointer-events: none;
 }
-/* on the composed 16:9 presets the rail spans the workspace only,
-   clearing the camera column and the brand block */
-.has-presenter .r-rail { left: 40%; right: var(--s-6); }
-.no-presenter  .r-rail { left: 26%; right: var(--s-6); }
+/* the rail spans the workspace: after the brand block by default,
+   after the 38% camera column when a presenter is on screen */
+.r-rail { left: 26%; right: var(--s-6); }
+.has-presenter .r-rail { left: 40%; }
 .r-rail--compact .trail--rail { gap: 0; }
 .r-rail--compact .trail__marker { width: 1.7em; height: 1.7em; border-width: var(--bw-thin); font-size: var(--fs-sm); }
 .r-rail--compact .trail__prompt { display: none; }
 .r-rail--compact .trail__label { font-size: 0.62rem; }
 .r-rail--compact .trail__node { gap: var(--s-1); }
 
-/* make room for the rail at the top of a composed 16:9 board */
+/* make room for the rail at the top of a composed 16:9 board.
+   A/C sit beside the camera so they only clear the rail; B/D/E/H are
+   full-width and must also clear the brand block. */
 .a16x9.preset-A .r-board,
-.a16x9.preset-C .r-board { padding-top: calc(var(--s-5) + 3.4em); }
+.a16x9.preset-C .r-board { padding-top: calc(var(--s-5) + 3.6em); }
+.a16x9.preset-B .r-board,
+.a16x9.preset-D .r-board,
+.a16x9.preset-E .r-board,
+.a16x9.preset-H .r-board { padding-top: max(calc(var(--s-8) * 2), calc(var(--s-5) + 3.6em)); }
+
+/* ---- per-family workspace column tuning ---- */
+.ws-col--focus  { gap: var(--s-6); max-width: 68rem; margin-inline: auto; width: 100%; }
+.ws-col--visual { gap: var(--s-5); align-content: center; }
+.ws-col--visual .ws-visual > * { max-width: min(100%, 60rem); }
+.ws-col--quick  { gap: var(--s-6); justify-items: center; text-align: center; max-width: 60rem; margin-inline: auto; align-content: center; }
+.ws-col--board  { gap: var(--s-7); width: 100%; }
+.ws-col--board .eqw__expr { font-size: var(--fs-4xl); }
 
 /* ---- Teaching-workspace column (hierarchy) ---- */
 .ws-col {
