@@ -180,6 +180,21 @@
     <h2>Phase 5 · composed discovery demo — “7 + 5” (gallery only)</h2>
     <div class="g-grid" id="c75-demo"></div>
   </section>
+
+  <!-- ================= PHASE 6 ================= -->
+  <section class="g">
+    <h2>Phase 6 · Production compositions — real stages via buildStageContent (dev)</h2>
+    <p class="g-note">Full <code>.stage</code> output at production pixels, scaled down.
+      Toggle <strong>Animations</strong> and <strong>Sample surface</strong> above; each frame
+      notes its preset / aspect / step / presenter. These are the reference screens for
+      <code>docs/FIGMA_HANDOFF.md</code>.</p>
+    <div class="g-frames" id="prod-frames"></div>
+  </section>
+
+  <section class="g">
+    <h2>Phase 6 · lesson sequences — 3/8 of 20 · 790 ÷ 2 · 7 + 5 (production stages)</h2>
+    <div class="g-frames" id="prod-seq"></div>
+  </section>
 </div>
 
 <script type="module">
@@ -192,6 +207,9 @@
   import { NumberJobs } from './src/components/number-jobs.js';
   import { PlaceValueBreakdown } from './src/components/place-value-breakdown.js';
   import { DIAGRAMS } from './src/modules/diagrams.js';
+  import { buildStageContent, usesPresenter } from './src/layouts/presets.js';
+  import { DEFAULT_STATE } from './src/app/state.js';
+  import { normalize } from './src/utils/lesson-loader.js';
   import { el } from './src/utils/dom.js';
   const NumberBond = DIAGRAMS.numberBond;
   const FractionBarModel = DIAGRAMS.fractionBarModel;
@@ -591,6 +609,101 @@
     PromptCard({ kind: 'notice', text: '{12} − 5 = 7  ✓', context: 'Subtraction undoes the addition.' }),
   );
   document.getElementById('c75-demo').appendChild(card('7 + 5  —  NumberBond + NumberLine + TransformationChain together', c75));
+
+  /* ================= PHASE 6: production stages ================= */
+  const SIZES = { '16x9': [1920, 1080], '9x16': [1080, 1920], '1x1': [1080, 1080] };
+
+  function prodStage(preset, aspect, lesson, over = {}) {
+    const [w, h] = SIZES[aspect];
+    const state = { ...structuredClone(DEFAULT_STATE), preset, aspect, ...over };
+    const hasP = usesPresenter(state);
+    const collapsed = (['A', 'C', 'F'].includes(preset)) && !hasP && aspect !== '1x1';
+    const cls = ['stage', `a${aspect}`, `preset-${preset}`, `bg-${state.background}`,
+      hasP ? 'has-presenter' : '', collapsed ? 'no-presenter' : ''].join(' ').replace(/\s+/g, ' ').trim();
+    const stage = el('div', { class: cls, style: { width: w + 'px', height: h + 'px' } },
+      el('div', { class: 'layer layer-bg' }),
+      buildStageContent(state, lesson));
+    const scale = aspect === '9x16' ? 0.26 : 0.34;
+    stage.style.transform = `scale(${scale})`;
+    stage.style.transformOrigin = 'top left';
+    return el('div', { class: 'g-scaler', style: { width: (w * scale) + 'px', height: (h * scale) + 'px' } }, stage);
+  }
+  const noLayer = (base, layer) => ({ ...base, layers: { ...structuredClone(DEFAULT_STATE).layers, [layer]: false } });
+
+  /* --- three synthetic lessons, EXISTING schema only (no new fields) --- */
+  const L_38 = normalize({
+    topic: 'Fraction of a whole', title: 'What is 3/8 of 20?',
+    headline: '3/8 of a 20 oz bag.',
+    question: 'What is 3/8 of 20?',
+    steps: {
+      see: { text: '20 is the whole, 8 equal parts, take 3', equation: '\\tfrac{3}{8}\\ \\text{of}\\ 20' },
+      break: { text: 'one eighth first', equation: '20 \\div 8 = 2\\ \\text{R}\\,4' },
+      build: { text: 'the remainder is four eighths', equation: '2 + \\tfrac{4}{8}' },
+      transform: { text: 'same value, simpler form', equation: '2 + \\tfrac{4}{8} = 2 + \\tfrac{1}{2} = 2.5' },
+      check: { text: 'take three of them', equation: '2.5 \\times 3 = 7.5' },
+    },
+    answer: { work: '\\tfrac{3}{8}\\ \\text{of}\\ 20', value: '= 7.5' },
+    diagram: { type: 'fractionBarModel', marker: true, rows: [{ label: '3/8', denominator: 8, shaded: 3 }] },
+    comparison: { think: '3/8 is basically a half', math: '3/8 is {less than} 1/2, so under 10 — and 7.5 < 10' },
+    takeaways: ['A remainder is a fraction of the next group.'],
+  }, 'demo-38');
+
+  const L_790 = normalize({
+    topic: 'Division by decomposition', title: '790 ÷ 2',
+    question: 'What do you notice about 790?',
+    steps: {
+      see: { text: 'seven hundreds and nine tens', equation: '790' },
+      break: { text: 'split into place-value parts', equation: '790 = 700 + 90' },
+      build: { text: 'halve each part', equation: '700 \\div 2 = 350' },
+      transform: { text: 'add the parts back', equation: '350 + 45 = 395' },
+      check: { text: 'double it back', equation: '395 \\times 2 = 790' },
+    },
+    answer: { work: '790 \\div 2', value: '= 395' },
+    diagram: { type: 'placeValueBreakdown', value: 790 },
+    takeaways: ['The value of 790 never changed — only its form.'],
+  }, 'demo-790');
+
+  const L_75 = normalize({
+    topic: 'Make a ten', title: '7 + 5',
+    question: 'How can we make this friendlier?',
+    steps: {
+      see: { text: 'two numbers to add', equation: '7 + 5' },
+      break: { text: 'break 5 to reach ten', equation: '5 = 3 + 2' },
+      build: { text: 'seven plus three is ten', equation: '7 + 3 = 10' },
+      transform: { text: 'same value, friendlier form', equation: '7 + 5 = 7 + 3 + 2 = 10 + 2 = 12' },
+      check: { text: 'subtraction undoes it', equation: '12 - 5 = 7' },
+    },
+    answer: { work: '7 + 5', value: '= 12' },
+    diagram: { type: 'numberBond', total: 5, parts: [3, 2], labels: ['5', 'to ten', 'the rest'] },
+    takeaways: ['Break a number to build a ten.'],
+  }, 'demo-75');
+
+  const pf = document.getElementById('prod-frames');
+  [
+    ['A · 16:9 · step 3 · presenter ON', () => prodStage('A', '16x9', L_38, { step: 3 })],
+    ['A · 16:9 · step 5 · presenter OFF (camera-off recompose)', () => prodStage('A', '16x9', L_38, noLayer({ step: 5 }, 'presenter'))],
+    ['A · 16:9 · transparent · step 4', () => prodStage('A', '16x9', L_38, { step: 4, background: 'transparent' })],
+    ['B · 16:9 · Workspace Focus · step 4', () => prodStage('B', '16x9', L_790, { step: 4 })],
+    ['E · 16:9 · Visual Model Focus · step 3', () => prodStage('E', '16x9', L_790, { step: 3 })],
+    ['D · 16:9 · Pattern Breakdown · step 4', () => prodStage('D', '16x9', L_75, { step: 4 })],
+    ['G · 16:9 · Quick Explanation · step 5', () => prodStage('G', '16x9', L_75, { step: 5 })],
+    ['H · 16:9 · Whiteboard · step 4', () => prodStage('H', '16x9', L_790, { step: 4 })],
+    ['F · 9:16 · presenter ON · step 3', () => prodStage('F', '9x16', L_38, { step: 3 })],
+    ['F · 9:16 · presenter OFF · step 3', () => prodStage('F', '9x16', L_38, noLayer({ step: 3 }, 'presenter'))],
+    ['A · 1:1 · step 3', () => prodStage('A', '1x1', L_75, { step: 3 })],
+    ['B · 16:9 · paper · answer hidden', () => prodStage('B', '16x9', L_790, { step: 5, background: 'paper', revealAnswer: false })],
+  ].forEach(([cap, make]) => pf.appendChild(card(cap, make())));
+
+  const ps = document.getElementById('prod-seq');
+  [
+    ['3/8 of 20 — A 16:9', () => prodStage('A', '16x9', L_38, { step: 4 })],
+    ['3/8 of 20 — F 9:16', () => prodStage('F', '9x16', L_38, { step: 4 })],
+    ['3/8 of 20 — A 1:1', () => prodStage('A', '1x1', L_38, { step: 4 })],
+    ['790 ÷ 2 — E 16:9', () => prodStage('E', '16x9', L_790, { step: 4 })],
+    ['790 ÷ 2 — B 9:16', () => prodStage('F', '9x16', L_790, { step: 4 })],
+    ['7 + 5 — D 16:9', () => prodStage('D', '16x9', L_75, { step: 4 })],
+    ['7 + 5 — G 16:9', () => prodStage('G', '16x9', L_75, { step: 5 })],
+  ].forEach(([cap, make]) => ps.appendChild(card(cap, make())));
 
   // toggles
   const bAnim = document.getElementById('btn-anim');
