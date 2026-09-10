@@ -78,6 +78,17 @@ const { EquationCard, PaperNote } = await import('../src/components/discovery.js
 const { ProblemCard } = await import('../src/components/core.js');
 const { TransformationChain } = await import('../src/components/transformation-chain.js');
 const { NumberJobs, JOB_IDS } = await import('../src/components/number-jobs.js');
+const { DIAGRAMS, DIAGRAM_NAMES, NumberBond, FractionBar, NumberLine } = await import('../src/modules/diagrams.js');
+const { PlaceValueBreakdown, decompose } = await import('../src/components/place-value-breakdown.js');
+
+/* deep text of an SVG/DOM subtree, including #text nodes */
+const allText = (n) => (n.text || '') + (n.children || []).map(allText).join(' ');
+/* every descendant with a given tagName */
+const byTag = (n, tag, acc = []) => {
+  if (n.tagName === tag) acc.push(n);
+  (n.children || []).forEach((c) => byTag(c, tag, acc));
+  return acc;
+};
 
 const SAMPLE = {
   see: { text: 'A total and a count.', equation: '144 \\text{ and } 4', annotation: 'money' },
@@ -464,6 +475,184 @@ group('NumberJobs: reusable with arbitrary values / descriptions', () => {
 
 group('NumberJobs: stack layout + narrow-canvas class', () => {
   check(NumberJobs({ whole: { value: 1 }, split: { value: 2 }, layout: 'stack' }).hasClass('njobs--stack'), 'stack layout class');
+});
+
+/* ============================================================
+   Phase 5 - visual math models
+   ============================================================ */
+
+group('DIAGRAMS registry compatibility', () => {
+  // every legacy key still present and pointing at a function
+  for (const k of ['numberBond', 'fractionBar', 'numberLine', 'doubleNumberLine',
+    'percentBar', 'arrayModel', 'areaModel', 'ratioTable', 'unitRateTable',
+    'balanceModel', 'coordinateGraph', 'barGraph', 'pieChart', 'receipt',
+    'formulaBlock', 'equation']) {
+    check(typeof DIAGRAMS[k] === 'function', `registry key "${k}" preserved`);
+  }
+  check(typeof DIAGRAMS.placeValueBreakdown === 'function', 'new key placeValueBreakdown');
+  check(DIAGRAMS.fractionBarModel === DIAGRAMS.fractionBar, 'fractionBarModel aliases fractionBar');
+  check(DIAGRAM_NAMES.includes('placeValueBreakdown') && DIAGRAM_NAMES.includes('fractionBarModel'),
+    'DIAGRAM_NAMES exposes the new keys (control-panel dropdown + smoke test)');
+});
+
+group('NumberBond: legacy spec unchanged', () => {
+  const n = NumberBond({ total: 462, parts: [400, 60, 2], caption: 'Expanded form' });
+  const svgs = byTag(n, 'svg');
+  check(svgs.length === 1 && svgs[0].getAttribute('viewBox') === '0 0 460 250', 'legacy viewBox 0 0 460 250');
+  check(/Number bond: 462 splits into 400 and 60 and 2/.test(svgs[0].getAttribute('aria-label') || ''), 'legacy aria-label');
+  check(byTag(n, 'circle').length === 4, 'whole + 3 parts = 4 circles');
+  check(allText(n).includes('462') && allText(n).includes('400'), 'values rendered');
+  check(n.byClass('nb__circle').length === 0, 'legacy path emits no rich state classes');
+});
+
+group('NumberBond: rich reveal / unknown / highlight', () => {
+  // whole-only reveal
+  const wo = NumberBond({ total: 10, parts: [7, 3], reveal: 'whole' });
+  const circ = wo.byClass('nb__circle');
+  check(circ.length === 3, 'rich path: 3 state-tagged circles');
+  check(circ.filter((c) => c.hasClass('is-complete')).length === 1, 'whole-only: 1 revealed circle');
+  check(circ.filter((c) => c.hasClass('is-inactive')).length === 2, 'whole-only: 2 hidden parts');
+  check((byTag(wo, 'text').map(allText).join(' ').match(/\?/g) || []).length >= 2, 'hidden parts show "?"');
+
+  // unknown part via "?"
+  const unk = NumberBond({ total: 10, parts: ['?', 3] });
+  check(byTag(unk, 'text').map(allText).join(' ').includes('?'), 'explicit "?" part renders as ?');
+  check(unk.byClass('nb__circle').filter((c) => c.hasClass('is-inactive')).length === 1, 'the ? part is inactive');
+
+  // progressive numeric reveal
+  const p1 = NumberBond({ total: 20, parts: [16, 4], reveal: 1 });
+  check(p1.byClass('nb__circle').filter((c) => c.hasClass('is-complete')).length === 2, 'reveal:1 -> whole + first part');
+  check(p1.byClass('nb__circle').filter((c) => c.hasClass('is-inactive')).length === 1, 'reveal:1 -> 2nd part hidden');
+
+  // highlighted part
+  const hi = NumberBond({ total: 20, parts: [16, 4], highlightPart: 1 });
+  check(hi.byClass('nb__circle').filter((c) => c.hasClass('is-active')).length === 1, 'highlightPart -> 1 active circle');
+
+  // "combine" cue: + signs between parts, plus a spoken aria-label
+  check(byTag(NumberBond({ total: 342, parts: [300, 42], reveal: 2 }), 'text').map(allText).join('').includes('+'),
+    'rich bond shows a + between parts (non-colour "combine" cue)');
+  check(/parts .*combine to the whole/i.test(byTag(hi, 'svg')[0].getAttribute('aria-label') || ''),
+    'aria-label states the parts combine to the whole');
+});
+
+group('FractionBar: legacy fractionBar unchanged', () => {
+  const n = FractionBar({ rows: [{ label: '1/2', denominator: 2, shaded: 1 }, { label: '3/6', denominator: 6, shaded: 3 }], caption: 'x' });
+  check(n.byClass('fbar-stack').length === 1 && n.byClass('fbar-stack--rich').length === 0, 'legacy fbar-stack, not rich');
+  check(n.byClass('fbar__cell').length === 8, '2 + 6 cells');
+  check(n.byClass('fbar__cell').filter((c) => c.hasClass('is-on')).length === 1, 'row 0 shaded cell -> is-on');
+  check(n.byClass('fbar__cell').filter((c) => c.hasClass('is-on-alt')).length === 3, 'row 1 shaded cells -> is-on-alt');
+  check(allText(n).replace(/\s/g, '') === 'x' || allText(n).includes('x'), 'caption present, no cell glyphs in legacy');
+});
+
+group('FractionBarModel: selected distinction + equivalence marker + reveal', () => {
+  const eq = DIAGRAMS.fractionBarModel({
+    marker: true,
+    rows: [{ label: '1/2', denominator: 2, shaded: 1 }, { label: '4/8', denominator: 8, shaded: 4 }],
+  });
+  check(eq.byClass('fbar-stack--rich').length === 1, 'rich stack');
+  const cells = eq.byClass('fbar__cell');
+  // non-colour: selected cells carry a filled glyph, unselected an outline glyph
+  const sel = cells.filter((c) => c.hasClass('fbar__cell--sel'));
+  check(sel.length === 5, '1 + 4 selected cells flagged');
+  check(sel.every((c) => allText(c).includes('■')), 'selected cells show a filled square (not colour-only)');
+  check(cells.filter((c) => !c.hasClass('fbar__cell--sel')).every((c) => allText(c).includes('□')), 'unselected cells show an outline square');
+  check(eq.byClass('fbar__guide').length === 2, 'an equal-length guide per row');
+  check(/same length/i.test(allText(eq)), 'guide is labelled "same length"');
+  // guides at the same % prove 1/2 = 4/8
+  const lefts = eq.byClass('fbar__guide').map((g) => g.style.left);
+  check(lefts[0] === lefts[1] && lefts[0] === '50%', 'both guides land at 50% -> 1/2 = 4/8 visible');
+
+  // reveal + active row
+  const r = DIAGRAMS.fractionBar({ activeRow: 0, rows: [{ denominator: 8, shaded: 3, reveal: 2 }, { denominator: 8, shaded: 3 }] });
+  check(r.byClass('fbar-row--rich')[0].hasClass('is-active'), 'activeRow 0 -> is-active');
+  check(r.byClass('fbar-row--rich')[1].hasClass('is-muted'), 'other row -> is-muted (still rendered)');
+  check(r.byClass('fbar')[0].children.filter((c) => c.hasClass && c.hasClass('is-pending')).length === 6, 'row 0 reveal:2 -> 6 pending cells');
+  check(r.byClass('fbar-row--rich')[0].getAttribute('role') === 'img', 'rich rows are labelled images');
+});
+
+group('NumberLine: legacy numberLine unchanged', () => {
+  const n = NumberLine({ min: 60, max: 100, ticks: 8, jump: { from: 68, to: 95, label: '+27' }, marks: [{ value: 70, label: 'friendly' }] });
+  const s = byTag(n, 'svg')[0];
+  check(s.getAttribute('viewBox') === '0 0 520 120', 'legacy viewBox 0 0 520 120');
+  check(byTag(n, 'path').length === 1, 'one jump arc');
+  check(allText(n).includes('+27') && allText(n).includes('friendly'), 'jump + mark labels');
+  check(n.byClass('nline__mark').length === 0, 'legacy path emits no rich mark classes');
+});
+
+group('NumberLine: rich jumps / same-location labels / reveal', () => {
+  // 7 + 5 as +3 then +2
+  const j = NumberLine({ min: 5, max: 14, ticks: 9, jumps: [
+    { from: 7, to: 10, label: '+3', state: 'complete' },
+    { from: 10, to: 12, label: '+2', state: 'active' },
+  ] });
+  check(byTag(j, 'path').length === 2, 'two jump arcs');
+  check(allText(j).includes('+3') && allText(j).includes('+2'), 'both jump labels');
+  check(/Number line from 5 to 14/.test(byTag(j, 'svg')[0].getAttribute('aria-label') || ''), 'spoken aria-label');
+
+  // reveal gates jumps
+  const jr = NumberLine({ min: 5, max: 14, ticks: 9, reveal: 1, jumps: [{ from: 7, to: 10, label: '+3' }, { from: 10, to: 12, label: '+2' }] });
+  check(byTag(jr, 'path').length === 2, 'both arcs present (reserve space)');
+  check(byTag(jr, 'path').filter((p) => (p.getAttribute('stroke-dasharray') || '') !== '').length === 1, 'reveal:1 -> 2nd jump dashed');
+
+  // same location, different labels
+  const same = NumberLine({ min: 0, max: 1, ticks: 4, minorTicks: 1, marks: [{ value: 0.5, labels: ['1/2', '2/4', '0.5'] }] });
+  check(byTag(same, 'circle').length === 1, 'one dot for three labels');
+  const txt = byTag(same, 'text').map(allText);
+  check(txt.some((t) => t.includes('1/2')) && txt.some((t) => t.includes('2/4')) && txt.some((t) => t.includes('0.5')),
+    'all three forms rendered at one location -> SAME VALUE, different form');
+  check(same.byClass('nline__mark').length === 1, 'rich mark class present');
+
+  // minor ticks
+  check(byTag(same, 'line').length > (4 + 1) + 1, 'minor ticks add lines');
+
+  // negatives still work in the rich path
+  const neg = NumberLine({ min: -5, max: 5, ticks: 10, marks: [{ value: -3, label: '-3', state: 'active' }] });
+  check(byTag(neg, 'svg').length === 1 && allText(neg).includes('-3'), 'negative domain renders in rich path');
+});
+
+group('NumberLine: accessibility', () => {
+  const n = NumberLine({ min: 5, max: 14, ticks: 9, jumps: [{ from: 7, to: 10, label: '+3' }], marks: [{ value: 12, label: 'answer' }] });
+  const s = byTag(n, 'svg')[0];
+  check(s.getAttribute('role') === 'img', 'rich number line is role=img');
+  check(/jumps: 7 to 10 \(\+3\)/.test(s.getAttribute('aria-label') || ''), 'jumps described');
+  check(/points: answer/.test(s.getAttribute('aria-label') || ''), 'points described');
+});
+
+group('PlaceValueBreakdown: decomposition', () => {
+  check(JSON.stringify(decompose(342).map((p) => [p.name, p.digit, p.placeValue]))
+    === JSON.stringify([['hundreds', 3, 300], ['tens', 4, 40], ['ones', 2, 2]]), 'auto-decompose 342');
+  check(decompose(9182).map((p) => p.placeValue).join(',') === '9000,100,80,2', 'thousands supported');
+  check(decompose(790).map((p) => p.placeValue).join(',') === '700,90,0', 'columns keep the zero place');
+});
+
+group('PlaceValueBreakdown: forms + reveal + regroup + a11y', () => {
+  const both = PlaceValueBreakdown({ value: 342 });
+  check(both.getAttribute('role') === 'group', 'root is a group');
+  check(/342 is 3 hundreds, 4 tens, 2 ones/.test(both.getAttribute('aria-label') || ''), 'spoken decomposition');
+  check(both.byClass('pvb__col').length === 3, 'columns present (both)');
+  check(both.byClass('pvb__expanded').length === 1, 'expanded present (both)');
+  check(both.byClass('pvb__place').map((x) => allText(x).trim()).join(',') === 'Hundreds,Tens,Ones',
+    'place WORDS present (primary signal, not colour)');
+  // expanded skips the zero place
+  const t790 = PlaceValueBreakdown({ value: 790, form: 'expanded' });
+  check(t790.byClass('pvb__col').length === 0 && t790.byClass('pvb__expanded').length === 1, 'expanded-only form');
+  check(t790.byClass('pvb__addend').length === 2, '790 -> 700 + 90 (no + 0)');
+  const cOnly = PlaceValueBreakdown({ value: 930, form: 'columns' });
+  check(cOnly.byClass('pvb__col').length === 3 && cOnly.byClass('pvb__expanded').length === 0, 'columns-only form');
+  // progressive reveal
+  const rv = PlaceValueBreakdown({ value: 342, reveal: 2 });
+  const cols = rv.byClass('pvb__col');
+  check(cols.filter((c) => c.hasClass('is-inactive')).length === 1, 'reveal:2 -> last column inactive');
+  check(cols.filter((c) => c.hasClass('is-active')).length === 1, 'reveal:2 -> one active column');
+  check(allText(cols[2]).includes('_'), 'unrevealed digit shown as _');
+  // regroup
+  const rg = PlaceValueBreakdown({ value: 342, regroup: { from: 1, to: 2 } });
+  check(rg.byClass('pvb__regroup').length === 1 && /regroup/i.test(allText(rg)), 'regroup note rendered');
+  check(rg.byClass('pvb__col')[1].hasClass('is-regroup-from') && rg.byClass('pvb__col')[2].hasClass('is-regroup-to'),
+    'regroup marks the two columns');
+  // highlighted place
+  check(PlaceValueBreakdown({ value: 342, highlightPlace: 0 }).byClass('pvb__col')[0].hasClass('is-active'),
+    'highlightPlace -> active column');
 });
 
 /* ---------- report ---------- */

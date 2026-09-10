@@ -8,6 +8,8 @@
 import { el, svg, esc } from '../utils/dom.js';
 import { renderMath } from '../utils/math-render.js';
 import { EquationWorkspace } from '../components/equation-workspace.js';
+import { PlaceValueBreakdown } from '../components/place-value-breakdown.js';
+import { fmtNum, arcPath } from './_svg.js';
 
 const C = {
   structure: 'var(--c-structure)', correct: 'var(--c-correct)', adjust: 'var(--c-adjust)',
@@ -19,7 +21,18 @@ const palette = [C.structure, C.strategy, C.adjust, C.transform, C.correct, C.di
 const wrap = (caption, ...kids) =>
   el('div', { class: 'diagram anim-fade' }, kids, caption && el('div', { class: 'diagram__caption' }, caption));
 
-/* ---------- Number bond ---------- */
+/* ---------- Number bond ----------
+   WHOLE decomposes into PARTs that recombine to the same WHOLE.
+   Legacy spec { total, parts, caption } renders exactly as before.
+   Rich spec adds: labels[], reveal ('all'|'whole'|'parts'|n),
+   highlightPart, and '?'/null part values (or unknownWhole) for
+   an unknown. */
+function bondIsRich(spec) {
+  return spec.reveal != null || spec.labels != null || spec.highlightPart != null
+    || spec.unknownWhole === true
+    || (Array.isArray(spec.parts) && spec.parts.some((p) => p === '?' || p == null));
+}
+
 export function NumberBond(spec = {}) {
   const total = spec.total ?? 100;
   const parts = spec.parts ?? [60, 40];
@@ -27,38 +40,163 @@ export function NumberBond(spec = {}) {
   const cx = w / 2, topY = 46, botY = 196, r = 40;
   const n = parts.length;
   const xs = parts.map((_, i) => (w / (n + 1)) * (i + 1));
+
+  if (!bondIsRich(spec)) {
+    return wrap(spec.caption,
+      svg('svg', { viewBox: `0 0 ${w} ${h}`, role: 'img', 'aria-label': `Number bond: ${total} splits into ${parts.join(' and ')}` },
+        xs.map((x) => svg('line', {
+          x1: cx, y1: topY + r, x2: x, y2: botY - r,
+          stroke: C.line, 'stroke-width': 3, 'stroke-linecap': 'round', class: 'branch-draw',
+        })),
+        svg('circle', { cx, cy: topY, r, fill: 'none', stroke: C.structure, 'stroke-width': 4 }),
+        svg('text', { x: cx, y: topY + 9, 'text-anchor': 'middle', fill: C.text, style: 'font:700 26px var(--font-ui)' }, String(total)),
+        xs.map((x, i) => [
+          svg('circle', { cx: x, cy: botY, r, fill: 'none', stroke: i === 0 ? C.correct : C.adjust, 'stroke-width': 4 }),
+          svg('text', { x, y: botY + 9, 'text-anchor': 'middle', fill: C.text, style: 'font:700 26px var(--font-ui)' }, String(parts[i])),
+        ]),
+      ),
+    );
+  }
+
+  /* ---- rich / stateful ---- */
+  const labels = spec.labels || [];
+  const rv = spec.reveal;
+  const wholeShown = spec.unknownWhole !== true && rv !== 'parts'
+    && !(typeof rv === 'number' && rv < 0);
+  const partShown = (i) => {
+    if (parts[i] === '?' || parts[i] == null) return false;
+    if (rv === 'whole') return false;
+    if (typeof rv === 'number') return i < rv;
+    return true; // 'all' | 'parts' | undefined
+  };
+  const wholeActive = spec.highlightPart === 'whole';
+  const circleText = (shown, val) => (shown ? String(val) : '?');
+
+  const nodeCircle = (x, y, shown, active, stroke) => svg('circle', {
+    cx: x, cy: y, r,
+    fill: active ? `color-mix(in srgb, ${stroke} 16%, transparent)` : 'none',
+    stroke, 'stroke-width': active ? 6 : 4,
+    'stroke-dasharray': shown ? null : '5 7',
+    opacity: shown ? 1 : 0.5,
+    class: `nb__circle is-${active ? 'active' : (shown ? 'complete' : 'inactive')}`,
+  });
+  const nodeText = (x, y, str, shown) => svg('text', {
+    x, y: y + 9, 'text-anchor': 'middle',
+    fill: shown ? C.text : C.low,
+    style: `font:700 ${shown ? 26 : 30}px var(--font-ui)`,
+  }, str);
+  const subLabel = (x, y, str) => (str
+    ? svg('text', { x, y, 'text-anchor': 'middle', class: 'svg-label' }, str)
+    : null);
+
+  const spoken = [
+    `Number bond. Whole ${circleText(wholeShown, total)}`,
+    `parts ${parts.map((p, i) => circleText(partShown(i), p)).join(', ')}`,
+    'the parts combine to the whole',
+  ].join('. ');
+
   return wrap(spec.caption,
-    svg('svg', { viewBox: `0 0 ${w} ${h}`, role: 'img', 'aria-label': `Number bond: ${total} splits into ${parts.join(' and ')}` },
-      xs.map((x) => svg('line', {
+    svg('svg', { viewBox: `0 0 ${w} ${h + 26}`, role: 'img', 'aria-label': spoken },
+      xs.map((x, i) => svg('line', {
         x1: cx, y1: topY + r, x2: x, y2: botY - r,
-        stroke: C.line, 'stroke-width': 3, 'stroke-linecap': 'round', class: 'branch-draw',
+        stroke: C.line, 'stroke-width': 3, 'stroke-linecap': 'round',
+        'stroke-dasharray': partShown(i) || wholeShown ? null : '4 8',
+        class: 'branch-draw',
       })),
-      svg('circle', { cx, cy: topY, r, fill: 'none', stroke: C.structure, 'stroke-width': 4 }),
-      svg('text', { x: cx, y: topY + 9, 'text-anchor': 'middle', fill: C.text, style: 'font:700 26px var(--font-ui)' }, String(total)),
-      xs.map((x, i) => [
-        svg('circle', { cx: x, cy: botY, r, fill: 'none', stroke: i === 0 ? C.correct : C.adjust, 'stroke-width': 4 }),
-        svg('text', { x, y: botY + 9, 'text-anchor': 'middle', fill: C.text, style: 'font:700 26px var(--font-ui)' }, String(parts[i])),
-      ]),
+      /* plus signs between adjacent parts - "combine" cue, not colour */
+      xs.slice(1).map((x, i) => svg('text', {
+        x: (xs[i] + xs[i + 1]) / 2, y: botY + 8, 'text-anchor': 'middle',
+        fill: C.low, style: 'font:700 22px var(--font-ui)',
+      }, '+')),
+      nodeCircle(cx, topY, wholeShown, wholeActive, C.structure),
+      nodeText(cx, topY, circleText(wholeShown, total), wholeShown),
+      subLabel(cx, topY + r + 20, labels[0]),
+      xs.map((x, i) => {
+        const shown = partShown(i);
+        const active = spec.highlightPart === i;
+        return [
+          nodeCircle(x, botY, shown, active, i === 0 ? C.correct : C.adjust),
+          nodeText(x, botY, circleText(shown, parts[i]), shown),
+          subLabel(x, botY + r + 20, labels[i + 1]),
+        ];
+      }),
     ),
   );
 }
 
-/* ---------- Fraction bar ---------- */
+/* ---------- Fraction bar ----------
+   WHOLE -> equal partitions -> selected partitions.
+   Legacy spec { rows:[{label,denominator,shaded,showNumbers}], caption }
+   (or flat { label, denominator, shaded }) renders exactly as before.
+   Rich spec adds: per-row `reveal` (cells shown) and `state`;
+   top-level `activeRow`, and `marker:true` for an equal-length guide
+   that makes 1/2 = 4/8 visible before it is calculated. */
+function barIsRich(spec) {
+  const rows = spec.rows || [];
+  return spec.reveal != null || spec.marker === true || spec.activeRow != null
+    || rows.some((r) => r && (r.reveal != null || r.state != null));
+}
+
 export function FractionBar(spec = {}) {
   const rows = spec.rows || [{ label: spec.label || '', denominator: spec.denominator ?? 4, shaded: spec.shaded ?? 1 }];
-  return wrap(spec.caption,
-    el('div', { class: 'fbar-stack' },
-      rows.map((row, ri) => el('div', { class: 'fbar-row' },
-        el('div', { class: 'fbar-row__label' }, row.label ? renderMath(row.label) : ''),
-        el('div', { class: 'fbar' },
-          Array.from({ length: row.denominator }, (_, i) =>
-            el('div', {
-              class: `fbar__cell${i < row.shaded ? (ri % 2 ? ' is-on-alt' : ' is-on') : ''} anim-fade stagger`,
-              style: { '--i': i },
-            }, row.showNumbers ? `1/${row.denominator}` : ''),
+
+  if (!barIsRich(spec)) {
+    return wrap(spec.caption,
+      el('div', { class: 'fbar-stack' },
+        rows.map((row, ri) => el('div', { class: 'fbar-row' },
+          el('div', { class: 'fbar-row__label' }, row.label ? renderMath(row.label) : ''),
+          el('div', { class: 'fbar' },
+            Array.from({ length: row.denominator }, (_, i) =>
+              el('div', {
+                class: `fbar__cell${i < row.shaded ? (ri % 2 ? ' is-on-alt' : ' is-on') : ''} anim-fade stagger`,
+                style: { '--i': i },
+              }, row.showNumbers ? `1/${row.denominator}` : ''),
+            ),
           ),
-        ),
-      )),
+        )),
+      ),
+    );
+  }
+
+  /* ---- rich / stateful ---- */
+  const activeRow = spec.activeRow;
+  const topReveal = spec.reveal;
+
+  return wrap(spec.caption,
+    el('div', { class: 'fbar-stack fbar-stack--rich' },
+      rows.map((row, ri) => {
+        const denom = row.denominator ?? 4;
+        const shaded = row.shaded ?? 0;
+        const reveal = row.reveal ?? topReveal ?? denom;
+        const state = row.state || (activeRow == null ? null : (activeRow === ri ? 'active' : 'muted'));
+        return el('div', {
+          class: `fbar-row fbar-row--rich${state ? ` is-${state}` : ''}`,
+          role: 'img',
+          'aria-label': `${row.label || `${shaded} of ${denom}`}: ${shaded} of ${denom} parts selected`,
+        },
+          el('div', { class: 'fbar-row__label', 'aria-hidden': 'true' }, row.label ? renderMath(row.label) : ''),
+          el('div', { class: 'fbar fbar--rich' },
+            Array.from({ length: denom }, (_, i) => {
+              const selected = i < shaded;
+              const pending = i >= reveal;
+              const glyph = row.showNumbers ? `1/${denom}` : (selected ? '■' : '□');
+              return el('div', {
+                class: `fbar__cell${selected ? (ri % 2 ? ' is-on-alt' : ' is-on') : ''}`
+                  + `${selected ? ' fbar__cell--sel' : ''}${pending ? ' is-pending' : ' anim-fade stagger'}`,
+                style: { '--i': i },
+                'aria-hidden': 'true',
+              }, pending ? '' : glyph);
+            }),
+            spec.marker
+              ? el('div', {
+                  class: 'fbar__guide',
+                  style: { left: `${(shaded / denom) * 100}%` },
+                  'aria-hidden': 'true',
+                }, el('span', { class: 'fbar__guide-tag' }, ri === 0 ? 'same length' : ''))
+              : null,
+          ),
+        );
+      }),
     ),
   );
 }
@@ -81,32 +219,120 @@ export function PercentBar(spec = {}) {
   );
 }
 
-/* ---------- Number line ---------- */
+/* ---------- Number line ----------
+   A reasoning surface. Legacy spec { min, max, ticks, jump, marks, caption }
+   renders exactly as before. Rich spec adds: minorTicks, jumps[] (with
+   per-jump label / state), reveal (count of jumps shown), and marks with
+   `labels: [..]` (many forms, one location -> another proof of SAME VALUE)
+   or `state`. Negative / fractional / decimal domains work in both paths. */
+function lineIsRich(spec) {
+  return spec.minorTicks != null || Array.isArray(spec.jumps) || spec.reveal != null
+    || (spec.marks || []).some((m) => m && (Array.isArray(m.labels) || m.state != null));
+}
+
 export function NumberLine(spec = {}) {
   const min = spec.min ?? 0, max = spec.max ?? 10;
   const ticks = spec.ticks ?? (max - min);
   const marks = spec.marks || [];
-  const w = 520, h = 120, pad = 34, y = 62;
-  const X = (v) => pad + ((v - min) / (max - min)) * (w - pad * 2);
+
+  if (!lineIsRich(spec)) {
+    const w = 520, h = 120, pad = 34, y = 62;
+    const X = (v) => pad + ((v - min) / (max - min)) * (w - pad * 2);
+    return wrap(spec.caption,
+      svg('svg', { viewBox: `0 0 ${w} ${h}` },
+        svg('line', { x1: pad, y1: y, x2: w - pad, y2: y, class: 'svg-axis', 'marker-end': '' }),
+        Array.from({ length: ticks + 1 }, (_, i) => {
+          const v = min + (i * (max - min)) / ticks;
+          return [
+            svg('line', { x1: X(v), y1: y - 10, x2: X(v), y2: y + 10, class: 'svg-axis' }),
+            svg('text', { x: X(v), y: y + 32, 'text-anchor': 'middle', class: 'svg-label' }, fmtNum(v)),
+          ];
+        }),
+        spec.jump && svg('path', {
+          d: arcPath(X(spec.jump.from), X(spec.jump.to), y - 12),
+          fill: 'none', stroke: C.adjust, 'stroke-width': 3, class: 'branch-draw',
+        }),
+        spec.jump && svg('text', { x: (X(spec.jump.from) + X(spec.jump.to)) / 2, y: y - 44, 'text-anchor': 'middle', class: 'svg-hand', style: `fill:${C.adjust}` }, spec.jump.label || ''),
+        marks.map((m, i) => [
+          svg('circle', { cx: X(m.value), cy: y, r: 8, fill: m.color || palette[i % palette.length] }),
+          svg('text', { x: X(m.value), y: y - 20, 'text-anchor': 'middle', class: 'svg-value' }, m.label || fmtNum(m.value)),
+        ]),
+      ),
+    );
+  }
+
+  /* ---- rich / stateful ---- */
+  const jumps = spec.jumps || (spec.jump ? [spec.jump] : []);
+  const reveal = spec.reveal;
+  const minor = spec.minorTicks || 0;
+  const w = 560, pad = 44, y = 96;
+  const jumpBand = jumps.length ? 26 + jumps.length * 20 : 24;
+  const h = y + 44;
+  const X = (v) => pad + ((v - min) / (max - min || 1)) * (w - pad * 2);
+  const jumpShown = (i) => (typeof reveal === 'number' ? i < reveal : true);
+
+  const spoken = [
+    `Number line from ${fmtNum(min)} to ${fmtNum(max)}`,
+    jumps.length ? `jumps: ${jumps.map((j) => `${fmtNum(j.from)} to ${fmtNum(j.to)}${j.label ? ` (${j.label})` : ''}`).join(', ')}` : '',
+    marks.length ? `points: ${marks.map((m) => (m.labels ? m.labels.join(' = ') : (m.label || fmtNum(m.value)))).join(', ')}` : '',
+  ].filter(Boolean).join('. ');
+
   return wrap(spec.caption,
-    svg('svg', { viewBox: `0 0 ${w} ${h}` },
-      svg('line', { x1: pad, y1: y, x2: w - pad, y2: y, class: 'svg-axis', 'marker-end': '' }),
-      Array.from({ length: ticks + 1 }, (_, i) => {
-        const v = min + (i * (max - min)) / ticks;
-        return [
-          svg('line', { x1: X(v), y1: y - 10, x2: X(v), y2: y + 10, class: 'svg-axis' }),
-          svg('text', { x: X(v), y: y + 32, 'text-anchor': 'middle', class: 'svg-label' }, fmt(v)),
-        ];
-      }),
-      spec.jump && svg('path', {
-        d: arc(X(spec.jump.from), X(spec.jump.to), y - 12),
-        fill: 'none', stroke: C.adjust, 'stroke-width': 3, class: 'branch-draw',
-      }),
-      spec.jump && svg('text', { x: (X(spec.jump.from) + X(spec.jump.to)) / 2, y: y - 44, 'text-anchor': 'middle', class: 'svg-hand', style: `fill:${C.adjust}` }, spec.jump.label || ''),
-      marks.map((m, i) => [
-        svg('circle', { cx: X(m.value), cy: y, r: 8, fill: m.color || palette[i % palette.length] }),
-        svg('text', { x: X(m.value), y: y - 20, 'text-anchor': 'middle', class: 'svg-value' }, m.label || fmt(m.value)),
-      ]),
+    svg('svg', { viewBox: `0 0 ${w} ${h + jumpBand}`, role: 'img', 'aria-label': spoken },
+      /* jump arcs live above the axis */
+      svg('g', { transform: `translate(0, ${jumpBand})` },
+        svg('line', { x1: pad, y1: y, x2: w - pad, y2: y, class: 'svg-axis' }),
+        Array.from({ length: ticks + 1 }, (_, i) => {
+          const v = min + (i * (max - min)) / ticks;
+          const isZero = Math.abs(v) < 1e-9;
+          return [
+            svg('line', { x1: X(v), y1: y - 11, x2: X(v), y2: y + 11, class: 'svg-axis', 'stroke-width': isZero ? 3 : 2 }),
+            svg('text', { x: X(v), y: y + 32, 'text-anchor': 'middle', class: 'svg-label' }, fmtNum(v)),
+            minor && i < ticks
+              ? Array.from({ length: minor }, (_, k) => {
+                  const mv = v + ((k + 1) * (max - min)) / ticks / (minor + 1);
+                  return svg('line', { x1: X(mv), y1: y - 5, x2: X(mv), y2: y + 5, class: 'svg-grid' });
+                })
+              : null,
+          ];
+        }),
+        jumps.map((j, i) => {
+          const shown = jumpShown(i);
+          const active = j.state === 'active';
+          const stroke = active ? C.discover : C.adjust;
+          const rise = 20 + (jumps.length - i) * 16;
+          return [
+            svg('path', {
+              d: arcPath(X(j.from), X(j.to), y - 10, rise),
+              fill: 'none', stroke, 'stroke-width': active ? 4 : 3,
+              'stroke-dasharray': shown ? null : '4 7',
+              opacity: shown ? 1 : 0.35,
+              class: 'branch-draw',
+            }),
+            svg('text', {
+              x: (X(j.from) + X(j.to)) / 2, y: y - 8 - rise,
+              'text-anchor': 'middle', class: 'svg-hand',
+              style: `fill:${stroke}`, opacity: shown ? 1 : 0.35,
+            }, j.label || ''),
+          ];
+        }),
+        marks.map((m, i) => {
+          const st = m.state || 'complete';
+          const labels = Array.isArray(m.labels) ? m.labels : [m.label || fmtNum(m.value)];
+          const fill = st === 'inactive' ? 'none' : (m.color || palette[i % palette.length]);
+          return [
+            svg('circle', {
+              cx: X(m.value), cy: y, r: st === 'active' ? 10 : 8,
+              fill, stroke: m.color || palette[i % palette.length], 'stroke-width': 3,
+              'stroke-dasharray': st === 'inactive' ? '3 4' : null,
+              class: `nline__mark is-${st}`,
+            }),
+            labels.map((t, k) => svg('text', {
+              x: X(m.value), y: y - 20 - k * 17, 'text-anchor': 'middle', class: 'svg-value',
+            }, t)),
+          ];
+        }),
+      ),
     ),
   );
 }
@@ -365,9 +591,11 @@ export function EquationModule(spec = {}) {
 export const DIAGRAMS = {
   numberBond: NumberBond,
   fractionBar: FractionBar,
+  fractionBarModel: FractionBar,   // Phase 5 alias; same renderer, richer spec
   percentBar: PercentBar,
   numberLine: NumberLine,
   doubleNumberLine: DoubleNumberLine,
+  placeValueBreakdown: PlaceValueBreakdown,
   arrayModel: ArrayModel,
   areaModel: AreaModel,
   ratioTable: RatioTable,
@@ -395,10 +623,4 @@ export function renderDiagram(spec, lesson, override = 'auto') {
     return el('div', { class: 'diagram__caption' }, `Unknown diagram type "${esc(type)}"`);
   }
   return fn(spec || {}, lesson);
-}
-
-const fmt = (v) => (Math.round(v * 100) / 100).toString();
-function arc(x1, x2, y) {
-  const mid = (x1 + x2) / 2;
-  return `M${x1},${y} Q${mid},${y - 52} ${x2},${y}`;
 }

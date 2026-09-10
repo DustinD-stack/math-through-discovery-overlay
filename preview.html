@@ -144,6 +144,42 @@
     <h2>Phase 3+4 · composed teaching example — “3/8 of 20” (gallery only, not a production preset)</h2>
     <div class="g-grid" id="composed-demo"></div>
   </section>
+
+  <!-- ================= PHASE 5 ================= -->
+  <section class="g">
+    <h2>Phase 5 · NumberBond — WHOLE ↙↘ PART PART (parts recombine to the same whole)</h2>
+    <div class="g-grid cols2" id="nb-demo"></div>
+  </section>
+
+  <section class="g">
+    <h2>Phase 5 · FractionBarModel — whole → equal parts → selected parts, and equivalence</h2>
+    <div class="g-grid cols2" id="fbar-demo"></div>
+  </section>
+
+  <section class="g">
+    <h2>Phase 5 · NumberLine — reasoning surface (jumps; one location, many forms)</h2>
+    <div class="g-grid cols2" id="nline-demo"></div>
+  </section>
+
+  <section class="g">
+    <h2>Phase 5 · PlaceValueBreakdown — decomposition made obvious (the BREAK move)</h2>
+    <div class="g-grid cols2" id="pvb-demo"></div>
+  </section>
+
+  <section class="g">
+    <h2>Phase 5 · visual models across dark / paper / 16:9 / 9:16 / 1:1</h2>
+    <div class="g-frames" id="vm-frames"></div>
+  </section>
+
+  <section class="g">
+    <h2>Phase 5 · composed discovery demo — “790 ÷ 2” (gallery only)</h2>
+    <div class="g-grid" id="c790-demo"></div>
+  </section>
+
+  <section class="g">
+    <h2>Phase 5 · composed discovery demo — “7 + 5” (gallery only)</h2>
+    <div class="g-grid" id="c75-demo"></div>
+  </section>
 </div>
 
 <script type="module">
@@ -154,7 +190,12 @@
   import { PromptCard } from './src/components/prompt-card.js';
   import { TransformationChain } from './src/components/transformation-chain.js';
   import { NumberJobs } from './src/components/number-jobs.js';
+  import { PlaceValueBreakdown } from './src/components/place-value-breakdown.js';
+  import { DIAGRAMS } from './src/modules/diagrams.js';
   import { el } from './src/utils/dom.js';
+  const NumberBond = DIAGRAMS.numberBond;
+  const FractionBarModel = DIAGRAMS.fractionBarModel;
+  const NumberLine = DIAGRAMS.numberLine;
 
   const SAMPLE = {
     see:       { text: 'A total and a count are visible.', equation: '144 \\text{ and } 4', annotation: 'money · people' },
@@ -408,6 +449,148 @@
   );
   document.getElementById('composed-demo').appendChild(
     card('SEE · NUMBER JOBS · BREAK · TRANSFORM · BUILD · TAKE · RESULT · CHECK   —   same value, different form', composed));
+
+  /* ================= PHASE 5 ================= */
+
+  // --- NumberBond ---
+  const nb = document.getElementById('nb-demo');
+  nb.appendChild(card('7 + 3 = 10', NumberBond({ total: 10, parts: [7, 3], labels: ['whole', 'part', 'part'] })));
+  nb.appendChild(card('20 = 16 + 4', NumberBond({ total: 20, parts: [16, 4] })));
+  nb.appendChild(card('342 = 300 + 42  (larger-number decomposition)', NumberBond({ total: 342, parts: [300, 42], labels: ['342', 'hundreds', 'the rest'] })));
+  nb.appendChild(card('unknown part —  10  ↙↘  ?  3', NumberBond({ total: 10, parts: ['?', 3] })));
+  nb.appendChild(card('progressive: whole only', NumberBond({ total: 20, parts: [16, 4], reveal: 'whole' })));
+  nb.appendChild(card('progressive: whole + first part, 2nd highlighted', NumberBond({ total: 20, parts: [16, 4], reveal: 1, highlightPart: 1 })));
+
+  // --- FractionBarModel ---
+  const fb = document.getElementById('fbar-demo');
+  fb.appendChild(card('3/8', FractionBarModel({ rows: [{ label: '3/8', denominator: 8, shaded: 3 }] })));
+  fb.appendChild(card('1/2 = 4/8  (equal-length guide)', FractionBarModel({
+    marker: true, rows: [{ label: '1/2', denominator: 2, shaded: 1 }, { label: '4/8', denominator: 8, shaded: 4 }],
+  })));
+  fb.appendChild(card('2/4 = 3/6 = 1/2  (three rows)', FractionBarModel({
+    marker: true, rows: [
+      { label: '2/4', denominator: 4, shaded: 2 },
+      { label: '3/6', denominator: 6, shaded: 3 },
+      { label: '1/2', denominator: 2, shaded: 1 },
+    ],
+  })));
+  fb.appendChild(card('progressive reveal + active row', FractionBarModel({
+    activeRow: 0, rows: [{ label: '3/8', denominator: 8, shaded: 3, reveal: 2 }, { label: '?', denominator: 8, shaded: 0 }],
+  })));
+  fb.appendChild(card('bg-paper', el('div', { class: 'bg-paper' }, FractionBarModel({
+    marker: true, rows: [{ label: '1/2', denominator: 2, shaded: 1 }, { label: '4/8', denominator: 8, shaded: 4 }],
+  })), 'on-paper'));
+
+  // --- NumberLine ---
+  const nl = document.getElementById('nline-demo');
+  nl.appendChild(card('7 + 5  as  +3 then +2', NumberLine({
+    min: 5, max: 14, ticks: 9,
+    jumps: [{ from: 7, to: 10, label: '+3', state: 'complete' }, { from: 10, to: 12, label: '+2', state: 'active' }],
+    marks: [{ value: 7, label: '7' }, { value: 12, label: '12', state: 'active' }],
+  })));
+  nl.appendChild(card('one location, many forms —  1/2 = 2/4 = 0.5', NumberLine({
+    min: 0, max: 1, ticks: 4, minorTicks: 1, marks: [{ value: 0.5, labels: ['1/2', '2/4', '0.5'] }],
+  })));
+  nl.appendChild(card('negative numbers —  −3 on a −5…5 line', NumberLine({
+    min: -5, max: 5, ticks: 10, marks: [{ value: -3, label: '−3', state: 'active' }, { value: 0, label: '0' }],
+  })));
+  nl.appendChild(card('progressive reveal (reveal: 1 of 2 jumps)', NumberLine({
+    min: 5, max: 14, ticks: 9, reveal: 1,
+    jumps: [{ from: 7, to: 10, label: '+3' }, { from: 10, to: 12, label: '+2' }],
+  })));
+  nl.appendChild(card('legacy spec still works (single jump)', NumberLine({
+    min: 60, max: 100, ticks: 8, jump: { from: 68, to: 95, label: '+27' }, marks: [{ value: 70, label: 'friendly' }],
+  })));
+
+  // --- PlaceValueBreakdown ---
+  const pv = document.getElementById('pvb-demo');
+  pv.appendChild(card('342 = 300 + 40 + 2  (both)', PlaceValueBreakdown({ value: 342 })));
+  pv.appendChild(card('790 = 700 + 90  (expanded skips the zero)', PlaceValueBreakdown({ value: 790, form: 'both' })));
+  pv.appendChild(card('930 = 900 + 30', PlaceValueBreakdown({ value: 930 })));
+  pv.appendChild(card('9182  (thousands)', PlaceValueBreakdown({ value: 9182, form: 'columns' })));
+  pv.appendChild(card('progressive reveal (reveal: 2)', PlaceValueBreakdown({ value: 342, reveal: 2 })));
+  pv.appendChild(card('regroup 1 ten → ones', PlaceValueBreakdown({ value: 342, regroup: { from: 1, to: 2 } })));
+
+  // --- visual models in scaled stages ---
+  const vmf = document.getElementById('vm-frames');
+  [
+    ['16:9', 'a16x9', 1920, 1080, 0.30, () => PlaceValueBreakdown({ value: 790 })],
+    ['9:16', 'a9x16', 1080, 1920, 0.22, () => NumberBond({ total: 20, parts: [16, 4] })],
+    ['1:1', 'a1x1', 1080, 1080, 0.30, () => NumberLine({ min: 0, max: 1, ticks: 4, marks: [{ value: 0.5, labels: ['1/2', '0.5'] }] })],
+  ].forEach(([cap, aspect, w, h, scale, make]) => {
+    const stage = el('div', { class: `stage ${aspect} bg-studio`, style: { width: w + 'px', height: h + 'px' } },
+      el('div', { class: 'layer layer-bg' }),
+      el('div', { class: 'stage-content-lite' }, make()));
+    stage.style.transform = `scale(${scale})`; stage.style.transformOrigin = 'top left';
+    vmf.appendChild(card(cap, el('div', { class: 'g-scaler', style: { width: (w * scale) + 'px', height: (h * scale) + 'px' } }, stage)));
+  });
+  vmf.appendChild(card('paper — number bond', el('div', { class: 'bg-paper', style: { padding: '1rem', borderRadius: '12px' } },
+    NumberBond({ total: 342, parts: [300, 42], labels: ['342', 'hundreds', 'the rest'] })), 'on-paper'));
+
+  /* ---- composed "790 ÷ 2" ---- */
+  const c790 = el('div', { class: 'demo-flow' },
+    heading('SEE'),
+    PromptCard({ kind: 'notice', text: 'What do you notice about {790}?', context: 'We want 790 ÷ 2.' }),
+    PlaceValueBreakdown({ value: 790, form: 'both', caption: '790 is 7 hundreds and 9 tens — the value has not changed, only the form.' }),
+    TeachingRail({ variant: 'rail', current: 5 }),
+
+    heading('BREAK — split into place-value parts'),
+    EquationWorkspace({ lines: [{ expr: '790 = 700 + 90', kind: 'given' }] }),
+
+    heading('BUILD — halve each part'),
+    EquationWorkspace({ lines: [
+      { expr: '700 \\div 2 = 350', kind: 'work' },
+      { expr: '90 \\div 2 = 45', kind: 'work' },
+    ] }),
+
+    heading('TRANSFORM — recombine'),
+    TransformationChain({ links: [
+      { form: '790 \\div 2', label: 'the original' },
+      { form: '(700 + 90) \\div 2', label: 'same value, split', note: 'place-value form' },
+      { form: '350 + 45', label: 'each part halved' },
+      { form: '395', label: 'added back' },
+    ], title: '395' }),
+
+    heading('RESULT'),
+    AnswerReveal({ work: '790 \\div 2', value: '395', revealed: true, skin: 'panel', lead: 'So' }),
+
+    heading('CHECK — reverse it'),
+    PromptCard({ kind: 'notice', text: '{395} × 2 = 790  ✓', context: 'Doubling 395: 350·2 = 700, 45·2 = 90, 700 + 90 = 790.' }),
+    PromptCard({
+      kind: 'notice',
+      text: 'The point:',
+      context: 'We never changed the value of 790. We changed its FORM to 700 + 90 so the division was easy.',
+    }),
+  );
+  document.getElementById('c790-demo').appendChild(card('790 ÷ 2  —  BREAK with PlaceValueBreakdown, same value / easier form', c790));
+
+  /* ---- composed "7 + 5" ---- */
+  const c75 = el('div', { class: 'demo-flow' },
+    heading('SEE'),
+    EquationWorkspace({ lines: [{ expr: '7 + 5', kind: 'given' }] }),
+
+    heading('BREAK — 5 = 3 + 2 (to make a ten)'),
+    NumberBond({ total: 5, parts: [3, 2], labels: ['5', 'to ten', 'the rest'] }),
+
+    heading('BUILD — 7 + 3 = 10'),
+    NumberLine({
+      min: 5, max: 14, ticks: 9,
+      jumps: [{ from: 7, to: 10, label: '+3', state: 'complete' }, { from: 10, to: 12, label: '+2', state: 'active' }],
+      marks: [{ value: 7, label: '7' }, { value: 10, label: '10' }, { value: 12, label: '12', state: 'active' }],
+    }),
+
+    heading('TRANSFORM — same value, friendlier form'),
+    TransformationChain({ links: [
+      { form: '7 + 5' },
+      { form: '7 + 3 + 2', note: 'broke 5 into 3 + 2' },
+      { form: '10 + 2', note: 'built a ten' },
+      { form: '12' },
+    ], title: '12' }),
+
+    heading('CHECK'),
+    PromptCard({ kind: 'notice', text: '{12} − 5 = 7  ✓', context: 'Subtraction undoes the addition.' }),
+  );
+  document.getElementById('c75-demo').appendChild(card('7 + 5  —  NumberBond + NumberLine + TransformationChain together', c75));
 
   // toggles
   const bAnim = document.getElementById('btn-anim');
