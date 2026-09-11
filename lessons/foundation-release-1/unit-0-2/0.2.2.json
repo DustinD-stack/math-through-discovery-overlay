@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "id": "0.2.2",
+  "unitId": "0.2",
+  "sequence": 2,
+  "title": "Breaking a Quantity Apart",
+  "domain": "D0",
+  "type": "discovery",
+  "objective": "A quantity can be broken apart in more than one way, and each way still gives back the same whole.",
+  "studentQuestion": "Can you break this apart a different way?",
+  "prerequisites": ["0.2.1"],
+  "newIdea": "More than one decomposition exists for the same whole.",
+  "reuses": ["0.2.1"],
+  "patterns": ["part-whole", "equivalence"],
+  "representations": [{ "type": "objects", "role": "primary" }],
+  "vocabulary": ["break apart", "a different way"],
+  "unlocks": ["0.2.4"],
+  "teaching": {
+    "setup": "6 counters, already split one way (4 and 2) from a prior demonstration.",
+    "see": "Is 4 and 2 the only way to break 6 apart?",
+    "break": "Re-split the same 6 a different way (e.g. 3 and 3, or 5 and 1).",
+    "build": "Record each split found, side by side.",
+    "transform": "Several different-looking splits, all of the same whole (6) — the earliest concrete instance of many forms, one value.",
+    "check": { "strategy": "recount", "prompt": "Recombine each split and recount to confirm it's still 6 every time." }
+  },
+  "examples": {
+    "primary": "6 into {4,2}, {3,3}, {5,1}.",
+    "second": "8 into at least two different splits.",
+    "transfer": "A number the learner has not yet split (e.g. 9), find as many splits as they can."
+  },
+  "language": { "teacherPrompts": ["cross.conservation-check"], "studentFrames": ["frame.i-broke"] },
+  "mastery": { "evidence": "Produces at least two different splits of the same whole and confirms both recombine to the same total." },
+  "production": { "formatSupport": ["long", "short"], "presenter": "recommended" }
+}

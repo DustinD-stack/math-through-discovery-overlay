@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "0.1.5",
+  "unitId": "0.1",
+  "sequence": 5,
+  "title": "More, Less, or Equal?",
+  "domain": "D0",
+  "type": "discovery",
+  "objective": "Name a comparison between two quantities using more, less, or equal, backed by evidence (pairing or counting), not a guess.",
+  "studentQuestion": "Is this group more, less, or the same as that one?",
+  "prerequisites": ["0.1.4"],
+  "newIdea": "The vocabulary more/less/equal attached to the pairing evidence from 0.1.4.",
+  "reuses": ["0.1.4", "0.1.1"],
+  "patterns": ["part-whole"],
+  "representations": [{ "type": "objects", "role": "primary" }],
+  "vocabulary": ["more", "less", "fewer", "equal", "the same as"],
+  "unlocks": ["0.1.6"],
+  "teaching": {
+    "setup": "Two groups are shown side by side.",
+    "see": "Look at both groups. What's your first guess?",
+    "break": "Pair the groups, or count each, to get evidence.",
+    "build": "State the comparison word backed by the evidence just gathered.",
+    "transform": "The same two groups, rearranged — comparison word stays the same.",
+    "check": { "strategy": "alternate-representation", "prompt": "A partner or teacher checks the pairing or count independently." }
+  },
+  "examples": {
+    "primary": "4 vs. 6 objects.",
+    "second": "5 vs. 5 objects.",
+    "transfer": "Three groups at once — the learner orders them using more/less/equal."
+  },
+  "misconceptions": ["MC-CONSERVATION-REARRANGE"],
+  "language": { "teacherPrompts": ["cross.how-do-you-know"], "studentFrames": ["frame.i-did-that-because"] },
+  "mastery": { "evidence": "Correctly compares two groups using more/less/equal, with evidence, in at least 3 of 4 tries." },
+  "production": { "formatSupport": ["long", "short"], "presenter": "optional" }
+}

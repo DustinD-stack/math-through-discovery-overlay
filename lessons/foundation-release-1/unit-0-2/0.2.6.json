@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "id": "0.2.6",
+  "unitId": "0.2",
+  "sequence": 6,
+  "title": "Where Do Numbers Live?",
+  "domain": "D0",
+  "type": "discovery",
+  "objective": "Numbers have a location relative to each other — they can be placed in order along a path, and that placement itself carries meaning.",
+  "studentQuestion": "Where would this number go?",
+  "prerequisites": ["0.1.5", "0.2.5"],
+  "newIdea": "Number location — the seed of the number line, used from here through algebra.",
+  "reuses": ["0.1.5", "0.2.5"],
+  "patterns": ["part-whole"],
+  "representations": [{ "type": "number-path", "role": "primary" }],
+  "vocabulary": ["before", "after", "between", "order"],
+  "unlocks": ["0.2.7"],
+  "teaching": {
+    "setup": "A blank path with a start point (zero) marked.",
+    "see": "If this end is zero, where do you think 3 belongs?",
+    "break": "Place a few numbers (0, 1, 2, 3) one at a time, checking each against more than the last one, so further along.",
+    "build": "Fill in a short run of consecutive numbers on the path.",
+    "transform": "The same numbers, shown as a path of positions instead of separate counted groups.",
+    "check": { "strategy": "alternate-representation", "prompt": "Does the order along the path match: more is farther from zero?" }
+  },
+  "examples": {
+    "primary": "Placing 0-5 on a path.",
+    "second": "Inserting 6 and 7 onto an already-placed 0-5 path.",
+    "transfer": "Given two already-placed numbers (e.g. 2 and 6), predict roughly where 4 belongs between them."
+  },
+  "language": { "teacherPrompts": ["cross.how-do-you-know"], "studentFrames": ["frame.i-see"] },
+  "mastery": { "evidence": "Correctly places 4-5 given numbers in order along a path and justifies more is farther along." },
+  "production": { "formatSupport": ["long", "short"], "presenter": "optional" }
+}

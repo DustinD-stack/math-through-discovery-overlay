@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "id": "2.1.5",
+  "unitId": "2.1",
+  "sequence": 5,
+  "title": "Comparing Two-Digit Numbers",
+  "domain": "D2",
+  "type": "strategy",
+  "objective": "Compare two two-digit numbers by comparing tens first, then ones only if the tens are equal.",
+  "studentQuestion": "Which number is bigger — how can you tell without counting everything?",
+  "prerequisites": ["2.1.2", "0.1.5"],
+  "newIdea": "An efficient comparison procedure grounded in place value, replacing full recounting.",
+  "reuses": ["0.1.5", "2.1.2"],
+  "patterns": ["break-by-place-value"],
+  "representations": [{ "type": "place-value-breakdown", "role": "primary" }],
+  "unlocks": ["2.1.6"],
+  "teaching": {
+    "setup": "Two numbers, e.g. 34 and 27, each shown as bundles + loose ones.",
+    "see": "Which has more tens?",
+    "break": "Compare the tens digits first; only compare ones if tens are tied.",
+    "build": "State the comparison (34 > 27, because 3 tens beats 2 tens, regardless of ones).",
+    "transform": "The same two quantities, compared efficiently by place value instead of a full one-by-one count.",
+    "check": { "strategy": "alternate-representation", "prompt": "Fully unbundle and count both to confirm the comparison." }
+  },
+  "examples": {
+    "primary": "34 vs. 27.",
+    "second": "34 vs. 31 (tens tied — ones decide).",
+    "transfer": "34 vs. 34 (equal — both tens and ones tied)."
+  },
+  "misconceptions": ["MC-DIGIT-VALUE-CONFUSION"],
+  "language": { "teacherPrompts": ["cross.how-do-you-know"], "studentFrames": ["frame.i-did-that-because"] },
+  "mastery": { "evidence": "Correctly compares 3 pairs of two-digit numbers, including one tied-tens case, using tens-first reasoning." },
+  "production": { "formatSupport": ["long", "short"], "presenter": "optional" }
+}

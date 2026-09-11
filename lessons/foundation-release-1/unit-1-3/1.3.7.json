@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "1.3.7",
+  "unitId": "1.3",
+  "sequence": 7,
+  "title": "Make 10 With a New Pair: 6 + 9",
+  "domain": "D1",
+  "type": "strategy",
+  "objective": "Apply the full Make 10 strategy independently to a pair not explicitly drilled in this unit, confirming transfer within the single-digit range.",
+  "studentQuestion": "You haven't practiced this exact pair yet — can you still do it?",
+  "prerequisites": ["1.3.1", "1.3.2", "1.3.3", "1.3.4", "1.3.5", "1.3.6"],
+  "reuses": ["1.3.1", "1.3.2", "1.3.3"],
+  "patterns": ["make-a-benchmark", "part-whole"],
+  "representations": [
+    { "type": "number-bond", "role": "primary", "data": { "whole": 6, "parts": [1, 5] } },
+    { "type": "equation-workspace", "role": "primary" },
+    { "type": "transformation-chain", "role": "secondary" }
+  ],
+  "unlocks": ["MC-1.3", "2.1.1"],
+  "teaching": {
+    "setup": "6 + 9, unsolved, presented without a worked model first.",
+    "see": "Which addend is closer to 10? (9, needing 1.)",
+    "break": "6 = 1 + 5.",
+    "build": "9 + 1 = 10.",
+    "transform": "10 + 5 = 15 — same value as 6 + 9.",
+    "check": { "strategy": "commutativity", "prompt": "6 + 9 = 15." }
+  },
+  "examples": {
+    "primary": "6 + 9 = 15.",
+    "second": "4 + 8 = 12.",
+    "transfer": "This lesson is itself the unit's transfer checkpoint — the two-digit extension is deferred to Unit 2.1's lesson 2.1.6, not attempted here."
+  },
+  "language": { "teacherPrompts": ["cross.how-do-you-know"], "studentFrames": ["frame.i-did-that-because"] },
+  "mastery": { "evidence": "Independently and correctly executes the full bridge for 6 + 9 without a worked model shown first." },
+  "production": { "formatSupport": ["long", "short"], "presenter": "recommended" }
+}

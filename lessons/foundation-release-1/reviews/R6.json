@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "id": "R6",
+  "unitId": "1.2",
+  "title": "Review: Missing-Part Reasoning as a Bond",
+  "domain": "D1",
+  "type": "review",
+  "objective": "Retrieve number-bond missing-part reasoning, placed after 1.2.3 to connect the just-practiced complement-to-10 fact back to its bond representation.",
+  "prerequisites": ["1.2.3"],
+  "review": {
+    "retrieves": ["1.1.4"],
+    "prompt": "Draw this complement-to-10 fact as a bond instead."
+  },
+  "production": { "formatSupport": ["long", "short"], "presenter": "not-needed" }
+}

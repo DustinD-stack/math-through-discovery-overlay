@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "id": "R3",
+  "unitId": "0.2",
+  "title": "Review: Composing and Comparing",
+  "domain": "D0",
+  "type": "review",
+  "objective": "Retrieve composing (0.2.3) and comparison (0.1.5), placed after 0.2.5 (zero) rather than immediately after either source lesson.",
+  "prerequisites": ["0.2.5"],
+  "review": {
+    "retrieves": ["0.2.3", "0.1.5"],
+    "prompt": "Given these two parts, what's the whole — and is it more or less than the whole from before?"
+  },
+  "production": { "formatSupport": ["long", "short"], "presenter": "not-needed" }
+}

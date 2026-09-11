@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "id": "1.2.5",
+  "unitId": "1.2",
+  "sequence": 5,
+  "title": "Which Benchmark Is Closer?",
+  "domain": "D1",
+  "type": "strategy",
+  "objective": "Given a number, decide whether 5 or 10 is the more useful nearby benchmark to reason from.",
+  "studentQuestion": "Is this number closer to 5 or closer to 10?",
+  "prerequisites": ["1.2.1", "1.2.2", "1.2.3", "1.2.4"],
+  "newIdea": "Choosing between two benchmarks — a light preview of the strategy-selection skill fully developed in Unit 1.3.",
+  "reuses": ["1.2.1", "1.2.3", "0.2.7"],
+  "patterns": ["make-a-benchmark"],
+  "representations": [{ "type": "number-path", "role": "primary" }, { "type": "number-bond", "role": "secondary" }],
+  "vocabulary": ["closer to"],
+  "unlocks": ["1.3.1"],
+  "teaching": {
+    "setup": "A number path with 5 and 10 marked; a target number is given (e.g. 6).",
+    "see": "Is 6 closer to 5 or closer to 10?",
+    "break": "Find the distance to each benchmark.",
+    "build": "Compare the two distances and choose the smaller.",
+    "transform": "The same number (6), reframed relative to whichever benchmark is more useful for it.",
+    "check": { "strategy": "recount", "prompt": "Confirm both distances by counting along the path." }
+  },
+  "examples": {
+    "primary": "6 (closer to 5, by 1, vs. 4 away from 10).",
+    "second": "8 (closer to 10).",
+    "transfer": "7 or 8 — genuinely closer to 10 but still meaningfully related to 5."
+  },
+  "language": { "teacherPrompts": ["cross.how-do-you-know"], "studentFrames": ["frame.i-did-that-because"] },
+  "mastery": { "evidence": "Correctly identifies the closer benchmark for 4 of 5 numbers 1-9, with a stated distance-based justification." },
+  "production": { "formatSupport": ["long", "short"], "presenter": "optional" }
+}

@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "id": "3.2.8",
+  "unitId": "3.2",
+  "sequence": 8,
+  "title": "Compensation at the Store",
+  "domain": "D3",
+  "type": "application",
+  "objective": "Apply compensation inside a real, motivating context (totaling a small receipt) — the unit's, and Foundation Release 1's, capstone application lesson.",
+  "studentQuestion": "How much did we spend in all — is there a friendlier way to add it up?",
+  "prerequisites": ["3.2.1", "3.2.2", "3.2.3", "3.2.4", "3.2.5", "3.2.6", "3.2.7"],
+  "reuses": ["3.2.2", "3.2.7"],
+  "patterns": ["compensate", "make-a-benchmark"],
+  "representations": [{ "type": "equation-workspace", "role": "primary" }, { "type": "receipt", "role": "secondary" }],
+  "vocabulary": ["total", "spend", "in all"],
+  "unlocks": ["MC-3.2"],
+  "teaching": {
+    "setup": "A short receipt: two items priced $19 and $26.",
+    "see": "How much did both items cost together?",
+    "break": "Notice $19 is close to $20; round up and plan to correct.",
+    "build": "$20 + $26 = $46.",
+    "transform": "$19 + $26 and $20 + $26 - $1 — same total ($45), reached via a friendlier round number.",
+    "check": { "strategy": "cross-check", "prompt": "Add the original prices directly to confirm $45." }
+  },
+  "examples": {
+    "primary": "$19 + $26 = $45.",
+    "second": "$38 + $47 = $85 (round 38 to 40, correct by 2).",
+    "transfer": "A three-item receipt, applying compensation to whichever price is closest to a landmark."
+  },
+  "misconceptions": ["MC-COMPENSATE-UNBALANCED"],
+  "language": { "teacherPrompts": ["cross.how-do-you-know"], "studentFrames": ["frame.makes-sense-because"] },
+  "mastery": { "evidence": "Correctly totals 2 receipt-style problems using compensation, including the correction step, in a real-context wrapper." },
+  "production": { "formatSupport": ["long", "short"], "presenter": "recommended" }
+}

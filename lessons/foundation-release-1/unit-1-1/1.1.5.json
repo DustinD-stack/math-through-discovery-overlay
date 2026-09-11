@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "1.1.5",
+  "unitId": "1.1",
+  "sequence": 5,
+  "title": "Missing Whole Puzzles",
+  "domain": "D1",
+  "type": "strategy",
+  "objective": "Given both parts, find the whole — the companion case to missing-part puzzles, reinforcing composing in bond form.",
+  "studentQuestion": "If you know both parts, what's the whole?",
+  "prerequisites": ["1.1.4"],
+  "reuses": ["0.2.3", "0.1.7"],
+  "patterns": ["part-whole"],
+  "representations": [{ "type": "number-bond", "role": "primary", "data": { "whole": null, "parts": [6, 3] } }],
+  "unlocks": ["1.1.6"],
+  "teaching": {
+    "setup": "A bond with both parts shown (e.g. 6 and 3), whole blank.",
+    "see": "Both parts are here. What whole do they make?",
+    "break": "Combine the two parts (counting on or a known fact).",
+    "build": "State and place the whole (9).",
+    "transform": "Two separate known parts — one combined named whole.",
+    "check": { "strategy": "alternate-representation", "prompt": "Build with objects to confirm 6 + 3 = 9." }
+  },
+  "examples": {
+    "primary": "Parts 6 and 3, whole 9.",
+    "second": "Parts 7 and 2, whole 9 (same whole via different parts).",
+    "transfer": "Three parts given at once, find the whole."
+  },
+  "misconceptions": ["MC-BOND-DIRECTION"],
+  "language": { "teacherPrompts": ["stage.build"], "studentFrames": ["frame.i-built"] },
+  "mastery": { "evidence": "Correctly finds the whole from two given parts for 3 different pairs." },
+  "production": { "formatSupport": ["long", "short"], "presenter": "optional" }
+}

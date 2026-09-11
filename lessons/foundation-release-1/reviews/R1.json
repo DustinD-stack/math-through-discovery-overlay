@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "id": "R1",
+  "unitId": "0.1",
+  "title": "Review: Counting and Cardinality",
+  "domain": "D0",
+  "type": "review",
+  "objective": "Retrieve secure counting/cardinality, placed after 0.1.4 rather than immediately after 0.1.1, so the retrieval is genuine rather than a rehearsal of the prior lesson.",
+  "prerequisites": ["0.1.4"],
+  "review": {
+    "retrieves": ["0.1.1"],
+    "prompt": "Count this group twice, in two different orders — does it match?"
+  },
+  "production": { "formatSupport": ["long", "short"], "presenter": "not-needed" }
+}

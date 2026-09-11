@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "3.2.4",
+  "unitId": "3.2",
+  "sequence": 4,
+  "title": "Almost a Hundred: 99 + 36",
+  "domain": "D3",
+  "type": "strategy",
+  "objective": "Apply the round-up-then-correct-total structure to a bigger benchmark jump (99 to 100), showing the strategy scales.",
+  "studentQuestion": "99 is almost 100 — how does that help us here?",
+  "prerequisites": ["3.2.3"],
+  "reuses": ["3.2.3"],
+  "patterns": ["compensate", "make-a-benchmark"],
+  "representations": [{ "type": "number-line", "role": "primary" }, { "type": "equation-workspace", "role": "primary" }],
+  "unlocks": ["3.2.5"],
+  "teaching": {
+    "setup": "99 + 36, unsolved.",
+    "see": "99 is only 1 away from 100.",
+    "break": "99 + 1 = 100 — treat the problem as if it were 100 + 36, remembering 1 extra was added.",
+    "build": "100 + 36 = 136.",
+    "transform": "99 + 36 and 100 + 36 - 1 — same total (135), reached via the friendlier hundred.",
+    "check": { "strategy": "cross-check", "prompt": "136 - 1 = 135. A second method (place-value addition) confirms 135." }
+  },
+  "examples": {
+    "primary": "99 + 36 = 135.",
+    "second": "98 + 47 = 145.",
+    "transfer": "199 + 58."
+  },
+  "misconceptions": ["MC-COMPENSATE-UNBALANCED"],
+  "language": { "teacherPrompts": ["cross.how-do-you-know"], "studentFrames": ["frame.i-did-that-because"] },
+  "mastery": { "evidence": "Correctly executes the full round-up-and-correct structure, including the final subtraction, for 2 examples." },
+  "production": { "formatSupport": ["long", "short"], "presenter": "optional" }
+}

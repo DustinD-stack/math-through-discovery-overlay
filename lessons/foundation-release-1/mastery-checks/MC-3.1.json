@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "id": "MC-3.1",
+  "unitId": "3.1",
+  "title": "Doubles/Halves Mastery Check",
+  "domain": "D3",
+  "type": "mastery-check",
+  "objective": "Determine whether doubles, near-doubles, honest halving, and two-digit doubling are secure enough to move into Unit 3.2.",
+  "prerequisites": ["3.1.1", "3.1.2", "3.1.3", "3.1.4", "3.1.5", "3.1.6", "3.1.7"],
+  "unlocks": ["3.2.1"],
+  "assessment": {
+    "tasks": [
+      { "facet": "recognize", "prompt": "State 4 of 5 doubles facts 1-10 from memory." },
+      { "facet": "break", "prompt": "Solve one near-double-plus-one and one near-double-minus-one problem, choosing the correct direction for each." },
+      { "facet": "transform", "prompt": "State half of an even number using its doubles fact, and correctly identify that an odd number does not split evenly, naming the leftover." },
+      { "facet": "transfer", "prompt": "Double a two-digit number by doubling tens and ones separately." }
+    ]
+  },
+  "mastery": {
+    "facets": ["recognize", "break", "transform", "transfer"],
+    "passEvidence": "All four tasks correct.",
+    "reteachTrigger": "Applies the same near-double direction (+1 or -1) regardless of the actual problem (reteach 3.1.3/3.1.4 side by side) or forces an odd number into two \"equal\" unequal groups without naming a leftover (reteach 3.1.6)."
+  },
+  "production": { "formatSupport": ["long", "short"], "presenter": "optional" }
+}

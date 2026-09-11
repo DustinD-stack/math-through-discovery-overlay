@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "id": "MC-0.2",
+  "unitId": "0.2",
+  "title": "Foundation Mastery Check II",
+  "domain": "D0",
+  "type": "mastery-check",
+  "objective": "Determine whether part/whole, zero, and number location are secure enough to move into Unit 1.1's Number Bond notation.",
+  "prerequisites": ["0.2.1", "0.2.2", "0.2.3", "0.2.4", "0.2.5", "0.2.6", "0.2.7", "0.2.8"],
+  "unlocks": ["1.1.1"],
+  "assessment": {
+    "tasks": [
+      { "facet": "break", "prompt": "Given a whole (e.g. 8), produce at least two different two-part splits." },
+      { "facet": "build", "prompt": "Given two parts, state the whole without recounting from 1." },
+      { "facet": "explain", "prompt": "State that zero is a valid count for an empty group, in a context with no physical objects present." },
+      { "facet": "represent", "prompt": "Place 3-4 given numbers correctly in order along an informal number path and state which of two numbers is farther from zero." }
+    ]
+  },
+  "mastery": {
+    "facets": ["break", "build", "explain", "represent"],
+    "passEvidence": "All four tasks completed correctly; the zero task specifically must use the word \"zero\" as an answer, not \"none\" or \"nothing.\"",
+    "reteachTrigger": "Produces only one split per whole and cannot find a second when prompted (reteach 0.2.2/0.2.4) or cannot state zero as a quantity outside a removal-demonstration context (reteach 0.2.5 with a non-object example)."
+  },
+  "production": { "formatSupport": ["long", "short"], "presenter": "optional" }
+}

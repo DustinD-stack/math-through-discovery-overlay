@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "id": "R8",
+  "unitId": "1.3",
+  "title": "Review: Benchmark Complements, Revisited",
+  "domain": "D1",
+  "type": "review",
+  "objective": "Retrieve complements to 10 after 1.3.3, with a light, informal pre-look at doubles noticing (not taught yet — Unit 3.1 will formalize it).",
+  "prerequisites": ["1.3.3"],
+  "review": {
+    "retrieves": ["1.2.3"],
+    "prompt": "Is 6 + 6 easier or harder to picture than 6 + 7? What does 6 + 7 need to reach a ten?"
+  },
+  "production": { "formatSupport": ["long", "short"], "presenter": "not-needed" }
+}

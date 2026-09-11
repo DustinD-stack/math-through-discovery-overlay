@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "1.2.2",
+  "unitId": "1.2",
+  "sequence": 2,
+  "title": "Make 5 With Two Groups",
+  "domain": "D1",
+  "type": "strategy",
+  "objective": "Given two small groups, recognize whether they already make 5, and if not, how far off they are.",
+  "studentQuestion": "Do these two groups make 5 together? How do you know?",
+  "prerequisites": ["1.2.1"],
+  "newIdea": "Applying the complement-to-5 fact to combining two given groups, not just filling one frame.",
+  "reuses": ["0.2.3", "1.2.1"],
+  "patterns": ["make-a-benchmark", "part-whole"],
+  "representations": [{ "type": "objects", "role": "primary" }, { "type": "number-bond", "role": "secondary" }],
+  "unlocks": ["1.2.3"],
+  "teaching": {
+    "setup": "Two small groups shown together (e.g. 2 and 2).",
+    "see": "Do you think these make exactly 5?",
+    "break": "Combine and count, or reason from known complements.",
+    "build": "State whether the total is 5, less than 5, or more than 5, and by how much.",
+    "transform": "The same two groups, seen as a combined total relative to the 5 benchmark.",
+    "check": { "strategy": "recount", "prompt": "Count the combined group directly to confirm." }
+  },
+  "examples": {
+    "primary": "2 and 2 (total 4 — one short of 5).",
+    "second": "3 and 2 (total 5 — exact).",
+    "transfer": "4 and 3 (total 7 — over 5)."
+  },
+  "language": { "teacherPrompts": ["cross.how-do-you-know"], "studentFrames": ["frame.i-did-that-because"] },
+  "mastery": { "evidence": "Correctly classifies 3 pairs of small groups as exactly, under, or over 5." },
+  "production": { "formatSupport": ["long", "short"], "presenter": "optional" }
+}

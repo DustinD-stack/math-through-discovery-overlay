@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "3.1.7",
+  "unitId": "3.1",
+  "sequence": 7,
+  "title": "Doubling Bigger Numbers",
+  "domain": "D3",
+  "type": "strategy",
+  "objective": "Double a two-digit number by doubling the tens and the ones separately, then recombining — connects this unit back to Unit 2.1's place value.",
+  "studentQuestion": "Can you double the tens and the ones separately, and put them back together?",
+  "prerequisites": ["3.1.1", "3.1.2", "3.1.3", "3.1.4", "3.1.5", "2.1.4"],
+  "newIdea": "Distributing doubling across place value — an early, concrete instance of the Distribute pattern, well before D5 formalizes it for multiplication generally.",
+  "reuses": ["3.1.2", "2.1.4"],
+  "patterns": ["double-half", "distribute", "break-by-place-value"],
+  "representations": [{ "type": "place-value-breakdown", "role": "primary" }],
+  "unlocks": ["MC-3.1", "3.2.1"],
+  "teaching": {
+    "setup": "double 23, unsolved.",
+    "see": "23 is 2 tens and 3 ones — can we double each part separately?",
+    "break": "23 = 20 + 3.",
+    "build": "Double each part: 20 doubled = 40; 3 doubled = 6.",
+    "transform": "40 + 6 = 46 — same value as double 23, reached by doubling the parts and recombining.",
+    "check": { "strategy": "inverse-operation", "prompt": "Add 23 + 23 directly to confirm 46." }
+  },
+  "examples": {
+    "primary": "double 23 = 46.",
+    "second": "double 14 = 28.",
+    "transfer": "double 38 — doubling the ones (16) crosses a ten, foreshadowing regrouping."
+  },
+  "language": { "teacherPrompts": ["cross.how-do-you-know"], "studentFrames": ["frame.i-built"] },
+  "mastery": { "evidence": "Correctly doubles 2 two-digit numbers by doubling tens and ones separately and recombining." },
+  "production": { "formatSupport": ["long", "short"], "presenter": "optional" }
+}

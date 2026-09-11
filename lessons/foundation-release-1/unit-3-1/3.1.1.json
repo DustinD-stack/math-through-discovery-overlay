@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "id": "3.1.1",
+  "unitId": "3.1",
+  "sequence": 1,
+  "title": "Doubles I Can See",
+  "domain": "D3",
+  "type": "discovery",
+  "objective": "A double is a whole made of two equal parts — a special case of the part/whole bonds already known.",
+  "studentQuestion": "What makes this bond special?",
+  "prerequisites": ["1.1.6", "2.1.7"],
+  "newIdea": "Doubles as bonds with equal parts, not a separately memorized category.",
+  "reuses": ["1.1.2", "0.1.4"],
+  "patterns": ["double-half", "part-whole"],
+  "representations": [{ "type": "number-bond", "role": "primary", "data": { "whole": 12, "parts": [6, 6] } }, { "type": "objects", "role": "secondary" }],
+  "vocabulary": ["double", "equal parts"],
+  "unlocks": ["3.1.2"],
+  "teaching": {
+    "setup": "Two equal groups of 6 counters each, side by side.",
+    "see": "What do you notice about these two groups?",
+    "break": "Confirm the two groups are exactly equal (pairing).",
+    "build": "Combine them and name the whole: 6 + 6 = 12.",
+    "transform": "6 and 6 (an ordinary bond) named specially as double 6 — same value, a special-case name for a familiar form.",
+    "check": { "strategy": "alternate-representation", "prompt": "Re-split the 12 back into two equal groups to confirm they're still 6 and 6." }
+  },
+  "examples": {
+    "primary": "6 + 6 = 12.",
+    "second": "4 + 4 = 8.",
+    "transfer": "8 + 8, without objects — reasoned from the pattern."
+  },
+  "language": { "teacherPrompts": ["cross.how-do-you-know"], "studentFrames": ["frame.i-see"] },
+  "mastery": { "evidence": "Correctly identifies and states 2 doubles facts from equal object groups." },
+  "production": { "formatSupport": ["long", "short"], "presenter": "optional" }
+}

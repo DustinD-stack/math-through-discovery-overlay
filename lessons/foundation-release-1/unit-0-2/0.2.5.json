@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "id": "0.2.5",
+  "unitId": "0.2",
+  "sequence": 5,
+  "title": "Zero Is Still a Quantity",
+  "domain": "D0",
+  "type": "discovery",
+  "objective": "Zero is a legitimate answer to how many (an empty group), not no answer or nothing to talk about.",
+  "studentQuestion": "If I take all of them away, how many are left? Is that still an amount?",
+  "prerequisites": ["0.2.1"],
+  "newIdea": "Zero as a real, nameable quantity — including as a legitimate part of a whole.",
+  "reuses": ["0.2.1"],
+  "patterns": ["part-whole"],
+  "representations": [{ "type": "objects", "role": "primary" }],
+  "vocabulary": ["zero", "none", "empty"],
+  "unlocks": ["0.2.6"],
+  "teaching": {
+    "setup": "5 counters in a tray; one at a time, all 5 are removed.",
+    "see": "How many are in the tray now?",
+    "break": "Name each amount as objects are removed: 5, 4, 3, 2, 1.",
+    "build": "Name the final amount — zero — as a real answer, not nothing left to count.",
+    "transform": "The tray, full to empty, is still a tray with a countable amount in it at every step.",
+    "check": { "strategy": "mental-reasonableness", "prompt": "Put one counter back — is the tray still zero, or something else now?" }
+  },
+  "examples": {
+    "primary": "5 counters removed one at a time to 0.",
+    "second": "3 = 3+0 and 3 = 0+3 as valid splits of 3.",
+    "transfer": "How many elephants are in this room — zero in a context with no physical removal to demonstrate."
+  },
+  "language": { "teacherPrompts": ["cross.how-do-you-know"], "studentFrames": ["frame.i-see"] },
+  "mastery": { "evidence": "Correctly states zero as the count of an empty group in at least two different contexts, including one with no physical objects at all." },
+  "production": { "formatSupport": ["long", "short"], "presenter": "recommended" }
+}

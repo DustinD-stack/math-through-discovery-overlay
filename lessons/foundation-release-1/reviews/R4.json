@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "id": "R4",
+  "unitId": "1.1",
+  "title": "Review: Part/Whole and Benchmarks Before Bonds",
+  "domain": "D1",
+  "type": "review",
+  "objective": "Opens Unit 1.1 by retrieving multiple domains at once (part/whole decomposition and the 5/10 benchmarks) rather than assuming they're still active in memory.",
+  "prerequisites": ["0.2.8"],
+  "review": {
+    "retrieves": ["0.2.1", "0.2.2", "0.2.3", "0.2.4", "0.2.8"],
+    "prompt": "Break this number apart two different ways, then tell me if it's closer to 5 or 10."
+  },
+  "production": { "formatSupport": ["long", "short"], "presenter": "not-needed" }
+}

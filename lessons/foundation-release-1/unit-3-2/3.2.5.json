@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "3.2.5",
+  "unitId": "3.2",
+  "sequence": 5,
+  "title": "Compensation in Subtraction",
+  "domain": "D3",
+  "type": "strategy",
+  "objective": "Compensation applies to subtraction too, but both numbers must adjust in the same direction to preserve the difference (unlike addition, where addends adjust in opposite directions).",
+  "studentQuestion": "In subtraction, if I add 1 to this number, what do I need to do to the other one?",
+  "prerequisites": ["3.2.2", "3.2.3", "3.2.4", "0.2.7"],
+  "newIdea": "The subtraction compensation rule — adjust both numbers the same way to keep the distance between them fixed — contrasted explicitly with addition's opposite-direction rule.",
+  "reuses": ["0.2.7", "3.2.2"],
+  "patterns": ["compensate"],
+  "representations": [{ "type": "number-line", "role": "primary" }],
+  "unlocks": ["3.2.6"],
+  "teaching": {
+    "setup": "52 - 19, unsolved.",
+    "see": "19 is close to 20 — what if both numbers moved up together?",
+    "break": "Add 1 to both: 52 + 1 = 53; 19 + 1 = 20.",
+    "build": "53 - 20 = 33.",
+    "transform": "52 - 19 and 53 - 20 — same difference (33), because the gap between the two numbers didn't change when both moved the same amount, the same direction.",
+    "check": { "strategy": "inverse-operation", "prompt": "33 + 19 = 52." }
+  },
+  "examples": {
+    "primary": "52 - 19 = 33.",
+    "second": "71 - 28 = 43.",
+    "transfer": "84 - 39."
+  },
+  "language": { "teacherPrompts": ["cross.how-do-you-know"], "studentFrames": ["frame.i-did-that-because"] },
+  "mastery": { "evidence": "Correctly compensates a subtraction problem using the same-direction rule, distinct from the addition rule, for 2 examples." },
+  "production": { "formatSupport": ["long", "short"], "presenter": "recommended" }
+}

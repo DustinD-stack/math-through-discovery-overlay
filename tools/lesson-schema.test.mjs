@@ -158,8 +158,9 @@ isInvalid({ ...validBase(), sequence: 'first' }, 'sequence as string is invalid'
   assert(errors.some((e) => e.file === 'bad.json' && e.path === 'title'), 'loadCorpus surfaces the per-file structural error');
 }
 
-/* ---------- PILOT: every committed pilot lesson under
-   lessons/foundation-release-1/ validates cleanly ---------- */
+/* ---------- FULL CORPUS (P4): the complete Foundation Release 1
+   production corpus validates cleanly, with ZERO unresolved
+   references, and matches the exact accepted counts. ---------- */
 {
   const releaseDir = path.join(root, 'lessons', 'foundation-release-1');
   function walk(dir) {
@@ -173,17 +174,65 @@ isInvalid({ ...validBase(), sequence: 'first' }, 'sequence as string is invalid'
     return out;
   }
   const files = walk(releaseDir);
-  assert(files.length >= 5, `at least 5 pilot lesson files exist (found ${files.length})`);
   const entries = files.map((f) => ({ file: path.relative(root, f), raw: JSON.parse(fs.readFileSync(f, 'utf8')) }));
   const { lessons, errors } = loadCorpus(entries);
-  const hardErrors = errors.filter((e) => e.severity !== 'warning');
-  assert(hardErrors.length === 0, `all pilot lessons validate with zero hard errors (got: ${JSON.stringify(hardErrors)})`);
-  assert(lessons.length === files.length, 'every pilot lesson file loaded successfully');
 
-  const types = new Set(lessons.map((l) => l.lesson.type));
-  assert(types.has('discovery'), 'pilot set includes a discovery lesson');
-  assert(types.has('error-analysis') || types.has('connection'), 'pilot set includes a connection or error-analysis lesson');
-  assert(types.has('mastery-check'), 'pilot set includes a mastery-check lesson');
+  assert(errors.length === 0, `full corpus has ZERO unresolved references or errors, warnings included (got ${errors.length}: ${JSON.stringify(errors.slice(0, 5))})`);
+  assert(lessons.length === files.length, 'every corpus file loaded successfully');
+  assert(lessons.length === 78, `total production experiences === 78 (got ${lessons.length})`);
+
+  const byType = {};
+  for (const { lesson } of lessons) byType[lesson.type] = (byType[lesson.type] || 0) + 1;
+  const expectedTypes = { discovery: 21, strategy: 25, fluency: 2, connection: 6, 'error-analysis': 2, application: 1, 'mastery-check': 8, review: 13 };
+  for (const [type, expected] of Object.entries(expectedTypes)) {
+    assert(byType[type] === expected, `lesson type "${type}" count === ${expected} (got ${byType[type] || 0})`);
+  }
+  const instructionalTotal = ['discovery', 'strategy', 'fluency', 'connection', 'error-analysis', 'application']
+    .reduce((sum, t) => sum + (byType[t] || 0), 0);
+  assert(instructionalTotal === 57, `instructional lesson total === 57 (got ${instructionalTotal})`);
+
+  const byUnit = {};
+  for (const { lesson } of lessons) {
+    if (lesson.type === 'mastery-check' || lesson.type === 'review') continue;
+    byUnit[lesson.unitId] = (byUnit[lesson.unitId] || 0) + 1;
+  }
+  const expectedUnits = { '0.1': 8, '0.2': 8, '1.1': 7, '1.2': 5, '1.3': 7, '2.1': 7, '3.1': 7, '3.2': 8 };
+  for (const [unit, expected] of Object.entries(expectedUnits)) {
+    assert(byUnit[unit] === expected, `unit ${unit} instructional lesson count === ${expected} (got ${byUnit[unit] || 0})`);
+  }
+
+  const ids = new Set(lessons.map((l) => l.lesson.id));
+  assert(ids.size === lessons.length, 'every lesson id in the corpus is globally unique');
+
+  // MC-1.2 remains the release's gate, unweakened: it must require every
+  // Unit 1.2 lesson and unlock 1.3.1.
+  const mc12 = lessons.find((l) => l.lesson.id === 'MC-1.2').lesson;
+  assert(['1.2.1', '1.2.2', '1.2.3', '1.2.4', '1.2.5'].every((id) => mc12.prerequisites.includes(id)), 'MC-1.2 still requires every Unit 1.2 lesson as a prerequisite');
+  assert(mc12.unlocks.includes('1.3.1'), 'MC-1.2 still unlocks 1.3.1 — the release\'s single most important gate is unweakened');
+
+  // Every review retrieves at least one lesson that is NOT its own
+  // immediate prerequisite (i.e. it is not merely re-teaching the lesson
+  // that precedes it).
+  const reviews = lessons.filter((l) => l.lesson.type === 'review').map((l) => l.lesson);
+  assert(reviews.length === 13, `exactly 13 review experiences exist (got ${reviews.length})`);
+  for (const r of reviews) {
+    const onlyRetrievesImmediatePrereq = r.review.retrieves.length === 1
+      && r.prerequisites.length === 1
+      && r.review.retrieves[0] === r.prerequisites[0];
+    assert(!onlyRetrievesImmediatePrereq, `review ${r.id} retrieves earlier material, not merely its immediately preceding lesson`);
+  }
+  // Unit-transition reviews that retrieve from more than one PRIOR unit,
+  // per docs/foundation-release-1/INTERLEAVED_REVIEW.md's actual table
+  // (R4 is the one transition review that, by design, only retrieves
+  // multiple lessons from the single preceding unit 0.2 — still multiple
+  // lessons, just not multiple units, which the general "not merely the
+  // immediate prerequisite" assertion above already covers for it).
+  const transitionReviewIds = ['R7', 'R9', 'R11', 'R13'];
+  for (const rid of transitionReviewIds) {
+    const r = reviews.find((x) => x.id === rid);
+    const unitsSpanned = new Set(r.review.retrieves.map((id) => id.split('.').slice(0, 2).join('.')));
+    assert(unitsSpanned.size > 1, `unit-transition review ${rid} retrieves from more than one earlier unit (got ${JSON.stringify([...unitsSpanned])})`);
+  }
 }
 
 /* ---------- REGRESSION: existing legacy runtime is untouched ---------- */

@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "id": "R13",
+  "unitId": "3.2",
+  "title": "Review: Same Value, Different Form, Everywhere",
+  "domain": "D3",
+  "type": "review",
+  "objective": "Opens Unit 3.2 by retrieving same-value/different-form from bonds and expanded form together with the benchmark numbers 10 and 100 — priming compensation's equivalence demand.",
+  "prerequisites": ["MC-3.1"],
+  "review": {
+    "retrieves": ["1.1.6", "2.1.4", "1.2.3", "2.1.5"],
+    "prompt": "34 = 30 + 4 and 34 = 2 tens + 14 ones — both true. Can two different-looking addition problems also give the same total?"
+  },
+  "production": { "formatSupport": ["long", "short"], "presenter": "not-needed" }
+}

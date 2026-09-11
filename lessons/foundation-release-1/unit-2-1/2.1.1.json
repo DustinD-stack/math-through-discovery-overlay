@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "2.1.1",
+  "unitId": "2.1",
+  "sequence": 1,
+  "title": "Ten Ones Make a New Unit",
+  "domain": "D2",
+  "type": "discovery",
+  "objective": "Ten individual ones can be bundled and treated as a single new unit — one ten — the conceptual heart of place value (unitizing).",
+  "studentQuestion": "If I bundle these, what do I have now?",
+  "prerequisites": ["1.2.3", "1.3.7"],
+  "newIdea": "Unitizing — a group of ten counted as one thing, not ten things.",
+  "reuses": ["0.1.1", "1.2.3"],
+  "patterns": ["unitize"],
+  "representations": [{ "type": "bundling-visual", "role": "primary" }, { "type": "objects", "role": "secondary" }],
+  "vocabulary": ["bundle", "ten", "one ten"],
+  "unlocks": ["2.1.2"],
+  "teaching": {
+    "setup": "10 loose counters, counted individually to confirm there are 10.",
+    "see": "We counted 10 loose ones. What if we bundle them together?",
+    "break": "Physically bundle the 10 ones into a single rod/bundle.",
+    "build": "Name the bundle: this is one ten.",
+    "transform": "10 loose ones — 1 bundle of ten — same value, a new countable unit.",
+    "check": { "strategy": "recount", "prompt": "Unbundle and recount the loose ones to confirm there are still 10." }
+  },
+  "examples": {
+    "primary": "10 loose counters into 1 bundle.",
+    "second": "A second group of 10 bundled the same way, compared to the first.",
+    "transfer": "Given 2 separate bundles of ten (already made), state the total without unbundling (20)."
+  },
+  "misconceptions": ["MC-CONSERVATION-REARRANGE"],
+  "language": { "teacherPrompts": ["cross.conservation-check"], "studentFrames": ["frame.same-value-different-form"] },
+  "mastery": { "evidence": "Correctly states a bundle of ten still represents 10 ones, and unbundles/recounts to confirm without prompting." },
+  "production": { "formatSupport": ["long", "short"], "presenter": "recommended" }
+}

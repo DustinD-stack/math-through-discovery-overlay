@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "id": "0.1.6",
+  "unitId": "0.1",
+  "sequence": 6,
+  "title": "Proving Two Groups Are Equal",
+  "domain": "D0",
+  "type": "strategy",
+  "objective": "Equal is a claim that needs evidence — a learner should be able to prove two groups are equal, not just assert it.",
+  "studentQuestion": "How can you prove they are equal?",
+  "prerequisites": ["0.1.5"],
+  "newIdea": "Equality as a provable claim (pairing with zero leftovers, or matching counts).",
+  "reuses": ["0.1.4", "0.1.5"],
+  "patterns": ["part-whole", "equivalence"],
+  "representations": [{ "type": "objects", "role": "primary" }],
+  "vocabulary": ["prove", "equal", "exactly the same amount"],
+  "unlocks": ["0.2.1"],
+  "teaching": {
+    "setup": "Two groups that look different in arrangement but are secretly equal (e.g. 6 in a cluster and 6 in a row).",
+    "see": "Someone says these are equal. How could we check?",
+    "break": "Choose a method — pairing or counting both.",
+    "build": "Carry out the chosen method and record the result.",
+    "transform": "The same two groups, rearranged again — the proof method still works.",
+    "check": { "strategy": "cross-check", "prompt": "Try the other method (if pairing was used, count; if counting was used, pair) to see if it agrees." }
+  },
+  "examples": {
+    "primary": "6 (cluster) vs. 6 (row).",
+    "second": "8 (circle) vs. 8 (two rows of 4).",
+    "transfer": "A case designed to look unequal (very different footprints) but is exactly equal."
+  },
+  "language": { "teacherPrompts": ["cross.how-do-you-know"], "studentFrames": ["frame.makes-sense-because"] },
+  "mastery": { "evidence": "Independently chooses and correctly executes a proof method for at least two equal-quantity pairs." },
+  "production": { "formatSupport": ["long", "short"], "presenter": "optional" }
+}

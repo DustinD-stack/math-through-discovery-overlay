@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "0.2.1",
+  "unitId": "0.2",
+  "sequence": 1,
+  "title": "A Whole Has Parts Inside It",
+  "domain": "D0",
+  "type": "discovery",
+  "objective": "A single quantity (a whole) can be seen as made of smaller quantities (its parts) without changing how many there are in total.",
+  "studentQuestion": "Can you find two smaller groups inside this one?",
+  "prerequisites": ["0.1.6", "0.1.3"],
+  "newIdea": "Part/whole — a whole physically split into two visible parts.",
+  "reuses": ["0.1.3"],
+  "patterns": ["part-whole"],
+  "representations": [{ "type": "objects", "role": "primary" }],
+  "vocabulary": ["whole", "part", "inside"],
+  "unlocks": ["0.2.2"],
+  "teaching": {
+    "setup": "7 counters in one group, counted together.",
+    "see": "This whole group is 7. What if I slide some of them apart?",
+    "break": "Physically slide the group into two visibly separate parts (e.g. 5 and 2).",
+    "build": "Count each part; notice they're still sitting inside what used to be the 7.",
+    "transform": "Same 7 — now seen as two parts instead of one whole.",
+    "check": { "strategy": "recount", "prompt": "Push the two parts back together and recount — still 7." }
+  },
+  "examples": {
+    "primary": "7 split into 5 and 2.",
+    "second": "6 split into 4 and 2.",
+    "transfer": "A group the learner splits themselves, in a way not yet shown."
+  },
+  "misconceptions": ["MC-CONSERVATION-REARRANGE"],
+  "language": { "teacherPrompts": ["cross.conservation-check"], "studentFrames": ["frame.i-broke"] },
+  "mastery": { "evidence": "Correctly predicts the whole is unchanged after a physical split, across two examples." },
+  "production": { "formatSupport": ["long", "short"], "presenter": "recommended" }
+}

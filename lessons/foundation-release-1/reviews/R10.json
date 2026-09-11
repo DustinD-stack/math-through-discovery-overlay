@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "id": "R10",
+  "unitId": "2.1",
+  "title": "Review: Make 10 Hiding in Expanded Form",
+  "domain": "D2",
+  "type": "review",
+  "objective": "Retrieve Make 10 and multiple decompositions after 2.1.4, connecting expanded form back to earlier benchmark reasoning.",
+  "prerequisites": ["2.1.4"],
+  "review": {
+    "retrieves": ["1.3.1", "0.2.4"],
+    "prompt": "34 = 30 + 4. Is there a Make-10 idea hiding in the 4?"
+  },
+  "production": { "formatSupport": ["long", "short"], "presenter": "not-needed" }
+}

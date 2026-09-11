@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "1.2.1",
+  "unitId": "1.2",
+  "sequence": 1,
+  "title": "What Does 5 Need?",
+  "domain": "D1",
+  "type": "discovery",
+  "objective": "For any number 5 or less, name how many more are needed to reach 5.",
+  "studentQuestion": "How many more to make 5?",
+  "prerequisites": ["0.2.8", "1.1.4"],
+  "newIdea": "Treating distance to 5 as a fact worth knowing directly, not re-derived by counting every time.",
+  "reuses": ["1.1.4", "0.2.8"],
+  "patterns": ["make-a-benchmark"],
+  "representations": [{ "type": "ten-frame", "role": "primary" }, { "type": "number-bond", "role": "secondary", "data": { "whole": 5, "parts": [3, 2] } }],
+  "vocabulary": ["needs", "to make 5"],
+  "unlocks": ["1.2.2"],
+  "teaching": {
+    "setup": "A five-frame with 3 dots filled.",
+    "see": "How many empty spaces are left?",
+    "break": "Count or subitize the empty spaces.",
+    "build": "State the complement: 3 needs 2 more to make 5.",
+    "transform": "The same 3, described as itself or as 2 away from 5 — same value, benchmark-relative form.",
+    "check": { "strategy": "inverse-operation", "prompt": "Fill the empty spaces and count all 5." }
+  },
+  "examples": {
+    "primary": "3 needs 2.",
+    "second": "1 needs 4.",
+    "transfer": "4 needs 1, without a five-frame shown (mental image only)."
+  },
+  "misconceptions": ["MC-MISSING-PART-ADD"],
+  "language": { "teacherPrompts": ["cross.friendlier-number"], "studentFrames": ["frame.i-see"] },
+  "mastery": { "evidence": "States the complement to 5 for at least 4 of 5 numbers 1-4, without recounting from scratch." },
+  "production": { "formatSupport": ["long", "short"], "presenter": "optional" }
+}

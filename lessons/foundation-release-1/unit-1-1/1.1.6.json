@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "1.1.6",
+  "unitId": "1.1",
+  "sequence": 6,
+  "title": "Many Bonds for the Same Number",
+  "domain": "D1",
+  "type": "strategy",
+  "objective": "The same whole has multiple valid bonds — direct extension of Unit 0.2's multiple decompositions into bond notation.",
+  "studentQuestion": "How many different bonds can you build for the same whole?",
+  "prerequisites": ["0.2.4", "1.1.3", "1.1.4", "1.1.5"],
+  "reuses": ["0.2.4"],
+  "patterns": ["part-whole", "equivalence"],
+  "representations": [{ "type": "number-bond", "role": "primary", "data": { "whole": 7, "parts": [6, 1] } }],
+  "unlocks": ["1.1.7"],
+  "teaching": {
+    "setup": "The whole 7 (same number used in the Unit 0.2 decomposition lesson, deliberately).",
+    "see": "You already found every way to split 7 with objects. Can you draw them all as bonds?",
+    "break": "Recall or re-derive 7's splits (6&1, 5&2, 4&3).",
+    "build": "Draw a bond for each split.",
+    "transform": "Three different bonds, one shared whole — same value, three drawn forms.",
+    "check": { "strategy": "inverse-operation", "prompt": "Verify each bond's parts sum to 7." }
+  },
+  "examples": {
+    "primary": "7 = 6+1, 5+2, 4+3 (bonds).",
+    "second": "8's full set of splits, as bonds.",
+    "transfer": "10's splits, as bonds — directly feeds Unit 1.2/1.3."
+  },
+  "language": { "teacherPrompts": ["cross.show-another-way"], "studentFrames": ["frame.same-value-as"] },
+  "mastery": { "evidence": "Produces the complete set of distinct bonds for a whole up to 10." },
+  "production": { "formatSupport": ["long", "short"], "presenter": "optional" }
+}

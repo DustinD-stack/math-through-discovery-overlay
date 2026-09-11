@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "id": "1.1.7",
+  "unitId": "1.1",
+  "sequence": 7,
+  "title": "From Bond to Equation",
+  "domain": "D1",
+  "type": "connection",
+  "objective": "A bond and an addition equation say the same thing in two different forms — the first explicit Picture to Symbol bridge in the curriculum.",
+  "studentQuestion": "Can you write what this bond says as a number sentence?",
+  "prerequisites": ["1.1.1", "1.1.2", "1.1.3", "1.1.4", "1.1.5", "1.1.6"],
+  "newIdea": "The equation whole = part + part as a symbolic form of the bond.",
+  "reuses": ["1.1.1", "1.1.6"],
+  "patterns": ["part-whole", "equivalence"],
+  "representations": [
+    { "type": "number-bond", "role": "primary", "data": { "whole": 7, "parts": [5, 2] } },
+    { "type": "equation-workspace", "role": "primary", "data": { "lines": [{ "expr": "7 = 5 + 2", "kind": "result" }] } }
+  ],
+  "vocabulary": ["equation", "number sentence", "equals"],
+  "unlocks": ["1.2.1"],
+  "teaching": {
+    "setup": "A completed bond (7 = 5 + 2).",
+    "see": "This bond and this number sentence — do they say the same thing?",
+    "break": "Map each part of the bond onto a piece of the equation (whole after equals; each part being added).",
+    "build": "Write the equation from the bond, and the bond from a given equation (the reverse direction).",
+    "transform": "The same relationship, in picture form (bond) or symbol form (equation).",
+    "check": { "strategy": "alternate-representation", "prompt": "Build the whole with objects and confirm both the bond and the equation describe it correctly." }
+  },
+  "examples": {
+    "primary": "7 = 5 + 2 (bond and equation).",
+    "second": "9 = 6 + 3 (bond and equation), reversed order.",
+    "transfer": "A three-part decomposition (e.g. 6 = 2+2+2) expressed as an equation."
+  },
+  "language": { "teacherPrompts": ["cross.show-another-way"], "studentFrames": ["frame.same-value-as"] },
+  "mastery": { "evidence": "Correctly translates between a bond and an equation in both directions, for two different wholes." },
+  "production": { "formatSupport": ["long", "short"], "presenter": "optional" }
+}

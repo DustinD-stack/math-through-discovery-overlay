@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "2.1.7",
+  "unitId": "2.1",
+  "sequence": 7,
+  "title": "Place Value Scavenger Hunt",
+  "domain": "D2",
+  "type": "strategy",
+  "objective": "Apply tens-and-ones reasoning (naming, expanded form, comparison) to numbers and contexts not seen in this unit's worked examples.",
+  "studentQuestion": "What can you tell me about this number using everything you've learned?",
+  "prerequisites": ["2.1.1", "2.1.2", "2.1.3", "2.1.4", "2.1.5", "2.1.6"],
+  "reuses": ["2.1.2", "2.1.4", "2.1.5"],
+  "patterns": ["unitize", "break-by-place-value"],
+  "representations": [{ "type": "place-value-breakdown", "role": "primary" }],
+  "unlocks": ["MC-2.1", "3.1.1"],
+  "teaching": {
+    "setup": "Several two-digit numbers drawn from real objects around the room.",
+    "see": "Pick a number. What do you already know how to say about it?",
+    "break": "The learner selects which tool(s) to apply — naming tens/ones, expanded form, or comparison to another found number.",
+    "build": "State at least two facts about the chosen number using different tools.",
+    "transform": "The same number, described in at least two different valid forms.",
+    "check": { "strategy": "alternate-representation", "prompt": "A peer or teacher verifies by unbundling/counting." }
+  },
+  "examples": {
+    "primary": "A number the learner finds themselves (e.g. 23 books on this shelf).",
+    "second": "Comparing two found numbers using the tens-first method.",
+    "transfer": "A number outside the unit's typical practice range (e.g. in the 50s or 60s)."
+  },
+  "language": { "teacherPrompts": ["cross.how-do-you-know"], "studentFrames": ["frame.i-see"] },
+  "mastery": { "evidence": "Independently produces at least two valid, correct statements (naming, expanded form, or comparison) about two different self-selected numbers." },
+  "production": { "formatSupport": ["long", "short"], "presenter": "optional" }
+}

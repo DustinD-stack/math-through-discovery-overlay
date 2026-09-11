@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "3.1.2",
+  "unitId": "3.1",
+  "sequence": 2,
+  "title": "Doubles Facts to 20",
+  "domain": "D3",
+  "type": "fluency",
+  "objective": "Retrieve doubles facts 1+1 through 10+10 quickly, after the concept (3.1.1) is secure.",
+  "studentQuestion": "Can you answer without building it this time?",
+  "prerequisites": ["3.1.1"],
+  "reuses": ["3.1.1"],
+  "patterns": ["double-half"],
+  "representations": [{ "type": "equation-workspace", "role": "primary" }],
+  "unlocks": ["3.1.3"],
+  "teaching": {
+    "see": "What's double this number?",
+    "break": "Retrieve from memory; fall back to bond-building only if stuck.",
+    "build": "Answer, then move to the next.",
+    "transform": "This lesson intentionally does not add a new equivalence; it drills the one already established in 3.1.1.",
+    "check": { "strategy": "alternate-representation", "prompt": "Self-check with objects for any hesitant answer." }
+  },
+  "examples": {
+    "primary": "The full run 1+1 through 10+10, self-paced.",
+    "second": "The same run, repeated for improvement.",
+    "transfer": "Doubles asked in a real-context wrapper (7 stickers, get the same number again)."
+  },
+  "mastery": { "evidence": "Answers at least 8 of 10 doubles facts (1-10) correctly within a few seconds each." },
+  "production": { "formatSupport": ["long", "short"], "presenter": "not-needed" }
+}

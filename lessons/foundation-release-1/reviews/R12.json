@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "id": "R12",
+  "unitId": "3.1",
+  "title": "Review: Benchmarks and Bridging, Revisited",
+  "domain": "D3",
+  "type": "review",
+  "objective": "Retrieve complements to 10 and Make-10 bridging after 3.1.4, connecting near-double reasoning back to benchmark reasoning.",
+  "prerequisites": ["3.1.4"],
+  "review": {
+    "retrieves": ["1.2.3", "1.3.1"],
+    "prompt": "Which is closer to a ten — this near-double answer, or the original problem?"
+  },
+  "production": { "formatSupport": ["long", "short"], "presenter": "not-needed" }
+}

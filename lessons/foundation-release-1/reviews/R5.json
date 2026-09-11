@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "id": "R5",
+  "unitId": "1.1",
+  "title": "Review: Decomposition and Number Location",
+  "domain": "D1",
+  "type": "review",
+  "objective": "Retrieve multiple decompositions and number location, placed after 1.1.4 rather than immediately after either source lesson.",
+  "prerequisites": ["1.1.4"],
+  "review": {
+    "retrieves": ["0.2.4", "0.2.6"],
+    "prompt": "Where would this whole's missing part sit on our number path?"
+  },
+  "production": { "formatSupport": ["long", "short"], "presenter": "not-needed" }
+}

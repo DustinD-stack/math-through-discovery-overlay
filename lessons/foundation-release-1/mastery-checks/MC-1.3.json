@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "id": "MC-1.3",
+  "unitId": "1.3",
+  "title": "Make 10 Mastery Check",
+  "domain": "D1",
+  "type": "mastery-check",
+  "objective": "Determine whether the Make 10 bridge (addition and subtraction), error diagnosis, and strategy selection are secure before Unit 2.1 begins. Completes the release's number-sense strand.",
+  "prerequisites": ["1.3.1", "1.3.2", "1.3.3", "1.3.4", "1.3.5", "1.3.6", "1.3.7"],
+  "unlocks": ["2.1.1"],
+  "assessment": {
+    "tasks": [
+      { "facet": "explain", "prompt": "Independently solve a new Make-10 addition problem (not previously drilled), narrating each stage (SEE/BREAK/BUILD/TRANSFORM) aloud." },
+      { "facet": "transfer", "prompt": "Solve a Make-10 subtraction problem." },
+      { "facet": "check", "prompt": "Diagnose a shown broken Make-10 attempt and correct it." },
+      { "facet": "recognize", "prompt": "Correctly decide whether a given problem needs a bridge at all, before solving it." }
+    ]
+  },
+  "mastery": {
+    "facets": ["explain", "transfer", "check", "recognize"],
+    "passEvidence": "All four tasks correct, with the narration in task 1 including the words \"same value\" or an equivalent phrase when stating the transform step.",
+    "reteachTrigger": "Gets a correct final answer in task 1 but cannot narrate the stages (reteach with more think-aloud modeling, not more problems) or fails to catch the wrong-target-split error in task 3 (reteach 1.3.6)."
+  },
+  "production": { "formatSupport": ["long", "short"], "presenter": "optional" }
+}

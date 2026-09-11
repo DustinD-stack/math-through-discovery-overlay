@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "id": "MC-1.1",
+  "unitId": "1.1",
+  "title": "Number Bonds Mastery Check",
+  "domain": "D1",
+  "type": "mastery-check",
+  "objective": "Determine whether Number Bond reasoning (missing part, missing whole, bond-to-equation) is secure enough to move into Unit 1.2's benchmark work.",
+  "prerequisites": ["1.1.1", "1.1.2", "1.1.3", "1.1.4", "1.1.5", "1.1.6", "1.1.7"],
+  "unlocks": ["1.2.1"],
+  "assessment": {
+    "tasks": [
+      { "facet": "represent", "prompt": "Build a bond from a known split." },
+      { "facet": "break", "prompt": "Solve a missing-part bond and a missing-whole bond, each for a different whole." },
+      { "facet": "transfer", "prompt": "Translate a given bond into an equation, and a given equation into a bond." },
+      { "facet": "explain", "prompt": "Explain, without prompting, which position in a bond is always the whole." }
+    ]
+  },
+  "mastery": {
+    "facets": ["represent", "break", "transfer", "explain"],
+    "passEvidence": "All four tasks correct; the missing-part task specifically must not show the add-instead-of-difference error.",
+    "reteachTrigger": "Solves missing-whole bonds but not missing-part bonds (reteach 1.1.4's difference-vs-sum distinction specifically) or cannot translate bond/equation in either direction (reteach 1.1.7)."
+  },
+  "production": { "formatSupport": ["long", "short"], "presenter": "optional" }
+}

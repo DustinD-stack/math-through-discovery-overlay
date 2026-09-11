@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "id": "R9",
+  "unitId": "2.1",
+  "title": "Review: Same Value Before Place Value",
+  "domain": "D2",
+  "type": "review",
+  "objective": "Opens Unit 2.1 by retrieving compose/decompose, part/whole, and same value/different form together — the explicit multi-unit review recommended in docs/foundation-release-1/README.md P1 sec.16.",
+  "prerequisites": ["MC-1.3"],
+  "review": {
+    "retrieves": ["0.2.2", "0.2.4", "1.1.6"],
+    "prompt": "Show two different ways to split 34 into two parts (not tens and ones yet) — is the value still the same?"
+  },
+  "production": { "formatSupport": ["long", "short"], "presenter": "not-needed" }
+}

@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "0.1.3",
+  "unitId": "0.1",
+  "sequence": 3,
+  "title": "Same Amount, Different Look",
+  "domain": "D0",
+  "type": "discovery",
+  "objective": "Rearranging a group of objects does not change how many there are (conservation of number) — the first appearance of Same Value, Different Form.",
+  "studentQuestion": "Did the amount change when I moved them?",
+  "prerequisites": ["0.1.1"],
+  "newIdea": "Conservation of quantity under rearrangement.",
+  "reuses": ["0.1.1"],
+  "patterns": ["equivalence"],
+  "representations": [{ "type": "objects", "role": "primary" }],
+  "vocabulary": ["same amount", "moved", "spread out", "bunched up"],
+  "unlocks": ["0.2.2"],
+  "teaching": {
+    "setup": "6 counters in a tight cluster; count them together.",
+    "see": "We counted 6. Watch what I do next.",
+    "break": "Spread the same 6 counters into a long row, in view of the learner.",
+    "build": "Ask for a prediction before recounting: how many now?",
+    "transform": "Same quantity, different arrangement — this unit's version of TRANSFORM; no symbolic step exists yet.",
+    "check": { "strategy": "recount", "prompt": "Recount the spread-out row; it still totals 6." }
+  },
+  "examples": {
+    "primary": "6 counters, cluster to row.",
+    "second": "8 counters, row to circle.",
+    "transfer": "A group the learner rearranges themselves, then predicts before recounting."
+  },
+  "misconceptions": ["MC-CONSERVATION-REARRANGE"],
+  "language": { "teacherPrompts": ["cross.conservation-check"], "studentFrames": ["frame.same-value-different-form"] },
+  "mastery": { "evidence": "Correctly predicts the count stays the same before recounting, across at least two different rearrangements." },
+  "production": { "formatSupport": ["long", "short"], "presenter": "recommended" }
+}

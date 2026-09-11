@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "3.2.3",
+  "unitId": "3.2",
+  "sequence": 3,
+  "title": "Give, Then Take Back: 38 + 19",
+  "domain": "D3",
+  "type": "strategy",
+  "objective": "When a number is just below a friendly one (like 19, just below 20), round it up and then subtract the extra back off — a variant compensation structure, distinct from 3.2.2.",
+  "studentQuestion": "What if we made 19 into 20 first — what would we need to do afterward to fix it?",
+  "prerequisites": ["3.2.2"],
+  "newIdea": "The round up, then subtract back compensation structure — distinct from move between the two addends, and deliberately contrasted with it.",
+  "reuses": ["3.2.2"],
+  "patterns": ["compensate", "make-a-benchmark"],
+  "representations": [{ "type": "number-line", "role": "primary" }, { "type": "equation-workspace", "role": "primary" }],
+  "vocabulary": ["round up", "take back"],
+  "unlocks": ["3.2.4"],
+  "teaching": {
+    "setup": "38 + 19, unsolved.",
+    "see": "19 is 1 away from 20. What if we just used 20 instead?",
+    "break": "38 + 20 = 58 (deliberately using 1 more than the real second addend).",
+    "build": "Since 1 extra was added, 1 must now be subtracted back off the total: 58 - 1 = 57.",
+    "transform": "38 + 19 and 38 + 20 - 1 — same total (57), a friendlier intermediate form.",
+    "check": { "strategy": "cross-check", "prompt": "Add the original numbers directly to confirm 57." }
+  },
+  "examples": {
+    "primary": "38 + 19 = 57.",
+    "second": "47 + 29 = 76.",
+    "transfer": "56 + 39."
+  },
+  "misconceptions": ["MC-COMPENSATE-UNBALANCED"],
+  "language": { "teacherPrompts": ["cross.how-do-you-know"], "studentFrames": ["frame.i-did-that-because"] },
+  "mastery": { "evidence": "Correctly applies the round-up-then-correct-total structure for 2 examples without confusing it with 3.2.2's structure." },
+  "production": { "formatSupport": ["long", "short"], "presenter": "optional" }
+}

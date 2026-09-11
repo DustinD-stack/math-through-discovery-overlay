@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "id": "0.2.7",
+  "unitId": "0.2",
+  "sequence": 7,
+  "title": "How Far Apart?",
+  "domain": "D0",
+  "type": "discovery",
+  "objective": "The distance between two quantities/positions is itself a quantity that can be found and named — plants the seed for subtraction-as-distance.",
+  "studentQuestion": "How far apart are these two numbers?",
+  "prerequisites": ["0.2.6"],
+  "newIdea": "Distance between two quantities as a nameable amount.",
+  "reuses": ["0.2.6", "0.1.7"],
+  "patterns": ["part-whole"],
+  "representations": [{ "type": "number-path", "role": "primary" }],
+  "vocabulary": ["how far", "gap", "apart"],
+  "unlocks": ["0.2.8"],
+  "teaching": {
+    "setup": "Two numbers marked on the path from the previous lesson (e.g. 3 and 7).",
+    "see": "How far do you have to travel from 3 to get to 7?",
+    "break": "Count the steps along the path from one mark to the other.",
+    "build": "Name the distance (4 steps) as its own quantity.",
+    "transform": "The same gap, described as steps from 3 to 7 or steps from 7 back to 3 — same distance, different direction.",
+    "check": { "strategy": "cross-check", "prompt": "Count the steps the other direction (7 back to 3) — same distance." }
+  },
+  "examples": {
+    "primary": "Distance from 3 to 7.",
+    "second": "Distance from 2 to 9.",
+    "transfer": "Which of two given pairs of numbers is farther apart?"
+  },
+  "language": { "teacherPrompts": ["cross.how-do-you-know"], "studentFrames": ["frame.i-see"] },
+  "mastery": { "evidence": "Correctly finds the distance between two numbers up to 10 without an off-by-one error, twice." },
+  "production": { "formatSupport": ["long", "short"], "presenter": "optional" }
+}

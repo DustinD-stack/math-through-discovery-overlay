@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "id": "R2",
+  "unitId": "0.2",
+  "title": "Review: Subitizing and Comparison",
+  "domain": "D0",
+  "type": "review",
+  "objective": "Retrieve quantity/subitizing and more-less-equal comparison, placed after 0.2.2 to interleave Unit 0.1 material into Unit 0.2's work.",
+  "prerequisites": ["0.2.2"],
+  "review": {
+    "retrieves": ["0.1.2", "0.1.5"],
+    "prompt": "At a glance, is this group more, less, or equal to that one?"
+  },
+  "production": { "formatSupport": ["long", "short"], "presenter": "not-needed" }
+}

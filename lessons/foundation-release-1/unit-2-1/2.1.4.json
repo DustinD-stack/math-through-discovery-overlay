@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "2.1.4",
+  "unitId": "2.1",
+  "sequence": 4,
+  "title": "Expanded Form",
+  "domain": "D2",
+  "type": "strategy",
+  "objective": "Write a two-digit number as the sum of its place values (e.g. 34 = 30 + 4), including the honest zero-ones case (40 = 40, never 40 + 0).",
+  "studentQuestion": "Can you write this number as tens plus ones added together?",
+  "prerequisites": ["2.1.2"],
+  "newIdea": "Expanded form as the symbolic version of tens and ones, and the explicit rule that a zero place is not written as a fake + 0 addend.",
+  "reuses": ["2.1.2", "0.2.5"],
+  "patterns": ["break-by-place-value"],
+  "representations": [{ "type": "place-value-breakdown", "role": "primary", "data": { "value": 40, "form": "both" } }],
+  "vocabulary": ["expanded form"],
+  "unlocks": ["2.1.5"],
+  "teaching": {
+    "setup": "34 (3 tens, 4 ones, already established).",
+    "see": "What is the value of the 3 (thirty), and the value of the 4 (four)?",
+    "break": "State each digit's actual value: 3 tens = 30; 4 ones = 4.",
+    "build": "Write 34 = 30 + 4.",
+    "transform": "34, 3 tens and 4 ones, and 30 + 4 — three forms, one value.",
+    "check": { "strategy": "inverse-operation", "prompt": "Add 30 + 4 back together to confirm it returns 34." }
+  },
+  "examples": {
+    "primary": "34 = 30 + 4.",
+    "second": "40 = 40 — the deliberate zero-ones case, never 40 + 0.",
+    "transfer": "27 = 20 + 7, produced independently."
+  },
+  "misconceptions": ["MC-ZERO-ONES-FAKE-ADDEND"],
+  "language": { "teacherPrompts": ["cross.how-do-you-know"], "studentFrames": ["frame.i-broke"] },
+  "mastery": { "evidence": "Correctly writes expanded form for 3 numbers including at least one with zero ones, without a fake + 0." },
+  "production": { "formatSupport": ["long", "short"], "presenter": "optional" }
+}

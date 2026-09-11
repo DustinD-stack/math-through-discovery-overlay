@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "1.1.4",
+  "unitId": "1.1",
+  "sequence": 4,
+  "title": "Missing Part Puzzles",
+  "domain": "D1",
+  "type": "strategy",
+  "objective": "Given the whole and one part, find the missing part.",
+  "studentQuestion": "What's hiding in the empty part?",
+  "prerequisites": ["1.1.3"],
+  "newIdea": "Solving for a missing part (the direct precursor to missing-addend reasoning used throughout arithmetic and later, algebra).",
+  "reuses": ["0.1.7", "1.1.2", "1.1.3"],
+  "patterns": ["part-whole", "unknown-as-missing-quantity"],
+  "representations": [{ "type": "number-bond", "role": "primary", "data": { "whole": 8, "parts": [5, null] } }],
+  "vocabulary": ["missing", "hidden"],
+  "unlocks": ["1.1.5"],
+  "teaching": {
+    "setup": "A bond with the whole (e.g. 8) and one part (5) shown; the other part is covered/blank.",
+    "see": "We know the whole is 8, and one part is 5. What's under the cover?",
+    "break": "Use counting-on from 5 toward 8, or objects, to find the missing amount.",
+    "build": "State the missing part (3) and place it in the bond.",
+    "transform": "The same whole (8), now shown as a complete bond after solving for the gap.",
+    "check": { "strategy": "inverse-operation", "prompt": "Reveal the cover / build with objects to confirm 5 + 3 = 8." }
+  },
+  "examples": {
+    "primary": "Whole 8, known part 5, missing part 3.",
+    "second": "Whole 9, known part 6, missing part 3.",
+    "transfer": "Whole 10, known part 4 — connects directly toward Unit 1.2's what does 10 need framing."
+  },
+  "misconceptions": ["MC-MISSING-PART-ADD"],
+  "language": { "teacherPrompts": ["cross.reasonableness"], "studentFrames": ["frame.i-broke"] },
+  "mastery": { "evidence": "Correctly solves 3 missing-part bonds with wholes up to 10 without the addition-instead-of-difference error." },
+  "production": { "formatSupport": ["long", "short"], "presenter": "optional" }
+}

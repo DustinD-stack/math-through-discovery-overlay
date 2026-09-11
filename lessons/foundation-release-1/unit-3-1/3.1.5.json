@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "id": "3.1.5",
+  "unitId": "3.1",
+  "sequence": 5,
+  "title": "Halving as Undoing Doubling",
+  "domain": "D3",
+  "type": "connection",
+  "objective": "Halving an even number is the inverse of doubling — if double 6 is 12, then half of 12 is 6.",
+  "studentQuestion": "If doubling 6 gives 12, what should half of 12 give back?",
+  "prerequisites": ["3.1.2"],
+  "newIdea": "Halving explicitly framed as doubling's inverse operation, not a new, unrelated skill.",
+  "reuses": ["3.1.2", "1.3.4"],
+  "patterns": ["double-half", "inverse-operations"],
+  "representations": [{ "type": "number-bond", "role": "primary", "data": { "whole": 12, "parts": [6, 6] } }],
+  "vocabulary": ["half"],
+  "unlocks": ["3.1.6"],
+  "teaching": {
+    "setup": "The known fact 6 + 6 = 12, already on display.",
+    "see": "If 6 and 6 make 12, what is half of 12?",
+    "break": "Read the bond backward: 12 splits into two equal parts.",
+    "build": "State half of 12 is 6, using the already-known double.",
+    "transform": "6 + 6 = 12 and half of 12 = 6 — the same relationship, read in opposite directions.",
+    "check": { "strategy": "inverse-operation", "prompt": "Double the answer (6) back to confirm it returns 12." }
+  },
+  "examples": {
+    "primary": "Half of 12 is 6 (from double 6).",
+    "second": "Half of 8 is 4 (from double 4).",
+    "transfer": "Half of 20, using the known double-10 fact."
+  },
+  "language": { "teacherPrompts": ["cross.how-do-you-know"], "studentFrames": ["frame.same-value-as"] },
+  "mastery": { "evidence": "Correctly states half of 3 even numbers using their known doubles facts, and explains the inverse relationship." },
+  "production": { "formatSupport": ["long", "short"], "presenter": "optional" }
+}

@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "0.1.1",
+  "unitId": "0.1",
+  "sequence": 1,
+  "title": "How Many?",
+  "domain": "D0",
+  "type": "discovery",
+  "objective": "Counting a group accurately answers \"how many,\" and the last count word said names the size of the whole group (cardinality).",
+  "studentQuestion": "How many are there?",
+  "newIdea": "Cardinality — the last number counted is the answer, not just the last object touched.",
+  "patterns": ["unitize"],
+  "representations": [{ "type": "objects", "role": "primary" }],
+  "vocabulary": ["how many", "count", "in all"],
+  "unlocks": ["0.1.2"],
+  "teaching": {
+    "setup": "A small group of objects (4-6) is shown, unlabeled.",
+    "see": "What do we want to know? How many are here?",
+    "break": "Touch and count each object once, in any order.",
+    "build": "The last word said is announced as the group's total.",
+    "transform": "Count the same group again in a different order — same total.",
+    "check": { "strategy": "recount", "prompt": "Recount once more; does it still come out the same?" }
+  },
+  "examples": {
+    "primary": "5 counters in a loose pile.",
+    "second": "6 counters in a row.",
+    "transfer": "7 objects the learner has not counted before."
+  },
+  "misconceptions": ["MC-COUNT-CORRESPONDENCE"],
+  "language": { "teacherPrompts": ["stage.see"], "studentFrames": ["frame.i-see"] },
+  "mastery": { "evidence": "Counts a group of 5-7 objects correctly twice in a row, in a different order each time." },
+  "production": { "formatSupport": ["long", "short"], "presenter": "recommended" }
+}

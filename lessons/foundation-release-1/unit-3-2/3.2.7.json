@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "3.2.7",
+  "unitId": "3.2",
+  "sequence": 7,
+  "title": "Proving Compensation Doesn't Change the Answer",
+  "domain": "D3",
+  "type": "error-analysis",
+  "objective": "Examine a compensation move that breaks — where an adjustment actually does change the answer — and explain precisely why, to secure genuine understanding of why correct compensation works.",
+  "studentQuestion": "This move looks like compensation, but the answer changed — what went wrong?",
+  "prerequisites": ["3.2.1", "3.2.2", "3.2.3", "3.2.4", "3.2.5", "3.2.6"],
+  "newIdea": "None new procedurally — this lesson is the unit's explicit why does this work capstone, directly responding to the instruction that compensation must not be reduced to move one because it's easier.",
+  "reuses": ["3.2.2", "3.2.3"],
+  "patterns": ["compensate", "equivalence"],
+  "representations": [{ "type": "equation-workspace", "role": "primary" }, { "type": "number-line", "role": "secondary" }],
+  "vocabulary": ["proof", "why"],
+  "unlocks": ["3.2.8"],
+  "teaching": {
+    "setup": "A shown (incorrect) compensation: 49 + 27 solved as 50 + 27 = 77 (added 1 to 49 to make 50, but never took the 1 back off 27).",
+    "see": "Does 77 match what we know 49 + 27 should be?",
+    "break": "Compute 49 + 27 directly (or via correct compensation) to get the true answer, 76.",
+    "build": "Compare 77 to 76 and locate exactly where the extra 1 came from.",
+    "transform": "The broken move, repaired into a true compensation (50 + 26 = 76) — same problem, corrected form: 1 was added to the total without being removed from anywhere, so the total quietly grew by 1.",
+    "check": { "strategy": "cross-check", "prompt": "The corrected version (50 + 26) is checked against a direct addition of 49 + 27." }
+  },
+  "examples": {
+    "primary": "49 + 27 -> 50 + 27 = 77 (wrong — should be 76).",
+    "second": "38 + 19 -> 38 + 20 = 58 (stops here without subtracting the extra 1 back off — should be 57).",
+    "transfer": "A new, not-yet-seen broken compensation attempt, diagnosed independently."
+  },
+  "misconceptions": ["MC-COMPENSATE-UNBALANCED"],
+  "language": { "teacherPrompts": ["cross.how-do-you-know"], "studentFrames": ["frame.makes-sense-because"] },
+  "mastery": { "evidence": "Correctly diagnoses and repairs 2 of 2 broken compensation attempts, stating in their own words why the original total changed." },
+  "production": { "formatSupport": ["long", "short"], "presenter": "optional" }
+}

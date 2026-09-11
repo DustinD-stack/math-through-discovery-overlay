@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "id": "1.1.2",
+  "unitId": "1.1",
+  "sequence": 2,
+  "title": "Reading a Number Bond",
+  "domain": "D1",
+  "type": "discovery",
+  "objective": "Given an already-drawn bond (whole and both parts filled in), state what it says as a full sentence, and connect it back to objects if asked.",
+  "studentQuestion": "What does this bond tell you?",
+  "prerequisites": ["1.1.1"],
+  "newIdea": "Fluently reading a bond, independent of having just built it.",
+  "reuses": ["1.1.1"],
+  "patterns": ["part-whole"],
+  "representations": [
+    { "type": "number-bond", "role": "primary", "data": { "whole": 8, "parts": [6, 2] } },
+    { "type": "objects", "role": "secondary" }
+  ],
+  "unlocks": ["1.1.3"],
+  "teaching": {
+    "setup": "A pre-drawn, fully filled-in bond (e.g. whole 8, parts 6 and 2).",
+    "see": "What does this picture tell us, without me saying anything?",
+    "break": "Identify which number is the whole and which two are the parts.",
+    "build": "State the relationship aloud: 8 is made of 6 and 2.",
+    "transform": "The same bond, read starting from either part (6 and 2 make 8, or 8 is 6 and 2) — same relationship, either direction.",
+    "check": { "strategy": "alternate-representation", "prompt": "Build it with objects to confirm the bond is telling the truth." }
+  },
+  "examples": {
+    "primary": "Whole 8, parts 6 and 2.",
+    "second": "Whole 9, parts 7 and 2.",
+    "transfer": "A bond with the parts listed in reverse position from the previous examples."
+  },
+  "misconceptions": ["MC-BOND-DIRECTION"],
+  "language": { "teacherPrompts": ["cross.show-another-way"], "studentFrames": ["frame.i-see"] },
+  "mastery": { "evidence": "Reads a given bond correctly starting from the whole and starting from the parts, for two different bonds." },
+  "production": { "formatSupport": ["long", "short"], "presenter": "optional" }
+}

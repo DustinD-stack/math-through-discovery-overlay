@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "id": "R11",
+  "unitId": "3.1",
+  "title": "Review: Equal Parts Before Doubles",
+  "domain": "D3",
+  "type": "review",
+  "objective": "Opens Unit 3.1 by retrieving part/whole and compose/decompose from Domain 0, priming the equal-parts idea doubling depends on.",
+  "prerequisites": ["MC-2.1"],
+  "review": {
+    "retrieves": ["0.1.4", "0.2.1", "0.2.2"],
+    "prompt": "Split this group into two equal parts — is that always possible?"
+  },
+  "production": { "formatSupport": ["long", "short"], "presenter": "not-needed" }
+}

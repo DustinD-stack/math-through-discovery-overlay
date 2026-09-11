@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "3.2.2",
+  "unitId": "3.2",
+  "sequence": 2,
+  "title": "Moving to a Friendly Number: 49 + 27",
+  "domain": "D3",
+  "type": "strategy",
+  "objective": "Deliberately choose how much to move so that one addend becomes a clean benchmark (like 50), making the addition easier.",
+  "studentQuestion": "How much would we need to move to make 49 into a nice, round number?",
+  "prerequisites": ["3.2.1", "2.1.4"],
+  "newIdea": "Purposeful compensation — choosing the adjustment size to reach a specific friendly target, not moving an arbitrary amount.",
+  "reuses": ["3.2.1", "1.2.3"],
+  "patterns": ["compensate", "make-a-benchmark"],
+  "representations": [{ "type": "number-line", "role": "primary" }, { "type": "equation-workspace", "role": "primary" }],
+  "vocabulary": ["friendly number", "round number"],
+  "unlocks": ["3.2.3"],
+  "teaching": {
+    "setup": "49 + 27, unsolved.",
+    "see": "49 is so close to 50 — what if it were exactly 50?",
+    "break": "Move 1 from 27 to 49: 49 + 1 = 50, leaving 27 - 1 = 26.",
+    "build": "50 + 26 = 76.",
+    "transform": "49 + 27 and 50 + 26 — same total (76), a friendlier form.",
+    "check": { "strategy": "cross-check", "prompt": "Add the original numbers directly (or via a second method) to confirm 76." }
+  },
+  "examples": {
+    "primary": "49 + 27 = 76.",
+    "second": "59 + 34 = 93.",
+    "transfer": "69 + 18."
+  },
+  "misconceptions": ["MC-COMPENSATE-UNBALANCED"],
+  "language": { "teacherPrompts": ["cross.friendlier-number"], "studentFrames": ["frame.i-did-that-because"] },
+  "mastery": { "evidence": "Correctly compensates 49 + 27 and one further example without the give/take pairing error." },
+  "production": { "formatSupport": ["long", "short"], "presenter": "recommended" }
+}

@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "id": "3.1.6",
+  "unitId": "3.1",
+  "sequence": 6,
+  "title": "When a Number Won't Split Evenly",
+  "domain": "D3",
+  "type": "discovery",
+  "objective": "Halving an odd number does not give two whole-number equal parts — an honest limit of the strategy, noticed and named without introducing formal fraction notation.",
+  "studentQuestion": "Can this number be split into two exactly equal whole groups?",
+  "prerequisites": ["3.1.5"],
+  "newIdea": "Recognizing when a relationship (evenly halving) breaks down, and describing the leftover informally, without inventing fraction procedures.",
+  "reuses": ["3.1.5", "0.2.1"],
+  "patterns": ["double-half", "part-whole"],
+  "representations": [{ "type": "objects", "role": "primary" }],
+  "vocabulary": ["evenly", "left over"],
+  "unlocks": ["3.1.7"],
+  "teaching": {
+    "setup": "7 counters; the learner is asked to split them into two equal groups.",
+    "see": "Can you make the two groups exactly the same size?",
+    "break": "Attempt the split — 3 and 3, with 1 left over that can't join either side evenly.",
+    "build": "Describe the result honestly: 7 splits into 3, 3, and 1 left over — it doesn't split evenly in half.",
+    "transform": "An even number's half (a clean whole-number answer) vs. an odd number's attempted half (two equal groups plus a leftover) — the value 7 is unchanged either way.",
+    "check": { "strategy": "recount", "prompt": "Recombine 3, 3, and 1 to confirm the total is still 7." }
+  },
+  "examples": {
+    "primary": "7 to 3, 3, and 1 left over.",
+    "second": "9 to 4, 4, and 1 left over.",
+    "transfer": "11, predicted before attempting."
+  },
+  "language": { "teacherPrompts": ["cross.how-do-you-know"], "studentFrames": ["frame.i-broke"] },
+  "mastery": { "evidence": "Correctly identifies whether a number up to 12 splits evenly in half, and if not, states the leftover, for 3 numbers." },
+  "production": { "formatSupport": ["long", "short"], "presenter": "recommended" }
+}

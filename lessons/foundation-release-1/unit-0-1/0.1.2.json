@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "id": "0.1.2",
+  "unitId": "0.1",
+  "sequence": 2,
+  "title": "Groups I Can See at a Glance",
+  "domain": "D0",
+  "type": "discovery",
+  "objective": "Small groups (up to 5) can be recognized instantly, without counting one-by-one (subitizing).",
+  "studentQuestion": "How do you know without counting?",
+  "prerequisites": ["0.1.1"],
+  "newIdea": "Subitizing — instant recognition of small quantities from their pattern.",
+  "reuses": ["0.1.1"],
+  "patterns": ["unitize"],
+  "representations": [{ "type": "objects", "role": "primary" }],
+  "vocabulary": ["at a glance", "pattern", "without counting"],
+  "unlocks": ["0.1.7"],
+  "teaching": {
+    "setup": "A dot card is shown for about 2 seconds, then hidden.",
+    "see": "How many did you see? How do you know?",
+    "break": "Compare the seen pattern to a known small pattern (e.g. like dice).",
+    "build": "Name the quantity from the pattern, not a count.",
+    "transform": "The same quantity shown in an unfamiliar arrangement — still recognized (or counted as backup) as the same amount.",
+    "check": { "strategy": "recount", "prompt": "Flip the card back over and count to confirm." }
+  },
+  "examples": {
+    "primary": "A 4-dot square pattern.",
+    "second": "A 3-dot triangle pattern.",
+    "transfer": "A scattered (non-dice) 5-dot arrangement."
+  },
+  "language": { "teacherPrompts": ["stage.see"], "studentFrames": ["frame.i-see"] },
+  "mastery": { "evidence": "Correctly names groups of 3-5 from a brief flash on at least 4 of 5 tries." },
+  "production": { "formatSupport": ["long", "short"], "presenter": "optional" }
+}

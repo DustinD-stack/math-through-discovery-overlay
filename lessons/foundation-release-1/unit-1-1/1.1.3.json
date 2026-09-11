@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "id": "1.1.3",
+  "unitId": "1.1",
+  "sequence": 3,
+  "title": "Whole Known, Parts Known",
+  "domain": "D1",
+  "type": "strategy",
+  "objective": "Build and verify a bond when both the whole and both parts are already known — the straightforward case, before any part is missing.",
+  "studentQuestion": "Does everything in this bond agree?",
+  "prerequisites": ["1.1.2"],
+  "newIdea": "Verifying a fully-known bond is internally consistent (parts add to the whole) — sets up recognizing when something is missing next.",
+  "reuses": ["0.2.3"],
+  "patterns": ["part-whole"],
+  "representations": [{ "type": "number-bond", "role": "primary", "data": { "whole": 9, "parts": [6, 3] } }],
+  "vocabulary": ["check", "agree"],
+  "unlocks": ["1.1.4"],
+  "teaching": {
+    "setup": "A bond with the whole and both parts filled in, sometimes correct, sometimes deliberately wrong (e.g. whole 9, parts 5 and 3).",
+    "see": "Every number in this bond is already filled in. Is it correct?",
+    "break": "Add the two parts together independently of what the bond claims the whole is.",
+    "build": "Compare the computed sum to the stated whole.",
+    "transform": "A broken bond, corrected into a true one — same numbers rearranged into a form that's actually consistent.",
+    "check": { "strategy": "alternate-representation", "prompt": "Rebuild with objects if the bond is in question." }
+  },
+  "examples": {
+    "primary": "A correct bond (9 = 6+3).",
+    "second": "A deliberately incorrect bond (9 claimed, but parts are 5 and 3).",
+    "transfer": "The learner builds their own fully-known, correct bond from a chosen whole."
+  },
+  "language": { "teacherPrompts": ["cross.how-do-you-know"], "studentFrames": ["frame.makes-sense-because"] },
+  "mastery": { "evidence": "Correctly identifies at least one true and one false bond, with justification." },
+  "production": { "formatSupport": ["long", "short"], "presenter": "optional" }
+}

@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "2.1.2",
+  "unitId": "2.1",
+  "sequence": 2,
+  "title": "Tens and Ones Names",
+  "domain": "D2",
+  "type": "discovery",
+  "objective": "A two-digit number names how many bundles of ten and how many loose ones remain, and this is read directly from the number itself.",
+  "studentQuestion": "How many tens, and how many extra ones?",
+  "prerequisites": ["2.1.1"],
+  "newIdea": "Reading tens and ones directly from a two-digit numeral.",
+  "reuses": ["2.1.1"],
+  "patterns": ["unitize"],
+  "representations": [{ "type": "place-value-breakdown", "role": "primary", "data": { "value": 34, "form": "columns" } }],
+  "vocabulary": ["tens", "ones", "digit"],
+  "unlocks": ["2.1.3"],
+  "teaching": {
+    "setup": "3 bundles of ten and 4 loose ones are shown together.",
+    "see": "How many bundles? How many loose ones?",
+    "break": "Count the bundles separately from the loose ones.",
+    "build": "Name the total using both counts: 3 tens and 4 ones.",
+    "transform": "The same physical quantity, named as 34 or as 3 tens and 4 ones.",
+    "check": { "strategy": "recount", "prompt": "Unbundle everything and count all the loose ones individually to confirm 34." }
+  },
+  "examples": {
+    "primary": "3 tens, 4 ones to 34.",
+    "second": "2 tens, 7 ones to 27.",
+    "transfer": "Given the numeral 41 (no objects shown), predict how many bundles and loose ones it should be, then build it to check."
+  },
+  "misconceptions": ["MC-DIGIT-VALUE-CONFUSION"],
+  "language": { "teacherPrompts": ["cross.how-do-you-know"], "studentFrames": ["frame.i-see"] },
+  "mastery": { "evidence": "Correctly states the number of tens and ones for 3 different two-digit numbers, both from objects and from a written numeral." },
+  "production": { "formatSupport": ["long", "short"], "presenter": "recommended" }
+}

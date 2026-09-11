@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "id": "0.2.4",
+  "unitId": "0.2",
+  "sequence": 4,
+  "title": "Many Ways to Break the Same Number",
+  "domain": "D0",
+  "type": "strategy",
+  "objective": "Systematically find all the whole-number ways to split a given small quantity, not just one or two.",
+  "studentQuestion": "Have you found every way, or might there be more?",
+  "prerequisites": ["0.2.2", "0.2.3"],
+  "newIdea": "Exhaustive (systematic) search for decompositions, not just a few examples.",
+  "reuses": ["0.2.2"],
+  "patterns": ["part-whole"],
+  "representations": [{ "type": "objects", "role": "primary" }],
+  "vocabulary": ["every way", "in order"],
+  "unlocks": ["1.1.6"],
+  "teaching": {
+    "setup": "The number 7.",
+    "see": "How many different ways do you think 7 can be broken into two parts?",
+    "break": "Search systematically — start from one part being 1, then 2, then 3, and so on.",
+    "build": "Record each pair found (1&6, 2&5, 3&4) and notice when pairs start repeating in reverse.",
+    "transform": "The same whole (7), organized as a complete, ordered list of forms.",
+    "check": { "strategy": "mental-reasonableness", "prompt": "Count the total number of distinct splits found and justify none were missed or duplicated." }
+  },
+  "examples": {
+    "primary": "7 = 6+1, 5+2, 4+3 (and their reverses).",
+    "second": "6 = 5+1, 4+2, 3+3.",
+    "transfer": "9, found independently by the learner using the same systematic method."
+  },
+  "language": { "teacherPrompts": ["cross.how-do-you-know"], "studentFrames": ["frame.i-broke"] },
+  "mastery": { "evidence": "Finds at least 3 distinct splits of 7 (or 6) using a systematic method, not trial and error." },
+  "production": { "formatSupport": ["long", "short"], "presenter": "optional" }
+}

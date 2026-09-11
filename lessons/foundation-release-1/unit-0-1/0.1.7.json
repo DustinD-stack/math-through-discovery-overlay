@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "id": "0.1.7",
+  "unitId": "0.1",
+  "sequence": 7,
+  "title": "Counting On From a Known Group",
+  "domain": "D0",
+  "type": "strategy",
+  "objective": "If a group's size is already known (by subitizing or a prior count), counting can continue from that number rather than restarting from one.",
+  "studentQuestion": "Do we have to start over, or can we start from what we know?",
+  "prerequisites": ["0.1.1", "0.1.2"],
+  "newIdea": "Counting on — the efficiency insight that plants the seed for later addition strategies (Make 10, D1).",
+  "reuses": ["0.1.2", "0.1.1"],
+  "patterns": ["unitize"],
+  "representations": [{ "type": "objects", "role": "primary" }],
+  "vocabulary": ["start from", "count on"],
+  "unlocks": ["0.1.8"],
+  "teaching": {
+    "setup": "A subitizable group of 4 is shown and instantly recognized; 3 more objects are added one at a time.",
+    "see": "We already know this is 4. Do we need to count it again?",
+    "break": "Separate what's already known (4) from what's new (the 3 added).",
+    "build": "Count on aloud: 4, then 5, 6, 7 instead of 1, 2, 3, ... 7.",
+    "transform": "The same total (7), reached two ways — recount from 1 vs. count on from 4 — same value, different counting form.",
+    "check": { "strategy": "recount", "prompt": "Recount fully from 1 to confirm counting-on gave the right total." }
+  },
+  "examples": {
+    "primary": "4 known + 3 added.",
+    "second": "5 known + 2 added.",
+    "transfer": "A group where the known part must be subitized on the spot, not pre-told."
+  },
+  "language": { "teacherPrompts": ["stage.build"], "studentFrames": ["frame.i-built"] },
+  "mastery": { "evidence": "Counts on from a known small quantity at least twice without prompting to restart from 1." },
+  "production": { "formatSupport": ["long", "short"], "presenter": "recommended" }
+}

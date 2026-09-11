@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "id": "MC-3.2",
+  "unitId": "3.2",
+  "title": "Addition & Subtraction Mastery Check",
+  "domain": "D3",
+  "type": "mastery-check",
+  "objective": "Determine whether compensation (addition and subtraction), error diagnosis, and strategy selection are secure. This is the Foundation Release 1 capstone check — passing it signals readiness for Foundation Release 2 (extended place value, written algorithms, formal Equivalence), which is out of scope for this corpus.",
+  "prerequisites": ["3.2.1", "3.2.2", "3.2.3", "3.2.4", "3.2.5", "3.2.6", "3.2.7", "3.2.8"],
+  "assessment": {
+    "tasks": [
+      { "facet": "explain", "prompt": "Solve a new compensation-addition problem near a landmark, narrating the give/take pairing explicitly." },
+      { "facet": "transfer", "prompt": "Solve a compensation-subtraction problem using the same-direction rule, distinct from the addition rule." },
+      { "facet": "check", "prompt": "Diagnose a shown broken compensation attempt (missing the take-back step) and correct it." },
+      { "facet": "explain", "prompt": "Given a small-number problem and a landmark-adjacent problem together, correctly choose Make 10 for one and compensation for the other, with a stated reason." }
+    ]
+  },
+  "mastery": {
+    "facets": ["explain", "transfer", "check"],
+    "passEvidence": "All four tasks correct, with task 1's narration explicitly stating what was \"given\" and what was \"taken\" (not just the final answer).",
+    "reteachTrigger": "Produces a correct answer in task 1 but cannot explain where the compensating amount came from (reteach 3.2.7's proof-based framing, not just more drill) or applies the addition (opposite-direction) rule to the subtraction task (reteach 3.2.5 with explicit contrast)."
+  },
+  "production": { "formatSupport": ["long", "short"], "presenter": "optional" }
+}
