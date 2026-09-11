@@ -1,0 +1,26 @@
+{
+  "_schemaNote": "Canonical teacher/student language registry, derived from docs/foundation-release-1/TEACHER_LANGUAGE.md. Lessons reference entries by id; lesson-specific custom wording lives in the lesson file itself, never here.",
+  "teacherPrompts": {
+    "stage.see": "What do you SEE? / What do you notice? / What are we being asked?",
+    "stage.break": "What can we BREAK apart? / Is there a friendlier number hiding in here? / How could we split this up?",
+    "stage.build": "What are we trying to BUILD? / What does that give us?",
+    "stage.transform": "Can we TRANSFORM this into something easier? / What stayed the same? What changed? / Did the value change?",
+    "stage.check": "How can we CHECK it? / How do you know? / Can you show it another way?",
+    "cross.same-changed": "What stayed the same? What changed?",
+    "cross.value-changed": "Did the value change, or just the way it's written/shown?",
+    "cross.show-another-way": "Can you show it another way?",
+    "cross.how-do-you-know": "How do you know?",
+    "cross.friendlier-number": "Is there a friendlier number hiding in here?",
+    "cross.conservation-check": "Did we add or take away anything, or just look at it differently?",
+    "cross.reasonableness": "Would the answer be bigger or smaller than that?"
+  },
+  "studentFrames": {
+    "frame.i-see": "I see ___.",
+    "frame.i-broke": "I broke ___ into ___ and ___.",
+    "frame.i-did-that-because": "I did that because ___.",
+    "frame.i-built": "I built ___.",
+    "frame.same-value-different-form": "I changed the form, but ___ stayed the same.",
+    "frame.makes-sense-because": "I know my answer makes sense because ___.",
+    "frame.same-value-as": "I can show the same value as ___."
+  }
+}

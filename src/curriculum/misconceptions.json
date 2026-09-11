@@ -1,0 +1,75 @@
+{
+  "_schemaNote": "Canonical misconception registry, derived from docs/foundation-release-1/MISCONCEPTION_MAP.md. Lessons reference these by id (array of strings) rather than copying the prose. Do not hand-edit id keys without updating every lesson that references them.",
+  "MC-COUNT-CORRESPONDENCE": {
+    "label": "Counting objects twice or skipping one",
+    "firstAppears": "0.1.1",
+    "likelyMentalModel": "Treats counting as reciting a sequence of words alongside vague pointing, rather than a strict one-to-one match between each word and exactly one object.",
+    "diagnosticQuestion": "Can you touch each one as you say its number, just once?",
+    "bestRepresentation": "objects",
+    "teacherResponse": "Model moving each object to a \"counted\" pile while saying its number; have the learner repeat with the moving-aside physically enforced."
+  },
+  "MC-CONSERVATION-REARRANGE": {
+    "label": "Thinking rearrangement changes quantity",
+    "firstAppears": "0.1.3",
+    "likelyMentalModel": "Judging quantity by the visual footprint (length, area, or spread) a group occupies, not by count — a normal developmental stage, not carelessness.",
+    "diagnosticQuestion": "Did anyone add or take away any objects when I moved them?",
+    "bestRepresentation": "objects",
+    "teacherResponse": "Have the learner do the rearranging themselves and predict the count before recounting, repeated across several rearrangements."
+  },
+  "MC-DIGIT-VALUE-CONFUSION": {
+    "label": "Confusing the numeral with the quantity / place-value digit-value confusion",
+    "firstAppears": "2.1.2",
+    "likelyMentalModel": "Numeral literacy (reading/writing the symbol) has outrun place-value understanding (what the symbol quantifies).",
+    "diagnosticQuestion": "Which part of '34' tells us the bundles? Which part tells us the loose ones?",
+    "bestRepresentation": "place-value-breakdown",
+    "teacherResponse": "Cover the numeral; ask the learner to state tens and ones from objects alone, then reveal the numeral and match each digit to what was just said."
+  },
+  "MC-BOND-DIRECTION": {
+    "label": "Whole vs. part reversal (number-bond direction confusion)",
+    "firstAppears": "1.1.5",
+    "likelyMentalModel": "Relying on a bond diagram's spatial position (top/bottom, left/right) rather than the size relationship (the whole is always the sum of the parts).",
+    "diagnosticQuestion": "Which number should be the biggest one here — the whole, or one of the parts?",
+    "bestRepresentation": "number-bond",
+    "teacherResponse": "Ask the learner to add the two numbers they've called \"parts\" — does the sum match the number they've called \"the whole\"?"
+  },
+  "MC-MISSING-PART-ADD": {
+    "label": "Missing-part confusion (adding instead of finding the difference)",
+    "firstAppears": "1.1.4",
+    "likelyMentalModel": "Over-applies \"put together\" (composing) reasoning to a \"what's left\" (decomposing) situation.",
+    "diagnosticQuestion": "If the whole is 8 and we already have 5, would the missing part be bigger or smaller than 8?",
+    "bestRepresentation": "objects",
+    "teacherResponse": "Before solving, ask the learner to predict whether the missing part will be larger or smaller than the given whole."
+  },
+  "MC-MAKE10-SPLIT-ORDER": {
+    "label": "Make-10 decomposition errors (wrong split target or wrong add order)",
+    "firstAppears": "1.3.1",
+    "likelyMentalModel": "Has memorized \"split one number into two pieces\" as the action, without tracking which piece exists specifically to complete the benchmark.",
+    "diagnosticQuestion": "Which piece did we split off to finish the ten? Let's add that piece first.",
+    "bestRepresentation": "number-bond",
+    "teacherResponse": "Require the learner to say out loud, before adding anything, which piece will make a ten."
+  },
+  "MC-COMPENSATE-UNBALANCED": {
+    "label": "Changing a number without compensating (compensation changing the answer)",
+    "firstAppears": "3.2.2",
+    "likelyMentalModel": "Treats \"make it friendlier\" as the whole strategy, without tracking that a change made for ease must be paired with an equal-and-opposite change to preserve value.",
+    "diagnosticQuestion": "You changed one number — where did that same amount need to go to keep the total fair?",
+    "bestRepresentation": "number-line",
+    "teacherResponse": "Have the learner compute the \"friendlier\" version and the original version by two independent methods and compare."
+  },
+  "MC-ZERO-ONES-FAKE-ADDEND": {
+    "label": "Zero-ones confusion (fake + 0 addend in expanded form)",
+    "firstAppears": "2.1.4",
+    "likelyMentalModel": "Pattern-matches the shape of expanded form (always two addends) rather than reasoning from each place's actual value.",
+    "diagnosticQuestion": "What is the value of the ones place here? If it's zero, do we need to write anything for it?",
+    "bestRepresentation": "place-value-breakdown",
+    "teacherResponse": "Ask the learner to physically point to the \"zero ones\" pile — when there's nothing there, ask whether writing \"+ 0\" adds anything real."
+  },
+  "MC-NEARDOUBLE-DIRECTION": {
+    "label": "Near-double errors (wrong +1/-1 direction relative to a known double)",
+    "firstAppears": "3.1.3",
+    "likelyMentalModel": "Over-generalizes the first-learned adjustment direction as if it were universal, rather than re-checking each time.",
+    "diagnosticQuestion": "Which double are we near, and is our number bigger or smaller than the double's matching part?",
+    "bestRepresentation": "number-bond",
+    "teacherResponse": "Require the learner to state, before adjusting, whether the target number is one more or one less than the nearby double."
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "id": "0.0.0",
+  "unitId": "0.0",
+  "sequence": 1,
+  "title": "Replace With The Lesson Title",
+  "domain": "D0",
+  "type": "discovery",
+  "objective": "One or two sentences: what should the learner understand or be able to do after this lesson?",
+  "studentQuestion": "The single question a student hears that frames this lesson.",
+  "prerequisites": ["0.0.0"],
+  "unlocks": ["0.0.0"],
+  "newIdea": "What is genuinely new here that was not true in a prior lesson? Leave this field out entirely for a pure Fluency lesson.",
+  "reuses": ["0.0.0"],
+  "patterns": ["part-whole"],
+  "representations": [
+    { "type": "objects", "role": "secondary" },
+    { "type": "number-bond", "role": "primary", "data": {} }
+  ],
+  "vocabulary": ["term-one", "term-two"],
+  "teaching": {
+    "setup": "How the problem/material is first presented, before any reasoning begins.",
+    "see": "What the learner is asked to notice.",
+    "break": "How the quantity/expression is decomposed.",
+    "build": "What is done with the decomposed pieces.",
+    "transform": "What stays the same and what changes — this is where Same Value, Different Form is made explicit, in whatever form fits THIS lesson (it does not have to be an algebraic-looking step).",
+    "check": {
+      "strategy": "recount",
+      "prompt": "How the answer is verified — must be a strategy from src/curriculum/constants.js CHECK_STRATEGIES."
+    }
+  },
+  "examples": {
+    "primary": "The main worked example.",
+    "second": "A second worked example, same structure, different numbers.",
+    "transfer": "An example not explicitly modeled, used to check independent transfer."
+  },
+  "misconceptions": [],
+  "language": {
+    "teacherPrompts": ["stage.see"],
+    "studentFrames": ["frame.i-see"],
+    "custom": []
+  },
+  "mastery": {
+    "evidence": "The smallest useful evidence that the learner has actually understood this, not just answered correctly once."
+  },
+  "production": {
+    "formatSupport": ["long", "short"],
+    "presenter": "optional"
+  }
+}

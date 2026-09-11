@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "id": "1.2.4",
+  "unitId": "1.2",
+  "sequence": 4,
+  "title": "Complement Pairs I Know by Heart",
+  "domain": "D1",
+  "type": "fluency",
+  "objective": "Retrieve complements to 10 quickly, without rebuilding a ten-frame every time — fluency practice after the concept (1.2.3) is secure.",
+  "studentQuestion": "Can you answer without the frame this time?",
+  "prerequisites": ["1.2.3"],
+  "unlocks": ["1.2.5"],
+  "reuses": ["1.2.3"],
+  "patterns": ["make-a-benchmark"],
+  "representations": [
+    { "type": "equation-workspace", "role": "primary", "data": { "lines": [ { "expr": "___ + ___ = 10", "kind": "given" } ] } }
+  ],
+  "teaching": {
+    "see": "What does this number need to make 10?",
+    "break": "Retrieve from memory first; fall back to the ten-frame only if stuck.",
+    "build": "Answer, then move to the next.",
+    "transform": "This lesson intentionally does not add a new equivalence; it drills the one already established in 1.2.3.",
+    "check": {
+      "strategy": "alternate-representation",
+      "prompt": "Self-check against a ten-frame for any answer given with hesitation."
+    }
+  },
+  "examples": {
+    "primary": "The full run 1-9, self-paced.",
+    "second": "The same run, repeated, for personal improvement.",
+    "transfer": "Complements given out of numeric order (e.g., 6, 2, 9, 4) to confirm retrieval, not a memorized sequence."
+  },
+  "mastery": {
+    "evidence": "Answers at least 7 of 9 out-of-order complement prompts within a few seconds each, without rebuilding a frame."
+  },
+  "production": {
+    "formatSupport": ["long", "short"],
+    "presenter": "not-needed"
+  }
+}

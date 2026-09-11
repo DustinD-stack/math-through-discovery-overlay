@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "id": "2.1.3",
+  "unitId": "2.1",
+  "sequence": 3,
+  "title": "Same Number, Different Groupings",
+  "domain": "D2",
+  "type": "connection",
+  "objective": "The same quantity can be grouped into tens and ones in more than one valid way (e.g., 34 as 3 tens 4 ones, or 2 tens 14 ones) — a direct, higher-level return of \"same value, different form.\"",
+  "studentQuestion": "Is there another way to group the same amount into tens and ones?",
+  "prerequisites": ["2.1.2", "0.2.4"],
+  "unlocks": ["2.1.4"],
+  "newIdea": "Non-canonical (ungrouped/regrouped) tens-and-ones representations of the same value.",
+  "reuses": ["0.2.4"],
+  "patterns": ["equivalence", "regroup-rename"],
+  "representations": [
+    { "type": "objects", "role": "secondary" },
+    { "type": "place-value-breakdown", "role": "primary", "data": { "value": 34, "form": "columns" } }
+  ],
+  "vocabulary": ["regroup", "another way"],
+  "teaching": {
+    "setup": "34 shown as 3 tens and 4 ones (canonical form).",
+    "see": "Is 3 tens and 4 ones the only way to make 34 with tens and ones?",
+    "break": "Unbundle one ten back into 10 loose ones.",
+    "build": "Recount: now there are 2 tens and 14 ones — still 34.",
+    "transform": "34 as \"3 tens, 4 ones\" or \"2 tens, 14 ones\" — same value, two valid place-value forms.",
+    "check": {
+      "strategy": "recount",
+      "prompt": "Count all loose ones from the unbundled version — still 34."
+    }
+  },
+  "examples": {
+    "primary": "34 = 3 tens 4 ones = 2 tens 14 ones.",
+    "second": "52 = 5 tens 2 ones = 4 tens 12 ones.",
+    "transfer": "Given a non-canonical form (2 tens, 15 ones), also state the canonical form (3 tens, 5 ones)."
+  },
+  "language": {
+    "teacherPrompts": ["cross.conservation-check"],
+    "studentFrames": ["frame.same-value-different-form"]
+  },
+  "mastery": {
+    "evidence": "Produces both a canonical and a regrouped form for the same two-digit number and confirms both total the same via recount."
+  },
+  "production": {
+    "formatSupport": ["long", "short"],
+    "presenter": "recommended"
+  }
+}

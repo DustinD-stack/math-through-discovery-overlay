@@ -9,7 +9,10 @@
     "dev": "node server/server.js",
     "python": "python3 -m http.server 3000",
     "lessons": "node tools/build-lessons.cjs",
-    "test": "node tools/smoke-test.mjs && node tools/ui-components.test.mjs"
+    "lessons:validate": "node tools/lesson-validate.mjs",
+    "lessons:index": "node tools/lesson-index.mjs",
+    "lessons:test": "node tools/lesson-schema.test.mjs",
+    "test": "node tools/smoke-test.mjs && node tools/ui-components.test.mjs && node tools/lesson-schema.test.mjs"
   },
   "keywords": [
     "obs",

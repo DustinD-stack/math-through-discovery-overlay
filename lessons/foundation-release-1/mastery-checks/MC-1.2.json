@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "MC-1.2",
+  "unitId": "1.2",
+  "title": "Make 5 / Benchmark Mastery Check",
+  "domain": "D1",
+  "type": "mastery-check",
+  "objective": "Determine whether complements to 10 are secure enough to begin Unit 1.3's Make 10 strategy. This is the single most important gate in Foundation Release 1.",
+  "prerequisites": ["1.2.1", "1.2.2", "1.2.3", "1.2.4", "1.2.5"],
+  "unlocks": ["1.3.1"],
+  "representations": [
+    { "type": "number-line", "role": "secondary" }
+  ],
+  "assessment": {
+    "tasks": [
+      {
+        "facet": "recognize",
+        "prompt": "State the complement to 10 for at least 6 of 8 given numbers 1-9, from memory."
+      },
+      {
+        "facet": "transfer",
+        "prompt": "Given a number, correctly state whether it's closer to 5 or to 10, with a distance justification."
+      }
+    ]
+  },
+  "mastery": {
+    "facets": ["recognize", "transfer"],
+    "passEvidence": "Both tasks correct at the stated thresholds.",
+    "reteachTrigger": "Cannot state complements to 10 without rebuilding a ten-frame for most numbers — reteach 1.2.3-1.2.4 before proceeding to Unit 1.3."
+  },
+  "production": {
+    "formatSupport": ["long", "short"],
+    "presenter": "optional"
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "id": "1.1.1",
+  "unitId": "1.1",
+  "sequence": 1,
+  "title": "A Model for Parts and Whole",
+  "domain": "D1",
+  "type": "discovery",
+  "objective": "The Number Bond diagram (whole on top, two parts below) is a picture of the splitting/joining a learner already knows how to do with objects — not a new rule to learn.",
+  "studentQuestion": "Can you show your object split using this picture instead?",
+  "prerequisites": ["0.2.1", "0.2.2", "0.2.3"],
+  "unlocks": ["1.1.2"],
+  "newIdea": "The NumberBond diagram as a representation of an already-understood action.",
+  "reuses": ["0.2.1", "0.2.2", "0.2.3"],
+  "patterns": ["part-whole"],
+  "representations": [
+    { "type": "objects", "role": "secondary" },
+    { "type": "number-bond", "role": "primary", "data": { "whole": 7, "parts": [5, 2] } }
+  ],
+  "vocabulary": ["whole", "part", "bond"],
+  "teaching": {
+    "setup": "7 counters, already split into 5 and 2 as in prior lessons.",
+    "see": "You already know 7 splits into 5 and 2. Here's a new way to draw that.",
+    "break": "Map the physical whole and parts onto the diagram's three positions.",
+    "build": "Draw/build the bond for 7 = 5 + 2 with the whole on top, parts below.",
+    "transform": "The same split (7 into 5 and 2), shown as objects or as a bond diagram — same value, a new drawn form.",
+    "check": {
+      "strategy": "alternate-representation",
+      "prompt": "Cover the bond's whole and rebuild it from the two parts (objects), then reveal — does it match?"
+    }
+  },
+  "examples": {
+    "primary": "7 = 5 + 2 (matches the Unit 0.2 example directly).",
+    "second": "6 = 4 + 2.",
+    "transfer": "A split the learner has already found themselves in Unit 0.2, redrawn as a bond without teacher demonstration."
+  },
+  "language": {
+    "teacherPrompts": ["stage.see", "cross.show-another-way"],
+    "studentFrames": ["frame.i-see", "frame.same-value-as"]
+  },
+  "mastery": {
+    "evidence": "Correctly draws a bond for a split already demonstrated with objects, twice."
+  },
+  "production": {
+    "formatSupport": ["long", "short"],
+    "presenter": "recommended"
+  }
+}
