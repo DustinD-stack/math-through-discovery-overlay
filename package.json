@@ -12,7 +12,8 @@
     "lessons:validate": "node tools/lesson-validate.mjs",
     "lessons:index": "node tools/lesson-index.mjs",
     "lessons:test": "node tools/lesson-schema.test.mjs",
-    "test": "node tools/smoke-test.mjs && node tools/ui-components.test.mjs && node tools/lesson-schema.test.mjs"
+    "curriculum:test": "node tools/curriculum-runtime.test.mjs",
+    "test": "node tools/smoke-test.mjs && node tools/ui-components.test.mjs && node tools/lesson-schema.test.mjs && node tools/curriculum-runtime.test.mjs"
   },
   "keywords": [
     "obs",

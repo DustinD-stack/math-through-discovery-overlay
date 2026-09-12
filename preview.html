@@ -18,6 +18,7 @@
 <link rel="stylesheet" href="src/styles/layouts.css">
 <link rel="stylesheet" href="src/styles/animations.css">
 <link rel="stylesheet" href="src/styles/teaching.css">
+<link rel="stylesheet" href="src/styles/curriculum-runtime.css">
 
 <style>
   /* Gallery chrome only — NOT part of the design system. */
@@ -194,6 +195,16 @@
   <section class="g">
     <h2>Phase 6 · lesson sequences — 3/8 of 20 · 790 ÷ 2 · 7 + 5 (production stages)</h2>
     <div class="g-frames" id="prod-seq"></div>
+  </section>
+
+  <!-- ================= P5 — SCHEMA-V1 RUNTIME ================= -->
+  <section class="g">
+    <h2>P5 · Foundation Release 1 — production corpus (schema v1, live)</h2>
+    <p class="g-note">Real <code>lessons/foundation-release-1/</code> experiences, loaded through the
+      actual catalog / adapter / player / representation resolver — not hardcoded demos.
+      Pick any unit and any of the 78 accepted experiences (lessons, mastery checks, reviews).
+      See <code>docs/lesson-authoring/RUNTIME_INTEGRATION.md</code>.</p>
+    <div id="fr1-preview"></div>
   </section>
 </div>
 
@@ -718,6 +729,13 @@
     const on = document.querySelector('#rail-states .g-card').classList.contains('bg-paper');
     bTheme.textContent = 'Sample surface: ' + (on ? 'paper' : 'dark');
   });
+
+  // P5 — Foundation Release 1 schema-v1 corpus (real catalog/player, not a demo).
+  import('./src/curriculum/preview-app.js')
+    .then(({ mountFoundationPreview }) => mountFoundationPreview(document.getElementById('fr1-preview')))
+    .catch((err) => {
+      document.getElementById('fr1-preview').textContent = 'Foundation Release 1 preview failed to load: ' + err.message;
+    });
 </script>
 </body>
 </html>

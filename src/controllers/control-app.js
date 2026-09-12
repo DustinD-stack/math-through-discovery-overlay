@@ -12,6 +12,7 @@ import { loadLesson, lessonIndex, STEP_KEYS } from '../utils/lesson-loader.js';
 import { PRESETS, PRESET_KEYS } from '../layouts/presets.js';
 import { DIAGRAM_NAMES } from '../modules/diagrams.js';
 import { STEP_META } from '../components/discovery.js';
+import { buildCatalog } from '../curriculum/catalog.js';
 
 const LAYER_NAMES = ['brand', 'presenter', 'story', 'math', 'discovery', 'comparison', 'takeaways'];
 const ASPECTS = [['16x9', '16:9'], ['9x16', '9:16'], ['1x1', '1:1']];
@@ -22,6 +23,20 @@ export async function mountControl(root) {
   const bus = createBus({ role: 'control' });
   let lesson = await loadLesson(store.get().lessonId).catch(() => null);
   let popped = [];
+
+  /* ---------- P5: Foundation Release 1 (schema-v1) selector ---------- */
+  let fr1Catalog = null;
+  let fr1Unit = null;
+  let fr1Id = null;
+  let fr1Active = false;
+  try {
+    const res = await fetch('lessons/foundation-release-1/manifest.json');
+    if (res.ok) {
+      fr1Catalog = buildCatalog(await res.json());
+      fr1Unit = fr1Catalog.listUnits()[0];
+      fr1Id = fr1Catalog.listByUnit(fr1Unit)[0].id;
+    }
+  } catch (_) { fr1Catalog = null; } // control panel still works with legacy-only if this fails
 
   const controls = el('div', { class: 'cp__col' });
   const previewCol = el('div', { class: 'cp__col' });
@@ -83,6 +98,18 @@ export async function mountControl(root) {
     try { await navigator.clipboard.writeText(url); showToast('URL copied'); }
     catch (_) { window.prompt('Copy this URL into OBS:', url); }
   }
+
+  /* P5: Foundation Release 1 messages travel over the SAME bus as every
+     other control->overlay message (no second transport). See
+     docs/lesson-authoring/RUNTIME_INTEGRATION.md "OBS usage". */
+  function sendFr1Select() {
+    if (!fr1Id) return;
+    fr1Active = true;
+    bus.send('fr1-select', { id: fr1Id });
+    render();
+  }
+  function sendFr1Stage(action) { bus.send('fr1-stage', { action }); }
+  function sendFr1Exit() { fr1Active = false; bus.send('fr1-exit', {}); render(); }
 
   function showToast(msg) {
     toast.textContent = msg;
@@ -170,6 +197,36 @@ export async function mountControl(root) {
         ),
       ),
     ));
+
+    /* --- P5: Foundation Release 1 (schema-v1 production corpus) --- */
+    if (fr1Catalog) {
+      controls.appendChild(el('section', { class: 'cp__panel' },
+        el('h2', { class: 'cp__legend' }, 'Foundation Release 1 (schema v1)'),
+        el('div', { class: 'field' },
+          el('label', {}, 'Unit'),
+          el('select', {
+            onchange: (e) => { fr1Unit = e.target.value; fr1Id = fr1Catalog.listByUnit(fr1Unit)[0].id; render(); },
+          }, fr1Catalog.listUnits().map((u) => el('option', { value: u, selected: u === fr1Unit }, u))),
+        ),
+        el('div', { class: 'field' },
+          el('label', {}, 'Experience'),
+          el('select', {
+            onchange: (e) => { fr1Id = e.target.value; },
+          }, fr1Catalog.listByUnit(fr1Unit).map((entry) => el('option', { value: entry.id, selected: entry.id === fr1Id },
+            `${entry.id} — ${entry.title} (${entry.type})`))),
+        ),
+        el('div', { class: 'row' },
+          el('button', { class: 'btn btn--primary', onclick: () => sendFr1Select() }, 'Load into overlay'),
+          el('button', { class: 'btn', onclick: () => sendFr1Exit() }, 'Return to legacy lesson'),
+        ),
+        fr1Active ? el('div', { class: 'row', style: { marginTop: 'var(--s-2)' } },
+          el('button', { class: 'btn', onclick: () => sendFr1Stage('previous') }, '← Stage'),
+          el('button', { class: 'btn', onclick: () => sendFr1Stage('next') }, 'Stage →'),
+          el('button', { class: 'btn', onclick: () => sendFr1Stage('reset') }, 'Reset'),
+          el('button', { class: 'btn', onclick: () => sendFr1Stage('reveal') }, 'Reveal / hide'),
+        ) : null,
+      ));
+    }
 
     /* --- layers --- */
     controls.appendChild(el('section', { class: 'cp__panel' },

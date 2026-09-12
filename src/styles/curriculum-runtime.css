@@ -1,0 +1,96 @@
+/* ============================================================
+   Foundation Release 1 runtime composer — P5
+
+   Additive only. Does not modify components.css / teaching.css /
+   layouts.css. Reuses the existing design tokens (tokens.css) so the
+   new composer matches the accepted system rather than inventing one.
+   Loaded only where the schema-v1 composer can appear (preview.html;
+   overlay.html when Foundation Release 1 mode is active).
+   ============================================================ */
+
+.fr1-experience {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+  max-width: 60rem;
+  margin: 0 auto;
+  color: var(--ui-text);
+  font-family: var(--font-ui);
+}
+
+.fr1-header__eyebrow {
+  font: 700 var(--fs-xs)/1 var(--font-logo);
+  letter-spacing: var(--tr-wider);
+  text-transform: uppercase;
+  color: var(--ui-text-muted);
+}
+.fr1-header__title { font: 700 var(--fs-2xl)/1.1 var(--font-logo); margin-top: var(--s-1); }
+.fr1-header__objective { color: var(--ui-text-muted); font-size: var(--fs-sm); margin-top: var(--s-1); max-width: 56ch; }
+
+.fr1-rail { padding: var(--s-2) 0; }
+
+.fr1-stage {
+  background: var(--ui-panel);
+  border: 1px solid var(--ui-border-faint);
+  border-radius: var(--r-lg);
+  padding: var(--s-4);
+}
+.fr1-stage__label {
+  font: 700 var(--fs-xs)/1 var(--font-logo);
+  letter-spacing: var(--tr-wide);
+  text-transform: uppercase;
+  color: var(--ui-accent);
+  margin-bottom: var(--s-2);
+}
+.fr1-stage__prompt { font-size: var(--fs-md); line-height: var(--lh-body); }
+
+.fr1-representation { display: flex; justify-content: center; padding: var(--s-3) 0; }
+
+.repr-gap, .repr-concrete {
+  border: var(--bw-thin) dashed var(--ui-border);
+  border-radius: var(--r-md);
+  padding: var(--s-4);
+  text-align: center;
+  color: var(--ui-text-muted);
+  max-width: 28rem;
+}
+.repr-gap__badge, .repr-concrete__badge {
+  font: 700 var(--fs-xs)/1 var(--font-logo);
+  letter-spacing: var(--tr-wider);
+  text-transform: uppercase;
+  color: var(--ui-warning);
+  margin-bottom: var(--s-2);
+}
+.repr-concrete__badge { color: var(--ui-text-muted); }
+.repr-gap__label { font-size: var(--fs-lg); color: var(--ui-text); margin-bottom: var(--s-2); }
+.repr-gap__note, .repr-concrete__note { font-size: var(--fs-xs); }
+
+.fr1-result {
+  border: var(--bw-thin) solid var(--ui-success);
+  border-radius: var(--r-md);
+  padding: var(--s-3) var(--s-4);
+}
+.fr1-result.is-hidden { opacity: .5; }
+.fr1-result__label { font: 700 var(--fs-xs)/1 var(--font-logo); text-transform: uppercase; letter-spacing: var(--tr-wide); color: var(--ui-success); }
+.fr1-result__value { font-size: var(--fs-lg); margin-top: var(--s-1); }
+
+.fr1-task__index { color: var(--ui-text-muted); font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: var(--tr-wide); }
+.fr1-task__facet {
+  display: inline-block;
+  margin-top: var(--s-2);
+  padding: 2px var(--s-2);
+  border-radius: var(--r-pill);
+  background: var(--ui-panel-quiet);
+  font: 700 var(--fs-xs)/1.6 var(--font-ui);
+  text-transform: uppercase;
+  letter-spacing: var(--tr-wide);
+}
+.fr1-task__prompt { margin-top: var(--s-2); font-size: var(--fs-md); }
+.fr1-mastery-meta { font-size: var(--fs-sm); color: var(--ui-text-muted); display: flex; flex-direction: column; gap: var(--s-1); }
+
+.fr1-review-retrieves__label { font: 700 var(--fs-xs)/1 var(--font-logo); text-transform: uppercase; letter-spacing: var(--tr-wide); color: var(--ui-text-muted); }
+.fr1-review-retrieves ul { margin: var(--s-1) 0 0; padding-left: 1.2em; }
+
+/* ---------- selector / nav chrome (preview + control) ---------- */
+.fr1-picker { display: flex; gap: var(--s-2); flex-wrap: wrap; align-items: center; }
+.fr1-nav { display: flex; gap: var(--s-2); margin-top: var(--s-3); }
