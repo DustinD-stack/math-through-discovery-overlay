@@ -53,6 +53,11 @@ export async function mountOverlay(root, { role = 'overlay', listen = true, init
   async function fr1Select(id) {
     const catalog = await ensureFr1Catalog();
     const raw = await getExperience(id, { catalog, readLesson: makeFetchReader() });
+    // A fresh player instance IS the deterministic "start"/"switch lesson"
+    // behavior (P7): index 0, reveal false, default representation, and
+    // (unlike lessonId) nothing about aspect/presenter is touched, since
+    // those live in `store`, not the player. See docs/TEACHING_WORKFLOW.md
+    // "Starting a lesson".
     fr1Player = createPlayer(adaptExperience(raw));
     fr1Active = true;
     renderFr1();
@@ -67,6 +72,7 @@ export async function mountOverlay(root, { role = 'overlay', listen = true, init
         else if (action === 'reset') fr1Player.reset();
         else if (action === 'reveal') (fr1Player.isRevealed() ? fr1Player.hideAnswer() : fr1Player.revealAnswer());
         else if (action && action.startsWith('goto:')) fr1Player.goTo(action.slice(5));
+        else if (action && action.startsWith('repr:')) fr1Player.selectRepresentation(action.slice(5));
       } else if (fr1Player.kind === 'mastery-check') {
         if (action === 'next') fr1Player.next();
         else if (action === 'previous') fr1Player.previous();
@@ -86,21 +92,68 @@ export async function mountOverlay(root, { role = 'overlay', listen = true, init
     fr1Active = false;
     fr1Player = null;
     render();
+    broadcastFr1Status();
   }
+
+  /**
+   * A compact status snapshot broadcast to control after every FR1
+   * change, over the SAME bus every other message uses (P7 — closes
+   * the "control and overlay could disagree" gap identified in the
+   * workflow audit; see docs/TEACHING_WORKFLOW.md). Data-only: no DOM,
+   * no lesson JSON, just enough for control to render its state
+   * display and know which buttons are valid.
+   */
+  function buildFr1Status() {
+    if (!fr1Active || !fr1Player) return { active: false };
+    const exp = fr1Player.experience;
+    const base = {
+      active: true, kind: fr1Player.kind,
+      id: exp.id, unitId: exp.unitId, title: exp.title, type: exp.type,
+      sessionStatus: fr1Player.sessionStatus(),
+    };
+    if (fr1Player.kind === 'teaching') {
+      return {
+        ...base,
+        stageId: fr1Player.current().id,
+        stageIndex: fr1Player.currentIndex(),
+        stageCount: fr1Player.order.length,
+        order: fr1Player.order,
+        atStart: fr1Player.atStart(),
+        atEnd: fr1Player.atEnd(),
+        revealed: fr1Player.isRevealed(),
+        representations: exp.representations.map((r) => r.type),
+        activeRepresentation: fr1Player.activeRepresentation() && fr1Player.activeRepresentation().type,
+      };
+    }
+    if (fr1Player.kind === 'mastery-check') {
+      return {
+        ...base,
+        taskIndex: fr1Player.currentIndex(), taskCount: fr1Player.taskCount,
+        atStart: fr1Player.atStart(), atEnd: fr1Player.atEnd(),
+      };
+    }
+    return { ...base, revealed: fr1Player.isRevealed() };
+  }
+
+  function broadcastFr1Status() { bus.send('fr1-status', buildFr1Status()); }
 
   function renderFr1() {
     const state = store.get();
     document.body.classList.toggle('transparent', state.background === 'transparent');
     document.body.classList.toggle('no-anim', !state.animations);
     const showPresenter = !!(state.layers && state.layers.presenter);
+    // Clean/production output (P7): no dev-only presenter label once the
+    // overlay is actually compositing over a real camera in OBS.
+    const clean = state.background === 'transparent';
     stage.className = [
       'stage', `a${state.aspect}`, `bg-${state.background}`, 'fr1-mode',
       showPresenter && state.aspect !== '1x1' ? 'has-presenter' : 'no-presenter',
     ].join(' ');
     clear(stage);
     stage.appendChild(bgLayer);
-    stage.appendChild(wrapWithPresenter(renderExperience(fr1Player), { aspect: state.aspect, showPresenter }));
+    stage.appendChild(wrapWithPresenter(renderExperience(fr1Player), { aspect: state.aspect, showPresenter, clean }));
     fit();
+    broadcastFr1Status();
   }
 
   async function ensureLesson(state) {
@@ -168,6 +221,9 @@ export async function mountOverlay(root, { role = 'overlay', listen = true, init
       else if (type === 'fr1-select') fr1Select(payload.id).catch((err) => renderError(stage, bgLayer, err.message));
       else if (type === 'fr1-stage') fr1Stage(payload.action);
       else if (type === 'fr1-exit') fr1Exit();
+      // A late-joining/reconnecting control panel asks for a fresh
+      // snapshot instead of guessing — same pattern as legacy `hello`.
+      else if (type === 'fr1-status-request') broadcastFr1Status();
     });
     bus.send('hello', { role });
   }
@@ -180,6 +236,7 @@ export async function mountOverlay(root, { role = 'overlay', listen = true, init
     fr1: {
       select: fr1Select, stage: fr1Stage, exit: fr1Exit,
       player: () => fr1Player, isActive: () => fr1Active,
+      status: buildFr1Status,
     },
   };
 }

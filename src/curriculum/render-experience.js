@@ -22,10 +22,7 @@
 import { el } from '../utils/dom.js';
 import { TeachingRail } from '../components/teaching-rail.js';
 import { resolveRepresentation } from './representations.js';
-
-const STAGE_LABEL = {
-  setup: 'Setup', see: 'See', break: 'Break', build: 'Build', transform: 'Transform', check: 'Check',
-};
+import { labelForStage, labelForRepresentation } from './labels.js';
 
 /** Render the current state of a teaching/mastery-check/review player. */
 export function renderExperience(player) {
@@ -40,8 +37,16 @@ export function renderExperience(player) {
 function renderTeaching(player) {
   const exp = player.experience;
   const stage = player.current();
+  const complete = player.sessionStatus() === 'complete';
 
-  return el('div', { class: 'fr1-experience fr1-experience--teaching' },
+  return el('div', {
+    class: `fr1-experience fr1-experience--teaching${complete ? ' is-complete' : ''}`,
+    // A stage-keyed key lets CSS run a restrained transition whenever
+    // the DOM is rebuilt for a new stage (see .fr1-stage transition
+    // rules in curriculum-runtime.css) — presentation-only, no lesson
+    // data involved. See docs/TEACHING_WORKFLOW.md "Transition polish".
+    'data-stage': stage.id,
+  },
     el('div', { class: 'fr1-header' },
       el('div', { class: 'fr1-header__eyebrow' }, `${exp.unitId} · ${exp.type}`),
       el('div', { class: 'fr1-header__title' }, exp.title),
@@ -49,7 +54,7 @@ function renderTeaching(player) {
     ),
     railNode(exp, player),
     el('div', { class: 'fr1-stage' },
-      el('div', { class: 'fr1-stage__label' }, STAGE_LABEL[stage.id] || stage.id),
+      el('div', { class: 'fr1-stage__label' }, labelForStage(stage.id)),
       el('div', { class: 'fr1-stage__prompt' }, stage.prompt),
     ),
     renderActiveRepresentation(player, stage.id),
@@ -58,6 +63,7 @@ function renderTeaching(player) {
         el('div', { class: 'fr1-result__label' }, 'Result'),
         el('div', { class: 'fr1-result__value' }, player.isRevealed() ? exp.examples.primary : '?'))
       : null,
+    complete ? el('div', { class: 'fr1-complete', role: 'status' }, '✓ Lesson complete') : null,
   );
 }
 
@@ -80,7 +86,17 @@ function renderActiveRepresentation(player, stageId) {
   if (!resolved) return null;
   let status = 'unknown';
   try { status = resolveRepresentation(rep, context).status; } catch (_) { /* keep 'unknown' */ }
-  return el('div', { class: `fr1-representation fr1-representation--${status}` }, resolved);
+  // Human-readable label only — the internal type string (e.g.
+  // "ten-frame") is never shown to a teacher (docs/TEACHING_WORKFLOW.md
+  // "Representations"). Multiple representations are silently listed
+  // as buttons by the control panel, not here — this only ever shows
+  // the single ACTIVE one.
+  return el('div', { class: `fr1-representation fr1-representation--${status}` },
+    player.experience.representations.length > 1
+      ? el('div', { class: 'fr1-representation__label' }, labelForRepresentation(rep.type))
+      : null,
+    resolved,
+  );
 }
 
 function renderAssessment(player) {
@@ -138,13 +154,25 @@ function renderReview(player) {
  * preset grid, because that grid's non-9:16 rules are keyed to a
  * specific preset (A/C) that schema-v1 experiences don't have — see
  * docs/lesson-authoring/VISUAL_CAPABILITIES.md "Presenter behavior".
+ *
+ * `clean` (P7): true when the overlay is composited transparently over
+ * a real camera in OBS (`state.background === 'transparent'` — see
+ * src/app/overlay-app.js) — the labeled dashed "PRESENTER · SAFE ZONE"
+ * box is a development/rehearsal aid and must not appear in actual
+ * recorded output; the safe area still reserves its space (an empty
+ * transparent region a real camera source sits behind in OBS), it is
+ * simply not drawn. Preview always passes `clean:false` — there is no
+ * real camera behind it there. See docs/TEACHING_WORKFLOW.md
+ * "Presenter safe-zone label".
  */
-export function wrapWithPresenter(node, { aspect = '16x9', showPresenter = false } = {}) {
+export function wrapWithPresenter(node, { aspect = '16x9', showPresenter = false, clean = false } = {}) {
   const show = showPresenter && aspect !== '1x1'; // 1x1: camera always hidden
-  const presenterBox = () => el('div', { class: 'fr1-presenter', role: 'note', 'aria-label': 'Presenter safe zone' },
-    el('div', { class: 'fr1-presenter__badge' }, 'PRESENTER'),
-    el('div', { class: 'fr1-presenter__label' }, 'SAFE ZONE'),
-  );
+  const presenterBox = () => clean
+    ? el('div', { class: 'fr1-presenter fr1-presenter--clean', 'aria-hidden': 'true' })
+    : el('div', { class: 'fr1-presenter', role: 'note', 'aria-label': 'Presenter safe zone' },
+      el('div', { class: 'fr1-presenter__badge' }, 'PRESENTER'),
+      el('div', { class: 'fr1-presenter__label' }, 'SAFE ZONE'),
+    );
   const workspace = el('div', { class: 'fr1-workspace' }, node);
 
   if (aspect === '9x16') {

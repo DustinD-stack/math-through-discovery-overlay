@@ -13,6 +13,8 @@ import { PRESETS, PRESET_KEYS } from '../layouts/presets.js';
 import { DIAGRAM_NAMES } from '../modules/diagrams.js';
 import { STEP_META } from '../components/discovery.js';
 import { buildCatalog } from '../curriculum/catalog.js';
+import { labelForRepresentation, labelForStage, titleForUnit } from '../curriculum/labels.js';
+import { resolveFr1Shortcut, isTypingTarget } from '../curriculum/shortcuts.js';
 
 const LAYER_NAMES = ['brand', 'presenter', 'story', 'math', 'discovery', 'comparison', 'takeaways'];
 const ASPECTS = [['16x9', '16:9'], ['9x16', '9:16'], ['1x1', '1:1']];
@@ -24,11 +26,16 @@ export async function mountControl(root) {
   let lesson = await loadLesson(store.get().lessonId).catch(() => null);
   let popped = [];
 
-  /* ---------- P5: Foundation Release 1 (schema-v1) selector ---------- */
+  /* ---------- P5/P7: Foundation Release 1 (schema-v1) selector ---------- */
   let fr1Catalog = null;
   let fr1Unit = null;
   let fr1Id = null;
-  let fr1Active = false;
+  /* `fr1Status` is the overlay's own last-broadcast snapshot (see
+     src/app/overlay-app.js `broadcastFr1Status`) — control never
+     guesses overlay state from its own local variables, precisely to
+     close the "control and overlay could disagree" gap the P7
+     workflow audit identified (docs/TEACHING_WORKFLOW.md). */
+  let fr1Status = { active: false };
   try {
     const res = await fetch('lessons/foundation-release-1/manifest.json');
     if (res.ok) {
@@ -99,17 +106,89 @@ export async function mountControl(root) {
     catch (_) { window.prompt('Copy this URL into OBS:', url); }
   }
 
-  /* P5: Foundation Release 1 messages travel over the SAME bus as every
-     other control->overlay message (no second transport). See
+  /* P5/P7: Foundation Release 1 messages travel over the SAME bus as
+     every other control->overlay message (no second transport). See
      docs/lesson-authoring/RUNTIME_INTEGRATION.md "OBS usage". */
   function sendFr1Select() {
     if (!fr1Id) return;
-    fr1Active = true;
     bus.send('fr1-select', { id: fr1Id });
-    render();
   }
   function sendFr1Stage(action) { bus.send('fr1-stage', { action }); }
-  function sendFr1Exit() { fr1Active = false; bus.send('fr1-exit', {}); render(); }
+  function sendFr1Exit() { bus.send('fr1-exit', {}); }
+
+  /* ---------- P7: current-state display ----------
+     Never inferred from button color alone (docs/TEACHING_WORKFLOW.md
+     "Current state display") — always the overlay's own reported
+     status. */
+  function renderFr1State() {
+    if (!fr1Status.active) {
+      return el('div', { class: 'fr1-state fr1-state--empty' }, 'Not currently teaching a Foundation Release 1 lesson.');
+    }
+    const stageLine = fr1Status.kind === 'teaching'
+      ? el('div', { class: 'fr1-state__meta' },
+        el('span', { class: 'fr1-state__stage' }, labelForStage(fr1Status.stageId)),
+        el('span', { class: 'fr1-state__progress' }, `${fr1Status.stageIndex + 1} of ${fr1Status.stageCount}`),
+        fr1Status.sessionStatus === 'complete' ? el('span', { class: 'fr1-state__complete' }, '✓ Complete') : null,
+        fr1Status.revealed ? el('span', { class: 'fr1-state__complete' }, 'Revealed') : null)
+      : fr1Status.kind === 'mastery-check'
+        ? el('div', { class: 'fr1-state__meta' },
+          el('span', { class: 'fr1-state__stage' }, 'TASK'),
+          el('span', { class: 'fr1-state__progress' }, `${fr1Status.taskIndex + 1} of ${fr1Status.taskCount}`))
+        : el('div', { class: 'fr1-state__meta' },
+          el('span', { class: 'fr1-state__stage' }, 'REVIEW'),
+          fr1Status.revealed ? el('span', { class: 'fr1-state__complete' }, 'Retrieves shown') : null);
+    return el('div', { class: 'fr1-state' },
+      el('div', { class: 'fr1-state__unit' }, `Unit ${fr1Status.unitId} · ${titleForUnit(fr1Status.unitId)}`),
+      el('div', { class: 'fr1-state__id' }, `${fr1Status.id} · ${fr1Status.type}`),
+      el('div', { class: 'fr1-state__title' }, fr1Status.title),
+      stageLine,
+    );
+  }
+
+  function renderFr1TeachingControls() {
+    const order = fr1Status.order || [];
+    return el('div', {},
+      el('div', { class: 'fr1-primary' },
+        el('button', { class: 'btn btn--xl', disabled: fr1Status.atStart, onclick: () => sendFr1Stage('previous') }, '← Previous'),
+        el('button', { class: 'btn btn--xl btn--primary', disabled: fr1Status.atEnd, onclick: () => sendFr1Stage('next') }, 'Next →'),
+      ),
+      el('div', { class: 'fr1-reveal-reset' },
+        el('button', { class: `btn btn--xl${fr1Status.revealed ? ' is-on' : ''}`, onclick: () => sendFr1Stage('reveal') },
+          fr1Status.revealed ? 'Hide' : 'Reveal'),
+        el('button', { class: 'btn btn--xl', onclick: () => sendFr1Stage('reset') }, 'Reset'),
+      ),
+      el('div', { class: 'fr1-stage-row' },
+        order.map((stageId) => el('button', {
+          class: `btn${fr1Status.stageId === stageId ? ' is-on' : ''}`,
+          onclick: () => sendFr1Stage(`goto:${stageId}`),
+        }, labelForStage(stageId).toUpperCase())),
+      ),
+      (fr1Status.representations && fr1Status.representations.length > 1)
+        ? el('div', { class: 'fr1-repr-row' },
+          fr1Status.representations.map((type) => el('button', {
+            class: `btn${fr1Status.activeRepresentation === type ? ' is-on' : ''}`,
+            onclick: () => sendFr1Stage(`repr:${type}`),
+          }, labelForRepresentation(type))))
+        : null,
+    );
+  }
+
+  function renderFr1MasteryControls() {
+    return el('div', {},
+      el('div', { class: 'fr1-primary' },
+        el('button', { class: 'btn btn--xl', disabled: fr1Status.atStart, onclick: () => sendFr1Stage('previous') }, '← Previous task'),
+        el('button', { class: 'btn btn--xl btn--primary', disabled: fr1Status.atEnd, onclick: () => sendFr1Stage('next') }, 'Next task →'),
+      ),
+      el('div', { class: 'row' }, el('button', { class: 'btn', onclick: () => sendFr1Stage('reset') }, 'Reset assessment')),
+    );
+  }
+
+  function renderFr1ReviewControls() {
+    return el('div', { class: 'row', style: { marginBottom: 'var(--s-3)' } },
+      el('button', { class: `btn btn--xl${fr1Status.revealed ? ' is-on' : ''}`, onclick: () => sendFr1Stage('reveal') },
+        fr1Status.revealed ? 'Hide retrieves' : 'Reveal retrieves'),
+    );
+  }
 
   function showToast(msg) {
     toast.textContent = msg;
@@ -198,33 +277,42 @@ export async function mountControl(root) {
       ),
     ));
 
-    /* --- P5: Foundation Release 1 (schema-v1 production corpus) --- */
+    /* --- P5/P7: Foundation Release 1 (schema-v1 production corpus) ---
+       Teaching controls first and biggest; lesson selection is
+       secondary chrome underneath (docs/TEACHING_WORKFLOW.md "Control
+       hierarchy"). Presenter/aspect/background live in the existing
+       Layout panel below and already apply to Foundation Release 1
+       mode — no duplicate controls were added for those. */
     if (fr1Catalog) {
       controls.appendChild(el('section', { class: 'cp__panel' },
-        el('h2', { class: 'cp__legend' }, 'Foundation Release 1 (schema v1)'),
-        el('div', { class: 'field' },
-          el('label', {}, 'Unit'),
-          el('select', {
-            onchange: (e) => { fr1Unit = e.target.value; fr1Id = fr1Catalog.listByUnit(fr1Unit)[0].id; render(); },
-          }, fr1Catalog.listUnits().map((u) => el('option', { value: u, selected: u === fr1Unit }, u))),
+        el('h2', { class: 'cp__legend' }, 'Foundation Release 1 — Teaching'),
+        renderFr1State(),
+        fr1Status.active && fr1Status.kind === 'teaching' ? renderFr1TeachingControls() : null,
+        fr1Status.active && fr1Status.kind === 'mastery-check' ? renderFr1MasteryControls() : null,
+        fr1Status.active && fr1Status.kind === 'review' ? renderFr1ReviewControls() : null,
+        el('div', { class: 'fr1-secondary' },
+          el('h3', { class: 'cp__legend' }, 'Change lesson'),
+          el('div', { class: 'field' },
+            el('label', {}, 'Unit'),
+            el('select', {
+              onchange: (e) => { fr1Unit = e.target.value; fr1Id = fr1Catalog.listByUnit(fr1Unit)[0].id; render(); },
+            }, fr1Catalog.listUnits().map((u) => el('option', { value: u, selected: u === fr1Unit }, `${u} · ${titleForUnit(u)}`))),
+          ),
+          el('div', { class: 'field' },
+            el('label', {}, 'Experience'),
+            el('select', {
+              onchange: (e) => { fr1Id = e.target.value; },
+            }, fr1Catalog.listByUnit(fr1Unit).map((entry) => el('option', { value: entry.id, selected: entry.id === fr1Id },
+              `${entry.id} — ${entry.title} (${entry.type})`))),
+          ),
+          el('div', { class: 'row' },
+            el('button', { class: 'btn btn--primary', onclick: () => sendFr1Select() }, '▶ Start Lesson'),
+            fr1Status.active ? el('button', { class: 'btn', onclick: () => sendFr1Exit() }, 'Exit Foundation Mode') : null,
+          ),
+          el('p', { class: 'hint', style: { marginTop: 'var(--s-2)' } },
+            'Shortcuts while teaching: → / space next · ← previous · R reveal · Home reset · 1–5 jump to SEE…CHECK'
+            + (fr1Status.order && fr1Status.order[0] === 'setup' ? ' · 0 Setup' : '') + '.'),
         ),
-        el('div', { class: 'field' },
-          el('label', {}, 'Experience'),
-          el('select', {
-            onchange: (e) => { fr1Id = e.target.value; },
-          }, fr1Catalog.listByUnit(fr1Unit).map((entry) => el('option', { value: entry.id, selected: entry.id === fr1Id },
-            `${entry.id} — ${entry.title} (${entry.type})`))),
-        ),
-        el('div', { class: 'row' },
-          el('button', { class: 'btn btn--primary', onclick: () => sendFr1Select() }, 'Load into overlay'),
-          el('button', { class: 'btn', onclick: () => sendFr1Exit() }, 'Return to legacy lesson'),
-        ),
-        fr1Active ? el('div', { class: 'row', style: { marginTop: 'var(--s-2)' } },
-          el('button', { class: 'btn', onclick: () => sendFr1Stage('previous') }, '← Stage'),
-          el('button', { class: 'btn', onclick: () => sendFr1Stage('next') }, 'Stage →'),
-          el('button', { class: 'btn', onclick: () => sendFr1Stage('reset') }, 'Reset'),
-          el('button', { class: 'btn', onclick: () => sendFr1Stage('reveal') }, 'Reveal / hide'),
-        ) : null,
       ));
     }
 
@@ -245,10 +333,32 @@ export async function mountControl(root) {
 
   render();
   push();
+  if (fr1Catalog) bus.send('fr1-status-request', {});
 
-  bus.on((msg) => { if (msg.type === 'hello' && msg.from !== 'control') push(); });
+  bus.on((msg) => {
+    if (msg.type === 'hello' && msg.from !== 'control') { push(); if (fr1Catalog) bus.send('fr1-status-request', {}); }
+    // P7: the overlay is the single source of truth for Foundation
+    // Release 1 state — control only ever displays what it reports,
+    // never a locally-guessed value (docs/TEACHING_WORKFLOW.md
+    // "Control/overlay sync").
+    else if (msg.type === 'fr1-status') { fr1Status = msg.payload; render(); }
+  });
+
   window.addEventListener('keydown', (e) => {
-    if (e.target.matches('input, textarea, select')) return;
+    if (isTypingTarget(e.target)) return;
+
+    // P7 recording-friendly shortcuts. `resolveFr1Shortcut` is pure and
+    // unit-tested (tools/workflow.test.mjs); dispatch uses the exact
+    // same sendFr1Stage() a button press uses — never a separate
+    // shortcut-only code path, per the architecture guard.
+    if (fr1Status.active) {
+      const action = resolveFr1Shortcut(e.key, fr1Status);
+      if (action) { e.preventDefault(); sendFr1Stage(action); }
+      // Escape is intentionally unmapped — it must never exit
+      // Foundation Release 1 mode or discard lesson state.
+      return;
+    }
+
     if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); set({ step: clampStep(store.get().step + 1) }); }
     if (e.key === 'ArrowLeft') { e.preventDefault(); set({ step: clampStep(store.get().step - 1) }); }
     if (e.key === '0') set({ step: 0 });

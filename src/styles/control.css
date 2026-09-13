@@ -120,3 +120,34 @@ details.cp__group[open] > summary::before { content: "▾ "; }
 }
 .toast.is-visible { opacity: 1; }
 .hint { color: var(--t-low); font-size: .82rem; line-height: 1.45; }
+
+/* ---------- Foundation Release 1 state display (P7) ---------- */
+.fr1-state {
+  background: rgba(255,255,255,.05); border: 1px solid var(--line-2); border-radius: var(--r-md);
+  padding: var(--s-3) var(--s-4); margin-bottom: var(--s-3);
+}
+.fr1-state__unit { font: 700 .72rem/1 var(--font-ui); letter-spacing: .12em; text-transform: uppercase; color: var(--t-low); }
+.fr1-state__id { color: var(--c-discover); font: 700 .8rem/1 var(--font-ui); margin-top: 2px; }
+.fr1-state__title { font: 700 1.15rem/1.3 var(--font-logo); margin-top: 2px; }
+.fr1-state__meta { display: flex; gap: var(--s-3); align-items: center; margin-top: var(--s-2); flex-wrap: wrap; }
+.fr1-state__stage {
+  font: 700 .85rem/1 var(--font-ui); letter-spacing: .08em; text-transform: uppercase;
+  color: #10131a; background: var(--c-discover); padding: 3px var(--s-2); border-radius: var(--r-sm);
+}
+.fr1-state__progress { color: var(--t-low); font-size: .82rem; }
+.fr1-state__complete { color: var(--c-correct); font-weight: 700; font-size: .82rem; text-transform: uppercase; letter-spacing: .08em; }
+.fr1-state--empty { color: var(--t-low); font-style: italic; }
+
+/* Primary live-teaching controls — the biggest, highest-contrast
+   targets in the whole panel; everything else is secondary to these. */
+.fr1-primary { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-2); margin-bottom: var(--s-2); }
+.fr1-primary .btn { min-height: 76px; font-size: 1.05rem; }
+.fr1-reveal-reset { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-2); margin-bottom: var(--s-3); }
+
+.fr1-stage-row, .fr1-repr-row { display: flex; gap: var(--s-2); flex-wrap: wrap; margin-bottom: var(--s-2); }
+.fr1-stage-row .btn, .fr1-repr-row .btn { font-size: .82rem; padding: .5rem .8rem; }
+
+/* Secondary "change lesson" area is visually quieter than the teaching
+   controls above it — same panel, lower visual weight, never hidden. */
+.fr1-secondary { border-top: 1px dashed var(--line-1); margin-top: var(--s-3); padding-top: var(--s-3); }
+.fr1-secondary .cp__legend { color: var(--t-faint); }

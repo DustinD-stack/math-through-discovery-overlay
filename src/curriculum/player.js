@@ -1,15 +1,26 @@
 /* ============================================================
-   Lesson-player state machine (P5)
+   Lesson-player state machine (P5, extended P7)
 
    Ephemeral runtime UI state only — no persistence, no student
    accounts, no mastery database (explicitly out of scope; see
    docs/lesson-authoring/RUNTIME_INTEGRATION.md). A player is created
    fresh for whatever experience is currently loaded and discarded
-   when the presenter switches lessons.
+   when the presenter switches lessons — this fresh-instance-per-load
+   IS the deterministic "start" and "lesson switch" behavior P7 asks
+   for; no separate session object was introduced (see
+   docs/TEACHING_WORKFLOW.md "Session model").
 
    Dispatches on the adapted experience's `.kind` (see adapter.js).
    Mastery checks and reviews are never forced through the teaching
    five-stage model — they get their own small, honest navigation.
+
+   P7 reveal policy: moving to a different stage (next/previous/goTo)
+   always hides a prior reveal — a stage change is a new teaching beat,
+   so an answer left showing on the previous beat would be stale. Only
+   `reset()` and the explicit `revealAnswer()/hideAnswer()` calls a
+   presenter makes change reveal state otherwise. No lesson in this
+   corpus's accepted pedagogy requires reveal to persist across a stage
+   change (verified against docs/foundation-release-1/*).
    ============================================================ */
 
 export class UnknownStageError extends Error {}
@@ -49,11 +60,11 @@ export function createTeachingPlayer(experience) {
     },
 
     next() {
-      if (index < order.length - 1) index += 1;
+      if (index < order.length - 1) { index += 1; revealed = false; }
       return stageAt(index);
     },
     previous() {
-      if (index > 0) index -= 1;
+      if (index > 0) { index -= 1; revealed = false; }
       return stageAt(index);
     },
     goTo(stageId) {
@@ -61,6 +72,7 @@ export function createTeachingPlayer(experience) {
       if (i === -1) {
         throw new UnknownStageError(`"${stageId}" is not a stage of lesson "${experience.id}". Valid stages: ${order.join(', ')}.`);
       }
+      if (i !== index) revealed = false;
       index = i;
       return stageAt(index);
     },
@@ -73,7 +85,8 @@ export function createTeachingPlayer(experience) {
     isRevealed: () => revealed,
     /** There is no structured "answer" object in schema-v1 (see
      *  RUNTIME_INTEGRATION.md) — reveal is a display toggle a
-     *  presenter controls, most naturally used at CHECK. */
+     *  presenter controls, most naturally used at CHECK. Note the
+     *  stage-change policy above: navigating away hides a reveal. */
     revealAnswer() { revealed = true; return revealed; },
     hideAnswer() { revealed = false; return revealed; },
 
@@ -86,6 +99,12 @@ export function createTeachingPlayer(experience) {
       activeRepresentation = rep;
       return activeRepresentation;
     },
+
+    /** 'teaching' while any stage before the last is active, 'complete'
+     *  once the final stage (always CHECK) is reached — a lightweight,
+     *  non-gamified signal for the control panel. See §"Lesson
+     *  completion" in docs/TEACHING_WORKFLOW.md. */
+    sessionStatus: () => (index === order.length - 1 ? 'complete' : 'teaching'),
   };
 }
 
@@ -114,6 +133,7 @@ export function createAssessmentPlayer(experience) {
       return tasks[index];
     },
     reset() { index = 0; },
+    sessionStatus: () => (index === tasks.length - 1 ? 'complete' : 'teaching'),
   };
 }
 
@@ -131,6 +151,7 @@ export function createReviewPlayer(experience) {
     isRevealed: () => revealed,
     revealRetrieves() { revealed = true; return revealed; },
     reset() { revealed = false; },
+    sessionStatus: () => (revealed ? 'complete' : 'teaching'),
   };
 }
 
