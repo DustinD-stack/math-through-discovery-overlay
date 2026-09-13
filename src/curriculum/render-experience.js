@@ -52,7 +52,7 @@ function renderTeaching(player) {
       el('div', { class: 'fr1-stage__label' }, STAGE_LABEL[stage.id] || stage.id),
       el('div', { class: 'fr1-stage__prompt' }, stage.prompt),
     ),
-    renderActiveRepresentation(player),
+    renderActiveRepresentation(player, stage.id),
     stage.id === 'check' && exp.examples && exp.examples.primary
       ? el('div', { class: `fr1-result${player.isRevealed() ? ' is-revealed' : ' is-hidden'}` },
         el('div', { class: 'fr1-result__label' }, 'Result'),
@@ -71,14 +71,15 @@ function railNode(exp, player) {
   return el('div', { class: 'fr1-rail' }, TeachingRail({ steps, current: currentNumber, variant: 'rail', showText: false }));
 }
 
-function renderActiveRepresentation(player) {
+function renderActiveRepresentation(player, stageId) {
   const rep = player.activeRepresentation();
   if (!rep) return null;
+  const context = { stageId };
   let resolved;
-  try { resolved = resolveRepresentation(rep).render(); } catch (_) { resolved = null; }
+  try { resolved = resolveRepresentation(rep, context).render(); } catch (_) { resolved = null; }
   if (!resolved) return null;
   let status = 'unknown';
-  try { status = resolveRepresentation(rep).status; } catch (_) { /* keep 'unknown' */ }
+  try { status = resolveRepresentation(rep, context).status; } catch (_) { /* keep 'unknown' */ }
   return el('div', { class: `fr1-representation fr1-representation--${status}` }, resolved);
 }
 
@@ -119,4 +120,43 @@ function renderReview(player) {
         el('ul', {}, player.retrieves.map((id) => el('li', {}, id))))
       : null,
   );
+}
+
+/**
+ * Presenter/camera composition (P6). Foundation Release 1 lesson data
+ * carries no camera/layout information (per the schema's own
+ * layout-independence rule) — `showPresenter` is state the presentation
+ * layer already owns (the same `state.layers.presenter` toggle the
+ * legacy runtime and control panel already use), never lesson data.
+ *
+ * Percentages match the accepted Phase 6 presenter language documented
+ * in docs/FIGMA_BUILD_SPEC.md / the frozen Design System: ~38% left
+ * camera / ~62% workspace for 16:9, a lower ~22%-height camera strip
+ * for 9:16 (workspace leads), and no camera at all for 1:1. This is a
+ * new, small, additive shell (`.fr1-shell`, src/styles/curriculum-
+ * runtime.css) rather than a reuse of the legacy `.stage-content`
+ * preset grid, because that grid's non-9:16 rules are keyed to a
+ * specific preset (A/C) that schema-v1 experiences don't have — see
+ * docs/lesson-authoring/VISUAL_CAPABILITIES.md "Presenter behavior".
+ */
+export function wrapWithPresenter(node, { aspect = '16x9', showPresenter = false } = {}) {
+  const show = showPresenter && aspect !== '1x1'; // 1x1: camera always hidden
+  const presenterBox = () => el('div', { class: 'fr1-presenter', role: 'note', 'aria-label': 'Presenter safe zone' },
+    el('div', { class: 'fr1-presenter__badge' }, 'PRESENTER'),
+    el('div', { class: 'fr1-presenter__label' }, 'SAFE ZONE'),
+  );
+  const workspace = el('div', { class: 'fr1-workspace' }, node);
+
+  if (aspect === '9x16') {
+    // Board leads; camera (when on) is the lower ~22% strip.
+    return el('div', { class: `fr1-shell fr1-shell--9x16${show ? ' has-presenter' : ' no-presenter'}` },
+      workspace, show ? presenterBox() : null);
+  }
+  if (aspect === '1x1') {
+    return el('div', { class: 'fr1-shell fr1-shell--1x1' }, workspace);
+  }
+  // 16:9 — camera left ~38%, workspace right ~62%; OFF recomposes to a
+  // centered workspace with no dead camera-shaped rectangle.
+  return el('div', { class: `fr1-shell fr1-shell--16x9${show ? ' has-presenter' : ' no-presenter'}` },
+    show ? presenterBox() : null, workspace);
 }

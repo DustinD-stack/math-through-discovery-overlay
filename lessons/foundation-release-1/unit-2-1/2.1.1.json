@@ -12,7 +12,7 @@
   "newIdea": "Unitizing — a group of ten counted as one thing, not ten things.",
   "reuses": ["0.1.1", "1.2.3"],
   "patterns": ["unitize"],
-  "representations": [{ "type": "bundling-visual", "role": "primary" }, { "type": "objects", "role": "secondary" }],
+  "representations": [{ "type": "bundling-visual", "role": "primary", "data": { "ones": 10, "bundleSize": 10, "bundled": false } }, { "type": "objects", "role": "secondary" }],
   "vocabulary": ["bundle", "ten", "one ten"],
   "unlocks": ["2.1.2"],
   "teaching": {

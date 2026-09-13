@@ -12,7 +12,7 @@
   "newIdea": "Treating distance to 5 as a fact worth knowing directly, not re-derived by counting every time.",
   "reuses": ["1.1.4", "0.2.8"],
   "patterns": ["make-a-benchmark"],
-  "representations": [{ "type": "ten-frame", "role": "primary" }, { "type": "number-bond", "role": "secondary", "data": { "whole": 5, "parts": [3, 2] } }],
+  "representations": [{ "type": "ten-frame", "role": "primary", "data": { "size": 5, "filled": 3 } }, { "type": "number-bond", "role": "secondary", "data": { "whole": 5, "parts": [3, 2] } }],
   "vocabulary": ["needs", "to make 5"],
   "unlocks": ["1.2.2"],
   "teaching": {

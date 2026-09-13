@@ -91,13 +91,21 @@ export const REPRESENTATION_TYPES = Object.freeze({
   // --- pre-symbolic / no rendering component (Unit 0.1–0.2 by design) ---
   'objects': { status: 'concrete', source: 'none' },
 
-  // --- P2-identified visual gaps (docs/foundation-release-1/README.md
-  //     "Visual gaps flagged") — valid semantic data, no production
-  //     renderer exists; P3 does not invent one. ---
-  'ten-frame': { status: 'gap', source: 'none' },
-  'number-path': { status: 'gap', source: 'none' },
-  'bundling-visual': { status: 'gap', source: 'none' },
+  // --- P6: the 3 gaps P3/P4/P5 identified now have real production
+  //     components (src/modules/diagrams.js), registered exactly like
+  //     any other diagram. The generic 'gap' status/mechanism itself
+  //     is preserved (see the comment above STATUS_GAP_EXAMPLE below)
+  //     for any future representation type that still lacks one. ---
+  'ten-frame': { status: 'component', source: 'diagram', diagramKey: 'ten-frame' },
+  'number-path': { status: 'component', source: 'diagram', diagramKey: 'number-path' },
+  'bundling-visual': { status: 'component', source: 'diagram', diagramKey: 'bundling-visual' },
 });
+
+/* The 'gap' status itself is not retired — see representations.js
+   gapPlaceholder(). It simply has no entries in this release's
+   registry anymore, now that ten-frame/number-path/bundling-visual
+   are real components. A future representation type can still be
+   declared with { status: 'gap' } the same way these three were. */
 
 export const REPRESENTATION_ROLES = Object.freeze(['primary', 'secondary']);
 

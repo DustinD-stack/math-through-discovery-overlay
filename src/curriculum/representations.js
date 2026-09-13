@@ -1,20 +1,33 @@
 /* ============================================================
-   Semantic representation resolver (P5)
+   Semantic representation resolver (P5, extended P6)
 
    Maps a schema-v1 representation descriptor ({ type, role?, data? })
    onto an existing renderer — never a lesson id. See
    src/curriculum/constants.js REPRESENTATION_TYPES for the closed
-   registry this resolves against (established in P3, unchanged here).
+   registry this resolves against.
 
    Three outcomes, always explicit:
      'component' — a real existing diagram/teaching-component renders it
+                   (as of P6 this includes ten-frame, number-path and
+                   bundling-visual — see docs/lesson-authoring/
+                   VISUAL_CAPABILITIES.md)
      'concrete'  — deliberately no diagram (Object stage, D0 lessons)
-     'gap'       — a P2-identified visual gap; renders an honest,
-                   development-safe placeholder, never a fake model
+     'gap'       — an as-yet-unbuilt visual; renders an honest,
+                   development-safe placeholder, never a fake model.
+                   The mechanism itself is NOT retired by P6 closing
+                   the three known Foundation Release 1 gaps — a
+                   future representation type can still be registered
+                   with { status: 'gap' } the same way.
 
    Unknown representation types are a hard failure (UnknownRepresentationError),
    never silently ignored — an unregistered type is a corpus/schema
    problem, not a capability gap.
+
+   `context.stageId` (optional) lets a diagram-sourced renderer receive
+   presentation-only stage hints (e.g. "emphasize the empty ten-frame
+   cells during BREAK") — see `stageHints()` below. This is generic,
+   type-keyed presentation logic, never a lesson-id branch, and it is
+   never stored in lesson data.
    ============================================================ */
 
 import { el } from '../utils/dom.js';
@@ -34,16 +47,17 @@ const TEACHING_COMPONENTS = {
 };
 
 const GAP_LABELS = {
-  'ten-frame': 'Ten Frame',
-  'number-path': 'Number Path',
-  'bundling-visual': 'Bundling / Unitizing Visual',
+  // Populated as future representation types are registered with
+  // { status: 'gap' } — empty now that P6 closed the three Foundation
+  // Release 1 gaps (ten-frame, number-path, bundling-visual).
 };
 
 /**
  * @param rep { type, role?, data? } — one entry of lesson.representations
+ * @param context { stageId? } — optional, presentation-only (see header)
  * @returns { status: 'component'|'concrete'|'gap', type, render(): Node|null }
  */
-export function resolveRepresentation(rep) {
+export function resolveRepresentation(rep, context = {}) {
   if (!rep || typeof rep.type !== 'string') {
     throw new UnknownRepresentationError('A representation descriptor requires a string "type".');
   }
@@ -63,7 +77,8 @@ export function resolveRepresentation(rep) {
   if (meta.source === 'diagram') {
     const fn = DIAGRAMS[meta.diagramKey];
     if (!fn) return { status: 'gap', type: rep.type, render: () => gapPlaceholder(rep.type) };
-    return { status: 'component', type: rep.type, render: () => fn(rep.data || {}) || null };
+    const data = { ...(rep.data || {}), ...stageHints(rep.type, context.stageId) };
+    return { status: 'component', type: rep.type, render: () => fn(data) || null };
   }
 
   if (meta.source === 'teaching-component') {
@@ -73,6 +88,26 @@ export function resolveRepresentation(rep) {
   }
 
   throw new UnknownRepresentationError(`"${rep.type}" has no resolvable renderer source.`);
+}
+
+/**
+ * Presentation-only stage hints, keyed by representation TYPE (never a
+ * lesson id) and the currently active teaching-stage id. Purely
+ * additive props layered on top of `rep.data`; a type with no hints
+ * defined here behaves exactly as it did before P6.
+ */
+function stageHints(type, stageId) {
+  if (!stageId) return {};
+  if (type === 'ten-frame') {
+    if (stageId === 'break' || stageId === 'build') return { emphasize: 'empty' };
+    if (stageId === 'transform') return { emphasize: 'filled' };
+    if (stageId === 'check') return { emphasize: 'total' };
+    return {};
+  }
+  if (type === 'bundling-visual') {
+    return { bundled: ['build', 'transform', 'check'].includes(stageId) };
+  }
+  return {};
 }
 
 function gapPlaceholder(type) {

@@ -12,7 +12,7 @@ import { buildStageContent, PRESETS, usesPresenter } from '../layouts/presets.js
 import { buildCatalog, getExperience, makeFetchReader } from '../curriculum/catalog.js';
 import { adaptExperience } from '../curriculum/adapter.js';
 import { createPlayer, UnknownStageError } from '../curriculum/player.js';
-import { renderExperience } from '../curriculum/render-experience.js';
+import { renderExperience, wrapWithPresenter } from '../curriculum/render-experience.js';
 
 const SIZES = { '16x9': [1920, 1080], '9x16': [1080, 1920], '1x1': [1080, 1080] };
 
@@ -92,10 +92,14 @@ export async function mountOverlay(root, { role = 'overlay', listen = true, init
     const state = store.get();
     document.body.classList.toggle('transparent', state.background === 'transparent');
     document.body.classList.toggle('no-anim', !state.animations);
-    stage.className = ['stage', `a${state.aspect}`, `bg-${state.background}`, 'fr1-mode'].join(' ');
+    const showPresenter = !!(state.layers && state.layers.presenter);
+    stage.className = [
+      'stage', `a${state.aspect}`, `bg-${state.background}`, 'fr1-mode',
+      showPresenter && state.aspect !== '1x1' ? 'has-presenter' : 'no-presenter',
+    ].join(' ');
     clear(stage);
     stage.appendChild(bgLayer);
-    stage.appendChild(renderExperience(fr1Player));
+    stage.appendChild(wrapWithPresenter(renderExperience(fr1Player), { aspect: state.aspect, showPresenter }));
     fit();
   }
 

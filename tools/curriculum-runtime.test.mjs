@@ -194,10 +194,13 @@ const readLesson = makeFsReader(root, fs, path);
   const receipt = resolveRepresentation({ type: 'receipt', data: {} });
   assert(receipt.status === 'component', 'receipt resolves as an existing generic diagram capability, not a gap');
 
-  const gap = resolveRepresentation({ type: 'ten-frame' });
-  assert(gap.status === 'gap', 'a known visual gap (ten-frame) resolves with status "gap"');
-  const gapNode = gap.render();
-  assert(gapNode && gapNode.textAll().includes('VISUAL MODEL PENDING'), 'a gap renders an explicit, honest placeholder, not a fake model');
+  // P6 closed all 3 Foundation Release 1 visual gaps (ten-frame,
+  // number-path, bundling-visual) with real components — see
+  // tools/visual-capabilities.test.mjs for their dedicated coverage
+  // and for a direct assertion that the gap mechanism itself (still
+  // present for future curriculum) is unchanged.
+  const tenFrame = resolveRepresentation({ type: 'ten-frame', data: { size: 10, filled: 7 } });
+  assert(tenFrame.status === 'component', 'ten-frame now resolves as a real component, not a gap (P6)');
 
   const concrete = resolveRepresentation({ type: 'objects' });
   assert(concrete.status === 'concrete', '"objects" resolves as a concrete/no-diagram representation');
@@ -248,7 +251,7 @@ const readLesson = makeFsReader(root, fs, path);
     }
   }
   assert(sweepFailures === 0, `full 78-experience sweep raises zero uncaught exceptions (got ${sweepFailures})`);
-  assert(gapCount === 7, `exactly the expected number of representation instances resolve as known gaps across the corpus (got ${gapCount})`);
+  assert(gapCount === 0, `P6 closed all known Foundation Release 1 visual gaps — 0 representation instances should resolve as "gap" across the corpus (got ${gapCount})`);
 }
 
 /* ---------- SCHEMA-V1 RENDER SWEEP (bounded, representative) ---------- */

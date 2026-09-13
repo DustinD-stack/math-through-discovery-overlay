@@ -12,7 +12,7 @@
   "newIdea": "Benchmark quantities — the direct prerequisite for Unit 1.2's Make-5/Make-10 complement work.",
   "reuses": ["0.2.6", "0.2.7"],
   "patterns": ["make-a-benchmark"],
-  "representations": [{ "type": "ten-frame", "role": "primary" }],
+  "representations": [{ "type": "ten-frame", "role": "primary", "data": { "size": 10, "filled": 7 } }],
   "vocabulary": ["close to", "landmark", "benchmark"],
   "unlocks": ["1.2.1"],
   "teaching": {

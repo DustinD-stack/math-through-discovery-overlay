@@ -12,7 +12,7 @@
   "newIdea": "Number location — the seed of the number line, used from here through algebra.",
   "reuses": ["0.1.5", "0.2.5"],
   "patterns": ["part-whole"],
-  "representations": [{ "type": "number-path", "role": "primary" }],
+  "representations": [{ "type": "number-path", "role": "primary", "data": { "start": 0, "end": 5, "current": 3 } }],
   "vocabulary": ["before", "after", "between", "order"],
   "unlocks": ["0.2.7"],
   "teaching": {

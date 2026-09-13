@@ -84,3 +84,10 @@
 .svg-label { fill: var(--t-low); font: 400 13px var(--font-ui); }
 .svg-value { fill: var(--t-hi); font: 700 15px var(--font-ui); }
 .svg-hand { fill: var(--t-hi); font: 400 20px var(--font-hand); }
+
+/* ---------- Ten frame / Number path / Bundling visual (P6) ---------- */
+.tframe__cell.is-highlight circle { filter: drop-shadow(0 0 4px color-mix(in srgb, var(--c-discover) 70%, transparent)); }
+.npath__trail { stroke: var(--line-1); stroke-width: 2; stroke-dasharray: 3 6; }
+.npath__num { fill: var(--t-low); font: 700 15px var(--font-ui); }
+.npath__stone.is-current .npath__num, .npath__stone.is-marked .npath__num { fill: #0a0d14; }
+.bundle__one { opacity: .95; }

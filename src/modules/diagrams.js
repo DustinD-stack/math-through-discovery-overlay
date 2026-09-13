@@ -585,6 +585,168 @@ export function EquationModule(spec = {}) {
   );
 }
 
+/* ---------- Ten frame (P6) ----------
+   A concrete benchmark-to-5 / benchmark-to-10 model: filled dots vs
+   hollow dots, arranged 2 rows x 5 (or 1 row x 5 for a five-frame).
+   Filled/empty is a shape distinction (solid vs hollow circle - the
+   same convention NumberLine already uses for active/inactive marks),
+   never color alone. `emphasize` is presentation-only state supplied
+   by the caller (e.g. the current teaching stage) - never stored in
+   lesson data. */
+export function TenFrame(spec = {}) {
+  const size = spec.size === 5 ? 5 : 10;
+  const filled = Math.max(0, Math.min(size, Math.round(spec.filled ?? 0)));
+  const empty = size - filled;
+  const cols = 5, rows = size / 5;
+  const cell = 64, pad = 14, gap = 6;
+  const w = pad * 2 + cols * cell + (cols - 1) * gap;
+  const h = pad * 2 + rows * cell + (rows - 1) * gap + 40; // + label band
+  const cx = (i) => pad + (i % cols) * (cell + gap) + cell / 2;
+  const cy = (i) => pad + Math.floor(i / cols) * (cell + gap) + cell / 2;
+  const emph = spec.emphasize; // 'filled' | 'empty' | 'total' | null
+
+  const spoken = `Ten frame: ${filled} filled, ${empty} empty, out of ${size}.`;
+
+  return wrap(spec.caption,
+    svg('svg', { viewBox: `0 0 ${w} ${h}`, role: 'img', 'aria-label': spoken },
+      svg('rect', {
+        x: pad / 2, y: pad / 2, width: w - pad, height: h - pad - 40, rx: 10,
+        fill: 'none', stroke: C.line, 'stroke-width': 2,
+      }),
+      Array.from({ length: size }, (_, i) => {
+        const isFilled = i < filled;
+        const highlighted = (emph === 'filled' && isFilled) || (emph === 'empty' && !isFilled);
+        return svg('g', { class: `tframe__cell is-${isFilled ? 'filled' : 'empty'}${highlighted ? ' is-highlight' : ''}` },
+          svg('rect', {
+            x: cx(i) - cell / 2 + 3, y: cy(i) - cell / 2 + 3, width: cell - 6, height: cell - 6, rx: 8,
+            class: 'svg-grid', fill: 'none',
+          }),
+          svg('circle', {
+            cx: cx(i), cy: cy(i), r: cell * 0.28,
+            fill: isFilled ? C.structure : 'none',
+            stroke: isFilled ? C.structure : C.line,
+            'stroke-width': isFilled ? 2 : 3,
+            'stroke-dasharray': isFilled ? null : '5 4',
+            opacity: highlighted ? 1 : (isFilled ? 1 : 0.85),
+          }),
+        );
+      }),
+      svg('text', { x: pad, y: h - 12, class: 'svg-label' }, `${filled} filled`),
+      svg('text', { x: w - pad, y: h - 12, 'text-anchor': 'end', class: 'svg-label' }, `${empty} empty`),
+      (emph === 'total') && svg('text', { x: w / 2, y: h - 12, 'text-anchor': 'middle', class: 'svg-value' }, `= ${size}`),
+    ),
+  );
+}
+
+/* ---------- Number path (P6) ----------
+   Deliberately EARLIER and more concrete than NumberLine: discrete,
+   evenly-spaced stepping stones (not a continuously-scaled ruled
+   axis), each stone numbered INSIDE the marker rather than labeled
+   above a line. This is a distinct instructional representation, not
+   a NumberLine re-skin - see docs/lesson-authoring/VISUAL_CAPABILITIES.md
+   "NumberPath vs NumberLine". */
+export function NumberPath(spec = {}) {
+  const start = Math.round(spec.start ?? 0);
+  // Explicit bounds handling: an end at or before start is invalid data,
+  // not a reason to crash — clamp to a minimal one-position path.
+  const end = Math.max(start, Math.round(spec.end ?? 10));
+  const positions = Array.from({ length: end - start + 1 }, (_, i) => start + i);
+  const marks = new Set(spec.marks || []);
+  const current = spec.current;
+  const jump = spec.jump;
+
+  const cell = 56, pad = 30, y = 70;
+  const w = pad * 2 + (positions.length - 1) * cell + cell;
+  const h = 118;
+  const X = (v) => pad + (v - start) * cell + cell / 2;
+
+  const spoken = [
+    `Number path from ${start} to ${end}.`,
+    current != null ? `current position ${current}.` : '',
+    marks.size ? `marked: ${[...marks].join(', ')}.` : '',
+    jump ? `step from ${jump.from} to ${jump.to}.` : '',
+  ].filter(Boolean).join(' ');
+
+  return wrap(spec.caption,
+    svg('svg', { viewBox: `0 0 ${w} ${h}`, role: 'img', 'aria-label': spoken },
+      /* a dashed footpath, never a solid ruled axis - the concrete/
+         discrete cue that distinguishes this from NumberLine */
+      svg('line', { x1: X(start), y1: y, x2: X(end), y2: y, class: 'npath__trail' }),
+      jump && svg('path', {
+        d: arcPath(X(jump.from), X(jump.to), y - 24, 34),
+        fill: 'none', stroke: C.adjust, 'stroke-width': 3, class: 'branch-draw',
+      }),
+      jump && svg('text', { x: (X(jump.from) + X(jump.to)) / 2, y: y - 52, 'text-anchor': 'middle', class: 'svg-hand', style: `fill:${C.adjust}` }, jump.label || `+${jump.to - jump.from}`),
+      positions.map((v) => {
+        const isCurrent = current === v;
+        const isMark = marks.has(v);
+        return svg('g', { class: `npath__stone is-${isCurrent ? 'current' : (isMark ? 'marked' : 'plain')}` },
+          svg('circle', {
+            cx: X(v), cy: y, r: isCurrent ? 20 : 16,
+            fill: isCurrent ? C.discover : (isMark ? C.structure : 'var(--fill-2)'),
+            stroke: isCurrent ? C.discover : (isMark ? C.structure : C.line),
+            'stroke-width': isCurrent ? 4 : 2,
+          }),
+          svg('text', {
+            x: X(v), y: y + 5, 'text-anchor': 'middle', class: 'npath__num',
+            style: (isCurrent || isMark) ? 'fill:#0a0d14;font-weight:700' : null,
+          }, String(v)),
+        );
+      }),
+      /* a simple "more this way" direction cue - never the only signal
+         for order, but reinforces it structurally */
+      svg('path', { d: `M${w - pad + 6},${y - 6} l10,6 l-10,6`, fill: 'none', stroke: C.line, 'stroke-width': 2 }),
+    ),
+  );
+}
+
+/* ---------- Bundling visual (P6) ----------
+   Unitizing 10 ones into 1 ten. The ten individual ones stay drawn
+   (never disappear) - only a band/enclosure is added around them -
+   so the picture itself argues "same quantity, different grouping"
+   rather than looking like the amount changed. */
+export function BundlingVisual(spec = {}) {
+  const ones = Math.max(1, Math.round(spec.ones ?? 10));
+  const bundleSize = Math.max(1, Math.round(spec.bundleSize ?? 10));
+  const bundled = !!spec.bundled;
+  const cols = Math.min(ones, 5);
+  const rows = Math.ceil(ones / cols);
+  const cell = 34, gap = 10, pad = 20;
+  const gridW = cols * cell + (cols - 1) * gap;
+  const gridH = rows * cell + (rows - 1) * gap;
+  const bandPad = 16;
+  const w = gridW + pad * 2 + (bundled ? bandPad * 2 : 0);
+  const h = gridH + pad * 2 + 34;
+  const ox = pad + (bundled ? bandPad : 0);
+  const oy = pad;
+  const cx = (i) => ox + (i % cols) * (cell + gap) + cell / 2;
+  const cy = (i) => oy + Math.floor(i / cols) * (cell + gap) + cell / 2;
+
+  const spoken = bundled
+    ? `${ones} ones, bundled into 1 group of ${bundleSize}.`
+    : `${ones} loose ones, not yet bundled.`;
+
+  return wrap(spec.caption,
+    svg('svg', { viewBox: `0 0 ${w} ${h}`, role: 'img', 'aria-label': spoken },
+      /* the enclosure IS the non-color grouping cue - a rounded band
+         drawn around (not through) the still-visible individual ones */
+      bundled && svg('rect', {
+        x: ox - bandPad + cell / 2 - gridW / 2 - bandPad / 2, y: oy - bandPad / 2,
+        width: gridW + bandPad * 2, height: gridH + bandPad,
+        rx: 14, fill: 'none', stroke: C.structure, 'stroke-width': 3, 'stroke-dasharray': '2 0',
+        transform: `translate(${gridW / 2 - (gridW + bandPad * 2) / 2 + bandPad}, 0)`,
+      }),
+      Array.from({ length: ones }, (_, i) => svg('circle', {
+        cx: cx(i), cy: cy(i), r: cell * 0.36,
+        fill: C.structure, stroke: 'none', class: 'bundle__one',
+      })),
+      svg('text', {
+        x: w / 2, y: h - 10, 'text-anchor': 'middle', class: 'svg-value',
+      }, bundled ? `1 ten = ${ones} ones` : `${ones} ones`),
+    ),
+  );
+}
+
 /* ============================================================
    Registry
    ============================================================ */
@@ -607,6 +769,9 @@ export const DIAGRAMS = {
   receipt: ReceiptCard,
   formulaBlock: FormulaBlock,
   equation: EquationModule,
+  'ten-frame': TenFrame,
+  'number-path': NumberPath,
+  'bundling-visual': BundlingVisual,
 };
 
 export const DIAGRAM_NAMES = Object.keys(DIAGRAMS);

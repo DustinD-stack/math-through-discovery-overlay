@@ -8,6 +8,25 @@
    overlay.html when Foundation Release 1 mode is active).
    ============================================================ */
 
+/* ---------- presenter / camera composition (P6) ---------- */
+.fr1-shell { position: absolute; inset: 0; box-sizing: border-box; padding: var(--s-6); overflow: auto; }
+.fr1-shell--16x9 { display: flex; flex-direction: row; gap: var(--s-6); align-items: stretch; }
+.fr1-shell--16x9.has-presenter .fr1-presenter { flex: 0 0 38%; }
+.fr1-shell--16x9.has-presenter .fr1-workspace { flex: 1 1 62%; min-width: 0; overflow: auto; }
+.fr1-shell--16x9.no-presenter .fr1-workspace { flex: 1 1 auto; max-width: 62rem; margin: 0 auto; }
+.fr1-shell--9x16 { display: flex; flex-direction: column; gap: var(--s-4); height: 100%; }
+.fr1-shell--9x16 .fr1-workspace { flex: 1 1 auto; min-height: 0; overflow: auto; }
+.fr1-shell--9x16.has-presenter .fr1-presenter { flex: 0 0 22%; }
+.fr1-shell--1x1 .fr1-workspace { max-width: 90%; margin: 0 auto; }
+.fr1-presenter {
+  border: var(--bw-thin) dashed var(--ui-border);
+  border-radius: var(--r-lg);
+  display: grid; place-items: center; text-align: center; gap: var(--s-1);
+  color: var(--ui-text-muted);
+}
+.fr1-presenter__badge { font: 700 var(--fs-sm)/1 var(--font-logo); letter-spacing: var(--tr-wider); text-transform: uppercase; }
+.fr1-presenter__label { font: 700 var(--fs-lg)/1 var(--font-logo); letter-spacing: var(--tr-wide); }
+
 .fr1-experience {
   display: flex;
   flex-direction: column;
@@ -92,5 +111,14 @@
 .fr1-review-retrieves ul { margin: var(--s-1) 0 0; padding-left: 1.2em; }
 
 /* ---------- selector / nav chrome (preview + control) ---------- */
-.fr1-picker { display: flex; gap: var(--s-2); flex-wrap: wrap; align-items: center; }
-.fr1-nav { display: flex; gap: var(--s-2); margin-top: var(--s-3); }
+.fr1-picker { display: flex; gap: var(--s-2); flex-wrap: wrap; align-items: center; margin-bottom: var(--s-3); }
+.fr1-nav { display: flex; gap: var(--s-2); margin-top: var(--s-3); flex-wrap: wrap; }
+.fr1-frame { position: relative; overflow: hidden; border-radius: var(--r-md); border: var(--bw-hair) solid var(--ui-border-faint); }
+.fr1-repr-status { display: flex; gap: var(--s-2); flex-wrap: wrap; margin-bottom: var(--s-2); }
+.fr1-repr-status__chip {
+  font: 700 var(--fs-xs)/1.8 var(--font-ui); padding: 0 var(--s-2); border-radius: var(--r-pill);
+  background: var(--ui-panel-quiet); color: var(--ui-text-muted); text-transform: uppercase; letter-spacing: var(--tr-wide);
+}
+.fr1-repr-status__chip.is-component { color: var(--ui-success); }
+.fr1-repr-status__chip.is-gap { color: var(--ui-warning); }
+.fr1-repr-status__chip.is-active { outline: 1px solid currentColor; }
