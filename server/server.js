@@ -101,9 +101,27 @@ wss.on('connection', (socket) => {
   });
 });
 
+function handleStartupError(err) {
+  if (err.code === 'EADDRINUSE') {
+    console.error(`Port ${PORT} is already in use — another copy of this server (or something else) is already running.`);
+    console.error(`Close that program, or set a different port: PORT=3001 npm start`);
+  } else {
+    console.error('Math Through Discovery server failed to start:', err.message);
+  }
+  process.exit(1);
+}
+
+// The `ws` library re-emits the underlying http.Server's 'error' event
+// on the WebSocketServer instance it wraps — listen on both so a port
+// conflict always gets this operator-friendly message instead of a raw
+// Node stack trace, regardless of which object Node happens to route it to.
+server.on('error', handleStartupError);
+wss.on('error', handleStartupError);
+
 server.listen(PORT, HOST, () => {
   console.log(`Math Through Discovery running at http://localhost:${PORT}`);
   console.log(`Control: http://localhost:${PORT}/control.html`);
   console.log(`Overlay: http://localhost:${PORT}/overlay.html`);
-  console.log(`WebSocket: ws://localhost:${PORT}/ws`);
+  console.log(`Preview: http://localhost:${PORT}/preview.html`);
+  console.log(`WebSocket: ws://localhost:${PORT}/ws (available)`);
 });

@@ -15,7 +15,9 @@
     "curriculum:test": "node tools/curriculum-runtime.test.mjs",
     "visual:test": "node tools/visual-capabilities.test.mjs",
     "workflow:test": "node tools/workflow.test.mjs",
-    "test": "node tools/smoke-test.mjs && node tools/ui-components.test.mjs && node tools/lesson-schema.test.mjs && node tools/curriculum-runtime.test.mjs && node tools/visual-capabilities.test.mjs && node tools/workflow.test.mjs"
+    "hardening:test": "node tools/hardening.test.mjs",
+    "test": "node tools/smoke-test.mjs && node tools/ui-components.test.mjs && node tools/lesson-schema.test.mjs && node tools/curriculum-runtime.test.mjs && node tools/visual-capabilities.test.mjs && node tools/workflow.test.mjs && node tools/hardening.test.mjs",
+    "verify:release": "node tools/lesson-validate.mjs && npm test"
   },
   "keywords": [
     "obs",

@@ -15,6 +15,7 @@ import { STEP_META } from '../components/discovery.js';
 import { buildCatalog } from '../curriculum/catalog.js';
 import { labelForRepresentation, labelForStage, titleForUnit } from '../curriculum/labels.js';
 import { resolveFr1Shortcut, isTypingTarget } from '../curriculum/shortcuts.js';
+import { resolveConnectionStatus, connectionStatusLabel } from '../curriculum/connection-status.js';
 
 const LAYER_NAMES = ['brand', 'presenter', 'story', 'math', 'discovery', 'comparison', 'takeaways'];
 const ASPECTS = [['16x9', '16:9'], ['9x16', '9:16'], ['1x1', '1:1']];
@@ -36,6 +37,15 @@ export async function mountControl(root) {
      close the "control and overlay could disagree" gap the P7
      workflow audit identified (docs/TEACHING_WORKFLOW.md). */
   let fr1Status = { active: false };
+  /* P8: operator-facing connection status. `lastPeerSeenAt` is the
+     timestamp of the last message actually received from a non-control
+     peer (an overlay tab) — a periodic `ping` (already understood by
+     the overlay, see src/app/overlay-app.js) keeps this fresh even
+     between lesson actions. See src/curriculum/connection-status.js. */
+  let serverConnected = bus.wsConnected;
+  let lastPeerSeenAt = 0;
+  bus.onConnection((ok) => { serverConnected = ok; render(); });
+  setInterval(() => { bus.send('ping', {}); render(); }, 3000);
   try {
     const res = await fetch('lessons/foundation-release-1/manifest.json');
     if (res.ok) {
@@ -114,15 +124,35 @@ export async function mountControl(root) {
     bus.send('fr1-select', { id: fr1Id });
   }
   function sendFr1Stage(action) { bus.send('fr1-stage', { action }); }
-  function sendFr1Exit() { bus.send('fr1-exit', {}); }
+  function sendFr1Exit() {
+    // P8: the one control in this panel that is both high-disruption
+    // (fully discards the current teaching position) and easy to hit by
+    // accident right next to Start Lesson — everything else the P8
+    // accidental-action audit reviewed (Reset, presenter, aspect) is a
+    // normal, reversible, already-secondary-styled part of the
+    // documented workflow and stays confirmation-free.
+    if (!fr1Status.active) { bus.send('fr1-exit', {}); return; }
+    if (window.confirm('Exit Foundation Release 1 mode? This leaves the current lesson position.')) {
+      bus.send('fr1-exit', {});
+    }
+  }
 
   /* ---------- P7: current-state display ----------
      Never inferred from button color alone (docs/TEACHING_WORKFLOW.md
      "Current state display") — always the overlay's own reported
      status. */
+  function renderConnectionBadge() {
+    const status = resolveConnectionStatus({ serverConnected, lastPeerSeenAt });
+    return el('div', {
+      class: `conn-badge conn-badge--${status}`,
+      role: 'status',
+      'aria-live': 'polite',
+    }, connectionStatusLabel(status));
+  }
+
   function renderFr1State() {
     if (!fr1Status.active) {
-      return el('div', { class: 'fr1-state fr1-state--empty' }, 'Not currently teaching a Foundation Release 1 lesson.');
+      return el('div', { class: 'fr1-state fr1-state--empty', role: 'status', 'aria-live': 'polite' }, 'Not currently teaching a Foundation Release 1 lesson.');
     }
     const stageLine = fr1Status.kind === 'teaching'
       ? el('div', { class: 'fr1-state__meta' },
@@ -137,7 +167,7 @@ export async function mountControl(root) {
         : el('div', { class: 'fr1-state__meta' },
           el('span', { class: 'fr1-state__stage' }, 'REVIEW'),
           fr1Status.revealed ? el('span', { class: 'fr1-state__complete' }, 'Retrieves shown') : null);
-    return el('div', { class: 'fr1-state' },
+    return el('div', { class: 'fr1-state', role: 'status', 'aria-live': 'polite' },
       el('div', { class: 'fr1-state__unit' }, `Unit ${fr1Status.unitId} · ${titleForUnit(fr1Status.unitId)}`),
       el('div', { class: 'fr1-state__id' }, `${fr1Status.id} · ${fr1Status.type}`),
       el('div', { class: 'fr1-state__title' }, fr1Status.title),
@@ -153,13 +183,17 @@ export async function mountControl(root) {
         el('button', { class: 'btn btn--xl btn--primary', disabled: fr1Status.atEnd, onclick: () => sendFr1Stage('next') }, 'Next →'),
       ),
       el('div', { class: 'fr1-reveal-reset' },
-        el('button', { class: `btn btn--xl${fr1Status.revealed ? ' is-on' : ''}`, onclick: () => sendFr1Stage('reveal') },
-          fr1Status.revealed ? 'Hide' : 'Reveal'),
+        el('button', {
+          class: `btn btn--xl${fr1Status.revealed ? ' is-on' : ''}`,
+          'aria-pressed': fr1Status.revealed ? 'true' : 'false',
+          onclick: () => sendFr1Stage('reveal'),
+        }, fr1Status.revealed ? 'Hide' : 'Reveal'),
         el('button', { class: 'btn btn--xl', onclick: () => sendFr1Stage('reset') }, 'Reset'),
       ),
       el('div', { class: 'fr1-stage-row' },
         order.map((stageId) => el('button', {
           class: `btn${fr1Status.stageId === stageId ? ' is-on' : ''}`,
+          'aria-pressed': fr1Status.stageId === stageId ? 'true' : 'false',
           onclick: () => sendFr1Stage(`goto:${stageId}`),
         }, labelForStage(stageId).toUpperCase())),
       ),
@@ -167,6 +201,7 @@ export async function mountControl(root) {
         ? el('div', { class: 'fr1-repr-row' },
           fr1Status.representations.map((type) => el('button', {
             class: `btn${fr1Status.activeRepresentation === type ? ' is-on' : ''}`,
+            'aria-pressed': fr1Status.activeRepresentation === type ? 'true' : 'false',
             onclick: () => sendFr1Stage(`repr:${type}`),
           }, labelForRepresentation(type))))
         : null,
@@ -185,8 +220,11 @@ export async function mountControl(root) {
 
   function renderFr1ReviewControls() {
     return el('div', { class: 'row', style: { marginBottom: 'var(--s-3)' } },
-      el('button', { class: `btn btn--xl${fr1Status.revealed ? ' is-on' : ''}`, onclick: () => sendFr1Stage('reveal') },
-        fr1Status.revealed ? 'Hide retrieves' : 'Reveal retrieves'),
+      el('button', {
+        class: `btn btn--xl${fr1Status.revealed ? ' is-on' : ''}`,
+        'aria-pressed': fr1Status.revealed ? 'true' : 'false',
+        onclick: () => sendFr1Stage('reveal'),
+      }, fr1Status.revealed ? 'Hide retrieves' : 'Reveal retrieves'),
     );
   }
 
@@ -202,7 +240,10 @@ export async function mountControl(root) {
     clear(controls);
 
     controls.appendChild(el('div', {},
-      el('h1', { class: 'cp__title' }, 'Lesson control'),
+      el('div', { class: 'cp__head-row' },
+        el('h1', { class: 'cp__title' }, 'Lesson control'),
+        renderConnectionBadge(),
+      ),
       el('p', { class: 'cp__sub' }, 'Changes appear on every open overlay the moment you tap.'),
     ));
 
@@ -293,14 +334,16 @@ export async function mountControl(root) {
         el('div', { class: 'fr1-secondary' },
           el('h3', { class: 'cp__legend' }, 'Change lesson'),
           el('div', { class: 'field' },
-            el('label', {}, 'Unit'),
+            el('label', { for: 'fr1-unit' }, 'Unit'),
             el('select', {
+              id: 'fr1-unit',
               onchange: (e) => { fr1Unit = e.target.value; fr1Id = fr1Catalog.listByUnit(fr1Unit)[0].id; render(); },
             }, fr1Catalog.listUnits().map((u) => el('option', { value: u, selected: u === fr1Unit }, `${u} · ${titleForUnit(u)}`))),
           ),
           el('div', { class: 'field' },
-            el('label', {}, 'Experience'),
+            el('label', { for: 'fr1-experience' }, 'Experience'),
             el('select', {
+              id: 'fr1-experience',
               onchange: (e) => { fr1Id = e.target.value; },
             }, fr1Catalog.listByUnit(fr1Unit).map((entry) => el('option', { value: entry.id, selected: entry.id === fr1Id },
               `${entry.id} — ${entry.title} (${entry.type})`))),
@@ -336,12 +379,24 @@ export async function mountControl(root) {
   if (fr1Catalog) bus.send('fr1-status-request', {});
 
   bus.on((msg) => {
+    // P8: any message actually received from a non-control peer proves
+    // an overlay is alive and reachable right now — this is what powers
+    // the "Overlay Connected" badge (src/curriculum/connection-status.js),
+    // deliberately reusing this existing bus rather than a second
+    // heartbeat system.
+    if (msg.from !== 'control') lastPeerSeenAt = Date.now();
+
     if (msg.type === 'hello' && msg.from !== 'control') { push(); if (fr1Catalog) bus.send('fr1-status-request', {}); }
     // P7: the overlay is the single source of truth for Foundation
     // Release 1 state — control only ever displays what it reports,
     // never a locally-guessed value (docs/TEACHING_WORKFLOW.md
     // "Control/overlay sync").
     else if (msg.type === 'fr1-status') { fr1Status = msg.payload; render(); }
+    // P8: an operator-safe notice for a load/action failure that left
+    // the previous valid session untouched (docs/PRODUCTION_GUIDE.md
+    // "Load failure"). Never a stack trace — overlay-app.js only ever
+    // sends a short, plain-language message here.
+    else if (msg.type === 'fr1-error') { showToast(msg.payload.message); }
   });
 
   window.addEventListener('keydown', (e) => {

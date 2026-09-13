@@ -66,8 +66,8 @@ body:not(.no-anim) .fr1-experience { animation: fr1-fade var(--dur-base) var(--e
   text-transform: uppercase;
   color: var(--ui-text-muted);
 }
-.fr1-header__title { font: 700 var(--fs-2xl)/1.1 var(--font-logo); margin-top: var(--s-1); }
-.fr1-header__objective { color: var(--ui-text-muted); font-size: var(--fs-sm); margin-top: var(--s-1); max-width: 56ch; }
+.fr1-header__title { font: 700 var(--fs-2xl)/1.1 var(--font-logo); margin-top: var(--s-1); overflow-wrap: anywhere; }
+.fr1-header__objective { color: var(--ui-text-muted); font-size: var(--fs-sm); margin-top: var(--s-1); max-width: 56ch; overflow-wrap: anywhere; }
 
 .fr1-rail { padding: var(--s-2) 0; }
 
@@ -84,7 +84,7 @@ body:not(.no-anim) .fr1-experience { animation: fr1-fade var(--dur-base) var(--e
   color: var(--ui-accent);
   margin-bottom: var(--s-2);
 }
-.fr1-stage__prompt { font-size: var(--fs-md); line-height: var(--lh-body); }
+.fr1-stage__prompt { font-size: var(--fs-md); line-height: var(--lh-body); overflow-wrap: anywhere; }
 
 .fr1-representation { display: flex; flex-direction: column; align-items: center; gap: var(--s-2); padding: var(--s-3) 0; }
 .fr1-representation__label {
@@ -117,7 +117,7 @@ body:not(.no-anim) .fr1-experience { animation: fr1-fade var(--dur-base) var(--e
 }
 .fr1-result.is-hidden { opacity: .5; }
 .fr1-result__label { font: 700 var(--fs-xs)/1 var(--font-logo); text-transform: uppercase; letter-spacing: var(--tr-wide); color: var(--ui-success); }
-.fr1-result__value { font-size: var(--fs-lg); margin-top: var(--s-1); }
+.fr1-result__value { font-size: var(--fs-lg); margin-top: var(--s-1); overflow-wrap: anywhere; }
 
 .fr1-task__index { color: var(--ui-text-muted); font-size: var(--fs-xs); text-transform: uppercase; letter-spacing: var(--tr-wide); }
 .fr1-task__facet {
@@ -130,7 +130,7 @@ body:not(.no-anim) .fr1-experience { animation: fr1-fade var(--dur-base) var(--e
   text-transform: uppercase;
   letter-spacing: var(--tr-wide);
 }
-.fr1-task__prompt { margin-top: var(--s-2); font-size: var(--fs-md); }
+.fr1-task__prompt { margin-top: var(--s-2); font-size: var(--fs-md); overflow-wrap: anywhere; }
 .fr1-mastery-meta { font-size: var(--fs-sm); color: var(--ui-text-muted); display: flex; flex-direction: column; gap: var(--s-1); }
 
 .fr1-review-retrieves__label { font: 700 var(--fs-xs)/1 var(--font-logo); text-transform: uppercase; letter-spacing: var(--tr-wide); color: var(--ui-text-muted); }

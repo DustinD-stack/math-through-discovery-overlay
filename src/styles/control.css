@@ -137,6 +137,24 @@ details.cp__group[open] > summary::before { content: "▾ "; }
 .fr1-state__progress { color: var(--t-low); font-size: .82rem; }
 .fr1-state__complete { color: var(--c-correct); font-weight: 700; font-size: .82rem; text-transform: uppercase; letter-spacing: .08em; }
 .fr1-state--empty { color: var(--t-low); font-style: italic; }
+.fr1-state__title { overflow-wrap: anywhere; }
+
+/* ---------- P8: connection status ---------- */
+.cp__head-row { display: flex; align-items: center; justify-content: space-between; gap: var(--s-3); flex-wrap: wrap; }
+.conn-badge {
+  font: 700 .72rem/1 var(--font-ui); letter-spacing: .1em; text-transform: uppercase;
+  padding: .4rem .8rem; border-radius: var(--r-pill); border: 1px solid var(--line-2);
+  white-space: nowrap;
+}
+.conn-badge--connected { color: var(--c-correct); border-color: color-mix(in srgb, var(--c-correct) 50%, transparent); background: color-mix(in srgb, var(--c-correct) 12%, transparent); }
+.conn-badge--connecting { color: var(--t-mid); }
+.conn-badge--offline { color: var(--c-error); border-color: color-mix(in srgb, var(--c-error) 50%, transparent); background: color-mix(in srgb, var(--c-error) 12%, transparent); }
+
+/* ---------- P8: keyboard focus must always be visible ---------- */
+.btn:focus-visible, .field input:focus-visible, .field select:focus-visible,
+.field textarea:focus-visible, a:focus-visible {
+  outline: 2px solid var(--c-discover); outline-offset: 2px;
+}
 
 /* Primary live-teaching controls — the biggest, highest-contrast
    targets in the whole panel; everything else is secondary to these. */

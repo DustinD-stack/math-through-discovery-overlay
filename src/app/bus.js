@@ -15,6 +15,7 @@ const LS_KEY = 'mtd:message';
 
 export function createBus({ role = 'peer' } = {}) {
   const listeners = new Set();
+  const connListeners = new Set();
   const seen = new Set();
   const targets = new Set();
   let bc = null;
@@ -67,6 +68,7 @@ export function createBus({ role = 'peer' } = {}) {
       wsTimer = null;
       // Announce ourselves so the controller can push its latest state.
       sendWS(makeMessage('hello', { role, transport: 'websocket' }));
+      connListeners.forEach((fn) => fn(true));
     });
 
     ws.addEventListener('message', (e) => {
@@ -77,6 +79,7 @@ export function createBus({ role = 'peer' } = {}) {
 
     ws.addEventListener('close', () => {
       wsConnected = false;
+      connListeners.forEach((fn) => fn(false));
       scheduleReconnect();
     });
 
@@ -137,6 +140,10 @@ export function createBus({ role = 'peer' } = {}) {
   return {
     send,
     on(fn) { listeners.add(fn); return () => listeners.delete(fn); },
+    /** P8: notified `true`/`false` whenever the WebSocket transport to
+        the local server opens or closes. Reuses the transport this bus
+        already had (`wsConnected`) — no second heartbeat system. */
+    onConnection(fn) { connListeners.add(fn); return () => connListeners.delete(fn); },
     addTarget(win) { if (win) targets.add(win); },
     removeTarget(win) { targets.delete(win); },
     hasChannel: !!bc,

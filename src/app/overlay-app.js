@@ -63,6 +63,19 @@ export async function mountOverlay(root, { role = 'overlay', listen = true, init
     renderFr1();
   }
 
+  /* P8: a failed lesson load must never silently substitute a lesson,
+     but it also must not blank a screen that already has a valid
+     teaching session on it (Load failure UX / Safe state preservation).
+     `fr1Select` only reassigns `fr1Player`/`fr1Active` after every step
+     has succeeded, so on failure the prior valid player (if any) is
+     already untouched — the only thing this function decides is
+     whether the DOM needs to fall back to a full error state. */
+  function onFr1SelectFailed() {
+    bus.send('fr1-error', { message: 'This lesson could not be loaded. Choose another lesson and try again.' });
+    if (fr1Active && fr1Player) { renderFr1(); return; } // prior lesson stays on screen, untouched
+    renderError(stage, bgLayer, 'Choose another lesson and press Start Lesson again.');
+  }
+
   function fr1Stage(action) {
     if (!fr1Active || !fr1Player) return;
     try {
@@ -82,7 +95,14 @@ export async function mountOverlay(root, { role = 'overlay', listen = true, init
       }
     } catch (err) {
       if (!(err instanceof UnknownStageError)) throw err;
-      renderError(stage, bgLayer, err.message);
+      // P8: an invalid action (e.g. an unknown stage/representation id)
+      // must not corrupt the current valid session — every player method
+      // throws before mutating internal state, so simply leaving the
+      // existing render in place IS the safe recovery. No stack trace
+      // reaches the teaching surface; control is told so it can show a
+      // brief, operator-safe notice (docs/PRODUCTION_GUIDE.md
+      // "Load failure").
+      bus.send('fr1-error', { message: 'That action is not available right now. Nothing changed.' });
       return;
     }
     renderFr1();
@@ -218,7 +238,7 @@ export async function mountOverlay(root, { role = 'overlay', listen = true, init
       else if (type === 'step') store.set({ step: clampStep(payload.step) });
       else if (type === 'reload') window.location.reload();
       else if (type === 'ping') bus.send('pong', { role });
-      else if (type === 'fr1-select') fr1Select(payload.id).catch((err) => renderError(stage, bgLayer, err.message));
+      else if (type === 'fr1-select') fr1Select(payload.id).catch(() => onFr1SelectFailed());
       else if (type === 'fr1-stage') fr1Stage(payload.action);
       else if (type === 'fr1-exit') fr1Exit();
       // A late-joining/reconnecting control panel asks for a fresh
