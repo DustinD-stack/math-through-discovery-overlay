@@ -1,66 +1,74 @@
 # Release Checklist — Foundation Release 1 → V1.0
 
-Concrete pass/fail items for the P9 final-acceptance milestone. Items
-marked **(P8)** are already verified as of this checklist's creation;
-items marked **(P9)** are explicitly deferred and must not be marked
-complete now.
+Concrete pass/fail items for release acceptance. Items are marked PASS
+only once actually verified — not merely because they were planned.
+The two items under TAG/RELEASE that require the tag to already exist
+are left unchecked until immediately after the tag is pushed.
 
 ## REPOSITORY
-- [x] (P8) Working tree clean, `HEAD == origin/main`, no force-pushes used.
-- [x] (P8) No stray/debug files committed.
-- [ ] (P9) Final `v1.0.0` tag created.
+- [x] Working tree clean, `HEAD == origin/main`, no force-pushes used.
+- [x] No stray/debug files committed (temporary audit/test scripts used during verification were deleted, never staged).
 
 ## CURRICULUM
-- [x] (P8) 78/78 production experiences present (57 lessons, 8 mastery checks, 13 reviews).
-- [x] (P8) `npm run lessons:validate` reports 0 warnings, 0 errors.
-- [x] (P8) Capability gap count is 0.
-- [x] (P8) Curriculum content unmodified since P7 acceptance.
+- [x] 78/78 production experiences present (57 lessons, 8 mastery checks, 13 reviews).
+- [x] `npm run lessons:validate` reports 0 warnings, 0 errors.
+- [x] Capability gap count is 0.
+- [x] Curriculum content unmodified through P8 and P9 (zero lesson JSON files touched).
 
 ## RUNTIME
-- [x] (P8) Schema-v1 adapter/player/catalog/resolver unchanged in behavior (regression suites pass).
-- [x] (P8) Legacy lesson-loader/preset runtime unchanged and still passes its own suite.
-- [x] (P8) Invalid stage/representation requests fail safely without corrupting the active session.
-- [x] (P8) A failed lesson load never silently substitutes another lesson.
-- [x] (P8) A failed lesson load preserves the prior valid session where one exists.
+- [x] Schema-v1 adapter/player/catalog/resolver unchanged in behavior (regression suites pass).
+- [x] Legacy lesson-loader/preset runtime unchanged and still passes its own suite.
+- [x] Invalid stage/representation requests fail safely without corrupting the active session.
+- [x] A failed lesson load never silently substitutes another lesson.
+- [x] A failed lesson load preserves the prior valid session where one exists.
+
+## VISUALS
+- [x] Modular layout collision audit performed across 16:9/9:16/1:1 × presenter on/off, using the real corpus's worst cases (densest representation data, longest title/prompt/objective, most representations, longest mastery/review).
+- [x] Zero real component/asset collisions found — presenter and workspace are structurally separate flow regions everywhere; no lesson-specific pixel-position hacks exist or were added.
+- [x] Presenter-off reclaims full workspace width/height (no phantom empty presenter region).
+- [x] 1:1 always renders with presenter absent, even when explicitly requested on.
+- [x] Dense real-corpus content (longest title 46 chars, longest prompt/objective 317 chars) remains readable and unclipped at native OBS-recommended resolutions.
+- [x] Structural collision regression tests added (`npm run layout:test`, 53 assertions) — region ownership, no forbidden absolute positioning, min-width/min-height sizing contract, dense-content soundness.
 
 ## WORKFLOW
-- [x] (P8) Operator can complete the full START → SELECT → TEACH → RESET/RETAKE → SWITCH → STOP flow with no developer knowledge.
-- [x] (P8) Connection status is visible in plain language (Connected / Connecting / Offline).
-- [x] (P8) Reconnect re-syncs to the overlay's authoritative state, never a stale guess.
-- [x] (P8) The one high-disruption control (Exit Foundation Mode) asks for confirmation; Next/Previous/Reveal remain confirmation-free.
-- [x] (P8) Keyboard shortcuts are fully usable and disabled while typing.
+- [x] Operator can complete the full START → SELECT → TEACH → RESET/RETAKE → SWITCH → STOP flow with no developer knowledge.
+- [x] Connection status is visible in plain language (Connected / Connecting / Offline).
+- [x] Reconnect re-syncs to the overlay's authoritative state, never a stale guess.
+- [x] The one high-disruption control (Exit Foundation Mode) asks for confirmation; Next/Previous/Reveal remain confirmation-free.
+- [x] Keyboard shortcuts are fully usable and disabled while typing.
 
 ## OBS
-- [x] (P8) Recommended Browser Source URL documented (`http://localhost:3000/overlay.html`).
-- [x] (P8) 16:9, 9:16, and 1:1 aspect behavior verified live.
-- [x] (P8) Clean/transparent output verified free of developer chrome (no safe-zone label, no debug text).
-- [x] (P8) Long-session stress (200+ operations) produces no exceptions, no runaway DOM growth, no duplicated status broadcasts.
-- [x] (P8) Reconnect stress produces no duplicated actions.
+- [x] Recommended Browser Source URL and native canvas sizes documented (1920×1080 / 1080×1920 / 1080×1080).
+- [x] 16:9, 9:16, and 1:1 aspect behavior verified live, including at native (non-scaled) resolution.
+- [x] Clean/transparent output verified free of developer chrome (no safe-zone label, no debug text).
+- [x] Long-session stress (200+ operations) produces no exceptions, no runaway DOM growth, no duplicated status broadcasts.
+- [x] Reconnect stress produces no duplicated actions.
 
 ## ACCESSIBILITY
-- [x] (P8) Critical controls (Reveal, stage buttons, representation buttons, Presenter) expose `aria-pressed` state.
-- [x] (P8) Unit/Experience selects have linked, accessible labels.
-- [x] (P8) Current-state display is an `aria-live` region.
-- [x] (P8) Keyboard focus is visible (`:focus-visible` outline) on all interactive controls.
-- [x] (P8) No keyboard traps; Escape remains safe (never destructive).
+- [x] Critical controls (Reveal, stage buttons, representation buttons, Presenter) expose `aria-pressed` state.
+- [x] Unit/Experience selects have linked, accessible labels.
+- [x] Current-state display is an `aria-live` region.
+- [x] Keyboard focus is visible (`:focus-visible` outline) on all interactive controls.
+- [x] No keyboard traps; Escape remains safe (never destructive).
 
 ## DOCUMENTATION
-- [x] (P8) `docs/TEACHING_WORKFLOW.md` (P7) and `docs/PRODUCTION_GUIDE.md` (P8) exist, teacher/operator-facing.
-- [x] (P8) `docs/RELEASE_CHECKLIST.md` (this file) exists.
-- [ ] (P9) Formal release notes for v1.0 written.
+- [x] `docs/TEACHING_WORKFLOW.md`, `docs/PRODUCTION_GUIDE.md`, and this checklist exist, teacher/operator-facing.
+- [x] `docs/RELEASE_NOTES_V1.md` written.
+- [x] README, TEACHING_WORKFLOW, and PRODUCTION_GUIDE cross-checked for agreement on startup command, Control/Overlay/Preview URLs, OBS workflow, keyboard shortcuts, aspect/presenter behavior, and recovery procedure; README's stale docs listing and a corrupted trailing byte sequence were fixed.
 
 ## TESTS
-- [x] (P8) All required regression baselines hold: 78/78 lessons, 77 lesson-schema, 82 curriculum-runtime, 167 visual-capability, 64 workflow, 1152 render combinations, 427 UI assertions.
-- [x] (P8) New P8 hardening suite passes (`npm run hardening:test`).
-- [x] (P8) `npm run verify:release` exists and passes end-to-end.
+- [x] All required regression baselines hold: 78/78 lessons, 77 lesson-schema, 82 curriculum-runtime, 167 visual-capability, 64 workflow, 54 hardening, 53 layout-collision, 1152 render combinations, 427 UI assertions.
+- [x] `npm run verify:release` exists and passes end-to-end (lesson validation + all eight test suites).
 
 ## VERSION
-- [x] (P8) Current `package.json` version (`1.0.0`) reviewed; left unchanged in P8 per the schema/version guard.
-- [ ] (P9) Confirm `1.0.0` is the intended final release version (recommendation: keep as-is — it was never a placeholder pre-1.0 number).
+- [x] `package.json` version confirmed as the intended v1.0.0 release version; not changed merely to create a diff (it was already `1.0.0`, not a placeholder).
+
+## CLEAN-ROOM INSTALL
+- [x] Verified `npm install`/`npm ci`, `npm run verify:release`, and `npm start` from a clean checkout (see P9 final report, "CLEAN-ROOM INSTALL STATUS").
+- [x] Package-lock decision made explicitly and documented (see P9 final report, "PACKAGE LOCK DECISION") — not silently committed.
 
 ## TAG
-- [ ] (P9) Create the final release tag, following the existing `design-system-v1-accepted` naming convention (e.g. `foundation-release-1-v1.0.0`).
+- [ ] Annotated tag `foundation-release-1-v1.0.0` created and pushed to `origin`. *(Checked immediately after Part T completes — see PUSH RESULT / TAG RESULT in the P9 final report.)*
 
 ## RELEASE
-- [ ] (P9) Publish/announce release notes pointing at `docs/PRODUCTION_GUIDE.md` and `docs/TEACHING_WORKFLOW.md`.
-- [ ] (P9) Formal project freeze / V1 sign-off.
+- [ ] Foundation Release 1 formally declared frozen. *(Checked at the same point as the TAG item above.)*
