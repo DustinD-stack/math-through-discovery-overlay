@@ -16,6 +16,7 @@ import { buildCatalog } from '../curriculum/catalog.js';
 import { labelForRepresentation, labelForStage, titleForUnit } from '../curriculum/labels.js';
 import { resolveFr1Shortcut, isTypingTarget } from '../curriculum/shortcuts.js';
 import { resolveConnectionStatus, connectionStatusLabel } from '../curriculum/connection-status.js';
+import { preserveViewport } from '../utils/viewport-preserve.js';
 
 const LAYER_NAMES = ['brand', 'presenter', 'story', 'math', 'discovery', 'comparison', 'takeaways'];
 const ASPECTS = [['16x9', '16:9'], ['9x16', '9:16'], ['1x1', '1:1']];
@@ -234,8 +235,19 @@ export async function mountControl(root) {
     setTimeout(() => toast.classList.remove('is-visible'), 1800);
   }
 
-  /* ---------- render ---------- */
+  /* ---------- render ----------
+     `render()` fully clears and rebuilds `controls` on every call
+     (`renderInner`), which destroys and recreates whatever the operator
+     had focused. Wrapping it in `preserveViewport` stops that rebuild
+     from silently moving `document.body`'s scroll position — see
+     src/utils/viewport-preserve.js for the full root-cause writeup and
+     why `document.body` (not `window`) is the real scroll container on
+     this page. */
   function render() {
+    preserveViewport(document.body, renderInner);
+  }
+
+  function renderInner() {
     const s = store.get();
     clear(controls);
 

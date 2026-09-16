@@ -17,7 +17,8 @@
     "workflow:test": "node tools/workflow.test.mjs",
     "hardening:test": "node tools/hardening.test.mjs",
     "layout:test": "node tools/layout-collision.test.mjs",
-    "test": "node tools/smoke-test.mjs && node tools/ui-components.test.mjs && node tools/lesson-schema.test.mjs && node tools/curriculum-runtime.test.mjs && node tools/visual-capabilities.test.mjs && node tools/workflow.test.mjs && node tools/hardening.test.mjs && node tools/layout-collision.test.mjs",
+    "viewport:test": "node tools/viewport-preserve.test.mjs",
+    "test": "node tools/smoke-test.mjs && node tools/ui-components.test.mjs && node tools/lesson-schema.test.mjs && node tools/curriculum-runtime.test.mjs && node tools/visual-capabilities.test.mjs && node tools/workflow.test.mjs && node tools/hardening.test.mjs && node tools/layout-collision.test.mjs && node tools/viewport-preserve.test.mjs",
     "verify:release": "node tools/lesson-validate.mjs && npm test"
   },
   "keywords": [
