@@ -62,6 +62,13 @@ export async function mountControl(root) {
     connectionBadge.textContent = connectionStatusLabel(status);
   }
   updateConnectionBadge();
+  /* Post-V1 fix: which Live-edit <details> sections the operator has
+     opened must survive a Control re-render (e.g. an fr1-status
+     broadcast arriving mid-edit) exactly like scroll/focus already do —
+     `<details>` has no state of its own once its element is destroyed
+     and recreated, so this small persistent Set is the section's real
+     memory across renders. See `buildEditor`. */
+  const openLiveEditSections = new Set();
   bus.onConnection((ok) => { serverConnected = ok; updateConnectionBadge(); });
   setInterval(() => { bus.send('ping', {}); updateConnectionBadge(); }, 3000);
   try {
@@ -116,6 +123,18 @@ export async function mountControl(root) {
   }
 
   function set(patch) { store.set(patch); render(); push(); }
+
+  /* Post-V1 fix: text/textarea `oninput` in the Live edits panel used
+     to go through `set()`, which calls the full destructive `render()`
+     on every single keystroke — rebuilding the whole panel (including
+     every <details> section, which reset to closed) and destroying the
+     very <input>/<textarea> the operator was typing into, dropping
+     focus and the cursor position every character. A live edit only
+     needs to update state and push it to the overlay preview — nothing
+     in the Control panel's own UI depends on the override's live value
+     while typing, so no re-render is needed at all here. See
+     `buildEditor`'s `edit()` below. */
+  function setQuiet(patch) { store.set(patch); push(); }
 
   async function setLesson(id) {
     lesson = await loadLesson(id).catch((e) => { showToast(e.message); return lesson; });
@@ -392,7 +411,7 @@ export async function mountControl(root) {
     ));
 
     /* --- live edits --- */
-    if (lesson) controls.appendChild(buildEditor(s, lesson, set, store));
+    if (lesson) controls.appendChild(buildEditor(s, lesson, setQuiet, store, openLiveEditSections));
   }
 
   render();
@@ -448,20 +467,39 @@ export async function mountControl(root) {
 /* ------------------------------------------------------------
    Live text editing. Every field writes a dot-path override,
    so the lesson JSON on disk is never modified.
+
+   Post-V1 fix: `set` here is `setQuiet` (state + overlay push, no
+   Control re-render — see mountControl) so typing/deleting characters
+   never rebuilds the panel at all. Every field also gets a stable,
+   path-derived `id`, which the existing `preserveViewport` focus/
+   selection restoration (by id) already picks up automatically for the
+   rarer case where an unrelated event (e.g. fr1-status) still triggers
+   a real render while a field is focused. `<details>` open/closed state
+   is tracked in `openSections` (persistent across renders) via a
+   `data-section` id and restored on every rebuild.
    ------------------------------------------------------------ */
-function buildEditor(s, lesson, set, store) {
+function buildEditor(s, lesson, set, store, openSections) {
   const val = (path, fallback) => {
     const o = store.get().overrides;
     return o[path] !== undefined ? o[path] : fallback;
   };
   const edit = (path) => (e) => set({ overrides: { [path]: e.target.value } });
+  const fieldId = (path) => `live-edit-${path}`;
 
   const text = (label, path, current, multiline = false) => el('div', { class: 'field' },
-    el('label', {}, label),
+    el('label', { for: fieldId(path) }, label),
     multiline
-      ? el('textarea', { oninput: edit(path) }, val(path, current) || '')
-      : el('input', { type: 'text', value: val(path, current) || '', oninput: edit(path) }),
+      ? el('textarea', { id: fieldId(path), oninput: edit(path) }, val(path, current) || '')
+      : el('input', { id: fieldId(path), type: 'text', value: val(path, current) || '', oninput: edit(path) }),
   );
+
+  /** A <details> section whose open/closed state survives a rebuild —
+      the operator decides when to open/close it, never this code. */
+  const section = (sectionId, summaryText, ...children) => el('details', {
+    class: 'cp__group',
+    open: openSections.has(sectionId),
+    ontoggle: (e) => { if (e.target.open) openSections.add(sectionId); else openSections.delete(sectionId); },
+  }, el('summary', {}, summaryText), ...children);
 
   return el('section', { class: 'cp__panel' },
     el('h2', { class: 'cp__legend' }, 'Live edits'),
@@ -471,41 +509,38 @@ function buildEditor(s, lesson, set, store) {
     text('Quote', 'quote', lesson.quote, true),
     text('Question', 'question', lesson.question, true),
 
-    el('details', { class: 'cp__group' },
-      el('summary', {}, 'Scenario numbers'),
+    section('facts', 'Scenario numbers',
       lesson.facts.map((f, i) => el('div', { class: 'field field--inline' },
-        el('input', { type: 'text', value: val(`facts.${i}.label`, f.label), oninput: edit(`facts.${i}.label`) }),
-        el('input', { type: 'text', value: val(`facts.${i}.value`, f.value), oninput: edit(`facts.${i}.value`) }),
+        el('input', { id: fieldId(`facts.${i}.label`), type: 'text', value: val(`facts.${i}.label`, f.label), oninput: edit(`facts.${i}.label`) }),
+        el('input', { id: fieldId(`facts.${i}.value`), type: 'text', value: val(`facts.${i}.value`, f.value), oninput: edit(`facts.${i}.value`) }),
       )),
       lesson.answer && el('div', { class: 'field field--inline' },
-        el('input', { type: 'text', value: val('answer.work', lesson.answer.work || ''), oninput: edit('answer.work') }),
-        el('input', { type: 'text', value: val('answer.value', lesson.answer.value || ''), oninput: edit('answer.value') }),
+        el('input', { id: fieldId('answer.work'), type: 'text', value: val('answer.work', lesson.answer.work || ''), oninput: edit('answer.work') }),
+        el('input', { id: fieldId('answer.value'), type: 'text', value: val('answer.value', lesson.answer.value || ''), oninput: edit('answer.value') }),
       ),
     ),
 
-    el('details', { class: 'cp__group' },
-      el('summary', {}, 'The five steps'),
+    section('steps', 'The five steps',
       STEP_KEYS.map((k) => el('div', {},
         el('div', { class: `step__label ${STEP_META[k].cls}`, style: { margin: '.6rem 0 .3rem' } }, STEP_META[k].label),
         el('div', { class: 'field' },
-          el('input', { type: 'text', value: val(`steps.${k}.text`, lesson.steps[k].text || ''), oninput: edit(`steps.${k}.text`), placeholder: 'Explanation' }),
+          el('input', { id: fieldId(`steps.${k}.text`), type: 'text', value: val(`steps.${k}.text`, lesson.steps[k].text || ''), oninput: edit(`steps.${k}.text`), placeholder: 'Explanation' }),
         ),
         el('div', { class: 'field' },
-          el('input', { type: 'text', value: val(`steps.${k}.equation`, lesson.steps[k].equation || ''), oninput: edit(`steps.${k}.equation`), placeholder: 'Math (e.g. 1200 / 160)' }),
+          el('input', { id: fieldId(`steps.${k}.equation`), type: 'text', value: val(`steps.${k}.equation`, lesson.steps[k].equation || ''), oninput: edit(`steps.${k}.equation`), placeholder: 'Math (e.g. 1200 / 160)' }),
         ),
       )),
     ),
 
-    lesson.comparison && el('details', { class: 'cp__group' },
-      el('summary', {}, 'Comparison'),
+    lesson.comparison && section('comparison', 'Comparison',
       text('What they think', 'comparison.think', lesson.comparison.think, true),
       text('What the math says', 'comparison.math', lesson.comparison.math, true),
     ),
 
-    el('details', { class: 'cp__group' },
-      el('summary', {}, 'Takeaways'),
+    section('takeaways', 'Takeaways',
       lesson.takeaways.map((t, i) => el('div', { class: 'field' },
         el('input', {
+          id: fieldId(`takeaways.${i}`),
           type: 'text',
           value: val(`takeaways.${i}`, typeof t === 'string' ? t : t.text),
           oninput: edit(`takeaways.${i}`),
