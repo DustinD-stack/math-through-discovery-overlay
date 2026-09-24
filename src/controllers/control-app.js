@@ -45,8 +45,25 @@ export async function mountControl(root) {
      between lesson actions. See src/curriculum/connection-status.js. */
   let serverConnected = bus.wsConnected;
   let lastPeerSeenAt = 0;
-  bus.onConnection((ok) => { serverConnected = ok; render(); });
-  setInterval(() => { bus.send('ping', {}); render(); }, 3000);
+  /* Post-V1 fix: a persistent, standalone connection-status node,
+     mutated in place. The periodic connectivity check below used to
+     call the full, destructive `render()` (clear+rebuild of the entire
+     controls column) purely to refresh this one-line status label —
+     meaning the whole panel, including any currently-open native
+     <select> dropdown (Unit/Experience), whose underlying DOM node
+     would be destroyed out from under it and forced closed by the
+     browser, was torn down every 3 seconds regardless of what the
+     operator was doing. `updateConnectionBadge` never touches anything
+     else on the page. */
+  const connectionBadge = el('div', { role: 'status', 'aria-live': 'polite' });
+  function updateConnectionBadge() {
+    const status = resolveConnectionStatus({ serverConnected, lastPeerSeenAt });
+    connectionBadge.className = `conn-badge conn-badge--${status}`;
+    connectionBadge.textContent = connectionStatusLabel(status);
+  }
+  updateConnectionBadge();
+  bus.onConnection((ok) => { serverConnected = ok; updateConnectionBadge(); });
+  setInterval(() => { bus.send('ping', {}); updateConnectionBadge(); }, 3000);
   try {
     const res = await fetch('lessons/foundation-release-1/manifest.json');
     if (res.ok) {
@@ -141,16 +158,8 @@ export async function mountControl(root) {
   /* ---------- P7: current-state display ----------
      Never inferred from button color alone (docs/TEACHING_WORKFLOW.md
      "Current state display") — always the overlay's own reported
-     status. */
-  function renderConnectionBadge() {
-    const status = resolveConnectionStatus({ serverConnected, lastPeerSeenAt });
-    return el('div', {
-      class: `conn-badge conn-badge--${status}`,
-      role: 'status',
-      'aria-live': 'polite',
-    }, connectionStatusLabel(status));
-  }
-
+     status. (The connection badge itself is the persistent
+     `connectionBadge` node declared above, not rendered here.) */
   function renderFr1State() {
     if (!fr1Status.active) {
       return el('div', { class: 'fr1-state fr1-state--empty', role: 'status', 'aria-live': 'polite' }, 'Not currently teaching a Foundation Release 1 lesson.');
@@ -254,7 +263,7 @@ export async function mountControl(root) {
     controls.appendChild(el('div', {},
       el('div', { class: 'cp__head-row' },
         el('h1', { class: 'cp__title' }, 'Lesson control'),
-        renderConnectionBadge(),
+        connectionBadge,
       ),
       el('p', { class: 'cp__sub' }, 'Changes appear on every open overlay the moment you tap.'),
     ));
